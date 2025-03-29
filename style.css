@@ -1,0 +1,142 @@
+/* vars for easier down the road management */
+:root {
+    --turq: #008080;
+    --check-turq: #007074;
+    --dark-turq: #034C53;
+    --mint-green: #3EB489;
+    --salmon: #FA8072;
+    --delete-red: #DC3545;
+    --light-pink: #FFE5E5;
+    --hard-black: #000000;
+    --hard-white: #FFFFFF;
+    --font-family: Josefin Sans, sans-serif;
+    --corners-round: 5px;
+}
+
+
+.flex-container {
+    display: flex;
+    flex: 100%;
+}
+
+.header{
+    display: flex;
+    background-color: var(--turq);
+    color: var(--hard-white);
+    font-family: var(--font-family);
+}
+
+.header-title{
+    color: var(--hard-white);
+    text-align: left;
+    font-size: 16px;
+    font-family: var(--font-family);
+}
+
+.text{
+    color: var(--hard-black);
+    text-align: left;
+    font-family: var(--font-family);
+}
+
+.dash-title{
+    color: var(--dark-turq);
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    font-family: var(--font-family);
+}
+
+/* BUTTONS */
+/* general button */
+.button{
+    background-color: var(--mint-green);
+    border: none;
+    border-radius: var(--corners-round);
+    padding: 15px 32px;
+    margin: 5px;
+    color: var(--hard-white);
+    font-family: var(--font-family);
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* This section tentatively for Confirm Deletion and its parts. */
+.confirm-delete-box{
+    display: flex;
+    background-color: var(--light-pink);
+}
+
+/* Throw the buttons in this container. */
+.delete-buttons-box{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* button */
+.delete-cancel{
+    flex: 25%;
+    order: 1;
+    background-color: var(--dark-turq);
+}
+
+/* invisible div to space .delete-confirm and .delete-cancel */
+.delete-spacer{
+    flex: 50%;
+    flex-direction: row;
+    order: 2;
+}
+
+/* button */
+.delete-confirm{
+    flex: 25%;
+    order: 3;
+    background-color: var(--delete-red);
+}
+
+/* CHECKBOXES */
+.unchecked{
+    background-color: var(--check-box);
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.checked{
+    background-color: var(--check-turq);
+    border-radius: var(--corners-round);
+    border: 1px solid black;
+}
+
+/* CARDS */
+.card{
+    width: 250px;
+    margin: 10px;
+    text-align: center;
+}
+
+.card-title{
+    text-align: center;
+    font-size: 20 px;
+    text-decoration-line: underline;
+}
+
+.card-text{
+    font-size: 14 px;
+}
+
+/* MENU */
+.menu {
+    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2), 0 10px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.menu-text{
+    font-size: 30 px;
+    color: var(--hard-black);
+}
+
+/* ALLERGEN */
+.allergen{
+    background-color: var(--salmon);
+}
