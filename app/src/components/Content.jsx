@@ -1,7 +1,9 @@
+import SignUp from './auth/SignUp.jsx';
+
 function Content() {
   return(
-    <div class="content">
-
+    <div className="content">
+      <SignUp />
     </div>
   )
 }

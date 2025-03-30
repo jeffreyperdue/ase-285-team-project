@@ -18,12 +18,18 @@
 
 * {
     font-family: var(--font-family);
+    box-sizing: border-box;
 }
 
 body {
     margin: 0px;
+}
+
+#root {
     width: 100vw;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .flex-container {
@@ -46,6 +52,8 @@ body {
 .content {
     background-color: var(--hard-white);
     padding: 20px 25px;
+    flex: 1 1 auto;
+    display: flex;
 }
 
 .text {
