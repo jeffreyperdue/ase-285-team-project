@@ -1,9 +1,9 @@
-import SignUp from './auth/SignUp.jsx';
+import SignInUp from './auth/SignInUp';
 
 function Content() {
   return(
     <div className="content">
-      <SignUp />
+      { SignInUp() }
     </div>
   )
 }

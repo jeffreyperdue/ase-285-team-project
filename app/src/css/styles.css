@@ -76,7 +76,7 @@ body {
     background-color: var(--mint-green);
     border: none;
     border-radius: var(--corners-round);
-    padding: 15px 32px;
+    padding: 10px 32px;
     margin: 5px;
     color: var(--hard-white);
     font-family: var(--font-family);
