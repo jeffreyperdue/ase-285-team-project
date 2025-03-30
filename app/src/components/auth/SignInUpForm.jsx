@@ -1,4 +1,4 @@
-import './auth.css';
+import '../../css/auth.css';
 import GeneratePasswordField from './Password';
 import PropTypes from 'prop-types';
 
