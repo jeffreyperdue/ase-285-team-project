@@ -17,23 +17,32 @@
     font-family: var(--font-family);
 }
 
+body {
+    margin: 0px;
+    width: 100vw;
+    height: 100vh;
+}
+
 .flex-container {
     display: flex;
     flex: 100%;
 }
 
 .header {
-    display: flex;
     background-color: var(--turq);
     color: var(--hard-white);
-    font-family: var(--font-family);
+    padding: 15px 25px;
 }
 
 .header-title {
     color: var(--hard-white);
     text-align: left;
-    font-size: 16px;
-    font-family: var(--font-family);
+    font-size: 20px;
+}
+
+.content {
+    background-color: var(--hard-white);
+    padding: 20px 25px;
 }
 
 .text {
