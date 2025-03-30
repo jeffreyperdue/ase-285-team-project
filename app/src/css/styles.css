@@ -1,3 +1,6 @@
+/* Import Josefin Sans font family from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&display=swap');
+
 /* vars for easier down the road management */
 :root {
     --turq: #008080;
@@ -9,7 +12,7 @@
     --light-pink: #FFE5E5;
     --hard-black: #000000;
     --hard-white: #FFFFFF;
-    --font-family: Josefin Sans, sans-serif;
+    --font-family: 'Josefin Sans', sans-serif;
     --corners-round: 5px;
 }
 
