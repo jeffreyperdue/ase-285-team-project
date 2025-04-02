@@ -1,6 +1,5 @@
-import '../../css/styles.css';
 import { useState, changeState } from 'react';
-import './index.css'
+import '.app/src/css/styles.css'
 import Checkbox from './assets/Checkbox.jsx';
 
 const AddMenuItemForm = () => {
@@ -64,6 +63,8 @@ const AddMenuItemForm = () => {
                         ))}
                     </div>
                 </div>
+                <button>+ Add Another</button>
+                <button>Save</button>
             </form>
         </div>
     )

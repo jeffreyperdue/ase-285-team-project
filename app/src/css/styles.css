@@ -152,7 +152,7 @@ body {
 
 /* MENU */
 .menu {
-    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2), 0 10px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
 }
 .menu-text {
     font-size: 30 px;
@@ -162,4 +162,20 @@ body {
 /* ALLERGEN */
 .allergen {
     background-color: var(--salmon);
+}
+
+
+.left-side {
+    float: left;
+    margin: 15px;
+  }
+
+.right-side{
+    float: right;
+    margin: 15px;
+  }
+
+.margin-left
+{
+  margin-left: 15px;
 }
