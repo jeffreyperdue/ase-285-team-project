@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import GetForm from './SignInUpForm';
+import GetForm from './GetForm';
 import '../../css/auth.css';
 
 function SignInUp() {
