@@ -8,32 +8,12 @@ function GetForm({ formName }) {
 
   const signUp = (event) => {
     event.preventDefault();
-    navigate('/setUp1');
+    navigate('/step1');
   }
 
   const logIn = (event) => {
     event.preventDefault();
     navigate('/logIn');
-  }
-
-  const continueSetUp = (event) => {
-    event.preventDefault();
-    navigate('/setUp2');
-  }
-
-  if (formName === 'setUpForm') {
-    // TO DO: add back arrow for backwards navigation
-    return (
-      <form name={ formName } className="set-up-form">
-        <h2 className="title">Set Up</h2>
-
-        <input type="text" name="businessName" placeholder="Business Name" required />
-        <input type="text" name="website" placeholder="Web Profile URL" />
-        <input type="text" name="address" placeholder="Location Address" />
-        
-        <button type="submit" onClick={ continueSetUp } className="set-up-btn button">Continue</button>
-      </form>
-    )
   }
 
   return (

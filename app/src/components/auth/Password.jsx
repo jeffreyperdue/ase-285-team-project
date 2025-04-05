@@ -25,7 +25,7 @@ function GeneratePasswordField({ name, placeholder }) {
       {/* dynamically changes eye icon appearance (slash or no slash)
           based on state */}
       <span
-        class="eye-icon"
+        className="eye-icon"
         onClick={ togglePasswordVisibility }
       >
         { passwordVisible ? (
@@ -42,6 +42,6 @@ function GeneratePasswordField({ name, placeholder }) {
 GeneratePasswordField.propTypes = {
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
-}
+};
 
 export default GeneratePasswordField;

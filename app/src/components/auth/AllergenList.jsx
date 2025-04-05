@@ -1,3 +1,5 @@
+import "../../css/styles.css";
+
 function GenerateAllergenList() {
   const allergens = [
     { label: "Lactose (milk)",
@@ -33,16 +35,15 @@ function GenerateAllergenList() {
 
   for (const allergen of allergens) {
     allergenList.push(
-      <div className="checkbox-container">
-        <label className="allergen-label">
-          <input
-            type="checkbox"
-            name="allergens"
-            value={ allergen.value }
-          />
-          { allergen.label }
-        </label>
-      </div>
+      <label key={ allergen.value } className="allergen-label">
+        <input
+          type="checkbox"
+          name="allergens"
+          value={ allergen.value }
+          className="checkbox"
+        />
+        { allergen.label }
+      </label>
     )
   }
   

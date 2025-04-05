@@ -10,11 +10,14 @@
     --salmon: #FA8072;
     --delete-red: #DC3545;
     --light-pink: #FFE5E5;
+    --gray: #7e7d7d;
+    --gray-hover: #666666;
     --hard-black: #000000;
     --hard-white: #FFFFFF;
     --font-family: 'Josefin Sans', sans-serif;
     --corners-round: 5px;
     --border: 1px solid rgba(0, 0, 0, 0.25);
+    --border-dashed: 1px dashed rgba(0, 0, 0, 0.25);
 }
 
 * {
@@ -88,6 +91,14 @@ body {
     cursor: pointer;
 }
 
+.gray-btn {
+    background-color: var(--gray);
+}
+  
+.gray-btn:hover {
+    background-color: var(--gray-hover);
+}
+
 /* This section tentatively for Confirm Deletion and its parts. */
 .confirm-delete-box {
     display: flex;
@@ -129,6 +140,12 @@ body {
 }
 
 .checked {
+    background-color: var(--check-turq);
+    border-radius: var(--corners-round);
+    border: 1px solid black;
+}
+
+input[type="checkbox"].checkbox:checked {
     background-color: var(--check-turq);
     border-radius: var(--corners-round);
     border: 1px solid black;
