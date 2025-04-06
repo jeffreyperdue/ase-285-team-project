@@ -131,3 +131,28 @@ a:hover {
 .password-toggle-icon i:hover {
 	color: #000;
 }
+
+.change-login-info-form {
+	height: 100%;
+	max-width: 340px;
+	gap: 30px;
+
+	input {
+		width: 100%;
+	}
+}
+
+.change-login-info-form-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+
+.change-login-info-container {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+	height: 100%;
+	justify-content: end;
+}

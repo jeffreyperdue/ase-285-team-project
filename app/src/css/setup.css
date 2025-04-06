@@ -48,6 +48,7 @@ ul {
 	background: var(--mint-green);
 }
 
+.change-login-info-page-container,
 .step1,
 .step2,
 .step3 {
@@ -67,6 +68,7 @@ ul {
 	justify-content: center;
 }
 
+.change-login-info-form,
 .step1-form,
 .step2-form,
 .step3-form {
@@ -84,6 +86,7 @@ ul {
 	column-gap: 20px;
 }
 
+.change-login-info-form,
 .step3-form {
 	display: flex;
 	flex-direction: column;
@@ -165,11 +168,13 @@ ul {
 }
 
 .allergen-label,
-.diet-label {
+.diet-label,
+.change-login-info-label {
 	display: flex;
 	width: fit-content;
 	align-items: center;
 	column-gap: 5px;
+	cursor: pointer;
 }
 
 .allergen-list {
