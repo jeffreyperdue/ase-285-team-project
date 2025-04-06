@@ -1,0 +1,36 @@
+/* src/css/MenuDashboard.css */
+
+.dashboard-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .button {
+    position: absolute;
+    top: 110px;
+    left: 55px;
+  }
+  
+  
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .dashboard-title {
+    color: #034C53;
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+  
+  .menu-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 1.5rem;
+  }
+  
+  
