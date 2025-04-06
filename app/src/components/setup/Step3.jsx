@@ -20,8 +20,8 @@ function Step3() {
 				className='step3-form'
 			>
 				<div className='question'>
-					You will add items using this page later. How do
-					you want it to look?
+					You will add menu items using this page later.
+					Which layout do you prefer?
 					<br />
 					(select the picture)
 				</div>

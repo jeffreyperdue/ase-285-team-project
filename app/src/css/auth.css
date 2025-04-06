@@ -66,8 +66,7 @@ a:hover {
 	width: 100%;
 }
 
-.auth-form,
-.step1-form {
+.auth-form {
 	width: 50%;
 	max-width: 325px;
 	padding: 45px;

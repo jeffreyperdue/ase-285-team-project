@@ -12,66 +12,118 @@ function Step1() {
 	// TO DO: make Step1 page same format as Step2 & Step3 pages
 	return (
 		<>
-			<div className='set-up-form-container'>
-				<form
-					name='setUpStep1Form'
-					className='step1-form'
-				>
-					<h2 className='title'>Set Up</h2>
+			<h1>Basic Business Information</h1>
 
-					<input
-						type='text'
-						name='businessName'
-						placeholder='Business Name'
-						required
-					/>
+			<form
+				name='setUpStep1Form'
+				className='step1-form'
+			>
+				<div className='business-info'>
+					<span className='question'>
+						Please enter your business name and website URL
+						(if applicable):
+					</span>
 
-					<input
-						type='text'
-						name='website'
-						placeholder='Web Profile URL'
-					/>
+					<div className='name-website-container'>
+						<div>
+							<input
+								type='text'
+								name='businessName'
+								placeholder='Business Name*'
+								maxLength={30}
+								required
+								className='business-name'
+							/>
+						</div>
 
-					<input
-						type='text'
-						name='address'
-						placeholder='Location Address'
-					/>
+						<div>
+							<input
+								type='text'
+								name='website'
+								placeholder='Web Profile URL'
+								className='website'
+							/>
+						</div>
+					</div>
 
-					<button
-						type='submit'
-						onClick={continueSetUp}
-						className='set-up-btn button'
-					>
-						Continue
-					</button>
-				</form>
-			</div>
+					<span className='question'>
+						Please enter your business's address:
+					</span>
 
-			<div className='considerations'>
-				<h1>Some Important Considerations:</h1>
+					<div className='address-container'>
+						<div>
+							<input
+								type='text'
+								name='streetAddress1'
+								placeholder='Street Address*'
+								className='street-address'
+							/>
+						</div>
 
-				<ul>
-					<li>
-						Information given in this section will be shown
-						publicly to the users (your customers). Please
-						only give info you want them to see.
-					</li>
-					<br />
-					<li>
-						If you are a mobile food truck service, please
-						put your most recent or upcoming location, or
-						the location of an event, in the “Location
-						Address” box. This location can be changed at
-						anytime via the “business info” settings.
-					</li>
-					<br />
-					<li>
-						Additional locations can be added later in the
-						business info settings.
-					</li>
-				</ul>
-			</div>
+						<div>
+							<input
+								type='text'
+								name='streetAddress2'
+								placeholder='Street Address 2'
+								className='street-address'
+							/>
+						</div>
+
+						<div className='city-state-zip'>
+							<input
+								type='text'
+								name='city'
+								placeholder='City*'
+								maxLength={50}
+								className='city'
+							/>
+
+							<input
+								type='text'
+								name='state'
+								placeholder='State*'
+								maxLength={2}
+								className='state'
+							/>
+
+							<input
+								type='number'
+								name='zipCode'
+								placeholder='ZIP*'
+								min='00500'
+								max='99999'
+								defaultValue=''
+								className='zip'
+							/>
+						</div>
+					</div>
+				</div>
+
+				<div className='notes'>
+					<h2>Please Note:</h2>
+
+					<ul>
+						<li>
+							Information given in this section will be
+							shown publicly to the users (your customers).
+							Please only give info you want them to see.
+						</li>
+						<br />
+						<li>
+							If you are a mobile food truck service, please
+							put your most recent or upcoming location, or
+							the location of an event, in the “Location
+							Address” box. This location can be changed at
+							anytime via the “business info” settings.
+						</li>
+						<br />
+						<li>
+							Additional locations can be added later in the
+							business info settings.
+						</li>
+					</ul>
+				</div>
+			</form>
 		</>
 	);
 }

@@ -41,7 +41,12 @@ function SetUp({ step }) {
 
 	const continueSetUp = (event) => {
 		event.preventDefault();
-		navigate('/step3');
+
+		if (step === 1) {
+			navigate('/step2');
+		} else if (step === 2) {
+			navigate('/step3');
+		}
 	};
 
 	const completeSetUp = (event) => {
@@ -54,13 +59,25 @@ function SetUp({ step }) {
 		navigate(`/step${step - 1}`);
 	};
 
-	// TO DO: add route to dashboard for case 3
+	// TO DO: add proper route to dashboard for case 3
 	const renderBtns = () => {
 		switch (step) {
+			case 1:
+				return (
+					<button
+						form=''
+						type='submit'
+						onClick={continueSetUp}
+						className='set-up-btn button'
+					>
+						Continue
+					</button>
+				);
 			case 2:
 				return (
 					<button
 						form=''
+						type='submit'
 						onClick={continueSetUp}
 						className='button'
 					>
@@ -71,6 +88,7 @@ function SetUp({ step }) {
 				return (
 					<button
 						form=''
+						type='submit'
 						onClick={completeSetUp}
 						className='button'
 					>
@@ -92,19 +110,20 @@ function SetUp({ step }) {
 
 			<div className={`step${step}`}>{renderStep()}</div>
 
-			{step !== 1 ? (
-				<div className='buttons'>
+			<div className='buttons'>
+				{step !== 1 ? (
 					<button
 						onClick={navigateBack}
-						className='button gray-btn'
+						className='button gray-btn back-btn'
 					>
 						Back
 					</button>
-					{renderBtns()}
-				</div>
-			) : (
-				<></>
-			)}
+				) : (
+					<></>
+				)}
+
+				{renderBtns()}
+			</div>
 		</div>
 	);
 }
