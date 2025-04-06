@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import MenuCard from './MenuCard';
 import '../../css/MenuDashboard.css';
-import deleteIcon from '../../icons/delete.png'; // Ensure this path is correct
+import deleteIcon from '../../icons/delete.png';
 
 function MenuDashboard() {
   const [menus, setMenus] = useState([
@@ -10,6 +10,8 @@ function MenuDashboard() {
       description: 'This menu will be shown to customers',
     },
   ]);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [menuToDelete, setMenuToDelete] = useState(null);
 
   const handleAddMenu = () => {
     const newMenu = {
@@ -17,6 +19,22 @@ function MenuDashboard() {
       description: 'New menu created',
     };
     setMenus([...menus, newMenu]);
+  };
+
+  const handleRequestDelete = (index) => {
+    setMenuToDelete(index);
+    setShowConfirm(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setMenus(menus.filter((_, i) => i !== menuToDelete));
+    setMenuToDelete(null);
+    setShowConfirm(false);
+  };
+
+  const handleCancelDelete = () => {
+    setShowConfirm(false);
+    setMenuToDelete(null);
   };
 
   return (
@@ -29,8 +47,13 @@ function MenuDashboard() {
       <div className="menu-grid">
         {menus.map((menu, index) => (
           <div className="menu-card-wrapper" key={index}>
-            {index !== 0 && ( // Show trash icon for all menus except index 0 (Master Menu)
-              <img src={deleteIcon} alt="Delete" className="delete-icon" />
+            {index !== 0 && (
+              <img
+                src={deleteIcon}
+                alt="Delete"
+                className="delete-icon"
+                onClick={() => handleRequestDelete(index)}
+              />
             )}
             <MenuCard
               title={menu.title}
@@ -40,6 +63,26 @@ function MenuDashboard() {
           </div>
         ))}
       </div>
+
+      {/* Confirmation Box */}
+      {showConfirm && (
+        <div className="confirm-delete-box">
+          <div className="confirm-content">
+            <p className="confirm-title">Confirm Deletion?</p>
+            <p className="confirm-message">
+              You are deleting <strong>{menus[menuToDelete]?.title}</strong>.
+            </p>
+          </div>
+          <div className="delete-buttons-box">
+            <button className="delete-cancel" onClick={handleCancelDelete}>
+              No, do not Delete
+            </button>
+            <button className="delete-confirm" onClick={handleConfirmDelete}>
+              Yes, Delete
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
