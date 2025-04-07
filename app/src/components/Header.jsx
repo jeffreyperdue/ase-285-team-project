@@ -1,30 +1,17 @@
-import { useNavigate } from 'react-router-dom';
 import '../css/styles.css';
+import ProfileIcon from './ProfileIcon';
+import '../css/Header.css';
 
 function Header() {
-	const navigate = useNavigate();
-
-	const toAdmin = (event) => {
-		event.preventDefault();
-		navigate('/admin');
-	};
-
 	return (
-		<div
-			className='header'
-			style={{
-				display: 'flex',
-				justifyContent: 'space-between',
-			}}
-		>
-			<span className='header-title'>NomNom Safe</span>
-			<button
-				onClick={toAdmin}
-				type='button'
-			>
-				Manage Access
-			</button>
-		</div>
+		<header className='header'>
+			<div className='header-left'>
+				<h1 className='header-title'>NomNomSafe</h1>
+			</div>
+			<div className='header-right'>
+				<ProfileIcon />
+			</div>
+		</header>
 	);
 }
 
