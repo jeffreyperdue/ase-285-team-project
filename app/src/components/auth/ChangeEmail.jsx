@@ -3,19 +3,21 @@ function ChangeEmail() {
 		<>
 			<div>
 				<input
-					type='text'
+					type='email'
 					name='currentEmail'
 					placeholder='Current Email*'
 					required
+					maxLength={50}
 				/>
 			</div>
 
 			<div>
 				<input
-					type='text'
+					type='email'
 					name='newEmail'
 					placeholder='New Email*'
 					required
+					maxLength={50}
 				/>
 			</div>
 		</>

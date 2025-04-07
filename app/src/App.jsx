@@ -7,13 +7,14 @@ import {
 	Route,
 	Routes,
 } from 'react-router-dom';
+import Admin from './components/admin/Admin';
 
 function App() {
 	return (
 		<>
-			<Header />
-
 			<Router>
+				<Header />
+
 				<div className='content'>
 					<Routes>
 						<Route
@@ -37,6 +38,11 @@ function App() {
 						<Route
 							path='/changeLogin'
 							element={<ChangeLoginInfo />}
+						/>
+
+						<Route
+							path='/admin'
+							element={<Admin />}
 						/>
 					</Routes>
 				</div>

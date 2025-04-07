@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import '../../css/auth.css';
-import GeneratePasswordField from './Password';
+import GetPasswordField from './Password';
 import PropTypes from 'prop-types';
 
 function GetAuthForm({ formName }) {
@@ -30,7 +30,7 @@ function GetAuthForm({ formName }) {
 				required
 			/>
 
-			<GeneratePasswordField
+			<GetPasswordField
 				name='password'
 				placeholder='Password'
 			/>
@@ -40,7 +40,7 @@ function GetAuthForm({ formName }) {
             Log In button for Sign In form */}
 			{formName === 'signUpForm' ? (
 				<>
-					<GeneratePasswordField
+					<GetPasswordField
 						name='confirmPassword'
 						placeholder='Confirm Password'
 					/>

@@ -1,15 +1,6 @@
 import '../../css/setup.css';
-import { useNavigate } from 'react-router-dom';
 
 function Step1() {
-	const navigate = useNavigate();
-
-	const continueSetUp = (event) => {
-		event.preventDefault();
-		navigate('/step2');
-	};
-
-	// TO DO: make Step1 page same format as Step2 & Step3 pages
 	return (
 		<>
 			<h1>Basic Business Information</h1>

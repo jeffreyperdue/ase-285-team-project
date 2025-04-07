@@ -1,24 +1,24 @@
-import GeneratePasswordField from './Password';
+import GetPasswordField from './Password';
 
 function ChangePassword() {
 	return (
 		<>
 			<div>
-				<GeneratePasswordField
+				<GetPasswordField
 					name='currentPassword'
 					placeholder='Current Password*'
 				/>
 			</div>
 
 			<div>
-				<GeneratePasswordField
+				<GetPasswordField
 					name='newPassword'
 					placeholder='New Password*'
 				/>
 			</div>
 
 			<div>
-				<GeneratePasswordField
+				<GetPasswordField
 					name='confirmNewPassword'
 					placeholder='Confirm New Password*'
 				/>

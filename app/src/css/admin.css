@@ -1,0 +1,51 @@
+.admin-container {
+	height: 100%;
+	width: 100%;
+	margin: 0px 40px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.user-maintenance-container {
+	display: grid;
+	grid-template-columns: 340px auto;
+	gap: 100px;
+}
+
+.add-user-container {
+	width: 340px;
+	height: fit-content;
+	display: grid;
+	gap: 10px;
+}
+
+.admin-table-container {
+	align-self: end;
+}
+
+.email {
+	flex: 1 0 300px;
+}
+
+.status {
+	flex: 1 0 100px;
+}
+
+.change-status,
+.remove-access {
+	flex: 0 0 230px;
+	justify-content: center;
+}
+
+.promote-btn {
+	background-color: var(--mint-green);
+}
+
+.demote-btn {
+	background-color: var(--salmon);
+}
+
+.remove-access-btn {
+	background-color: var(--delete-red);
+}
