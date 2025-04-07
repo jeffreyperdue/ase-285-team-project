@@ -6,109 +6,130 @@ import { useNavigate } from 'react-router-dom';
 import '../../css/setup.css';
 
 function SetUp({ step }) {
-  const navigate = useNavigate();
+	const navigate = useNavigate();
 
-  const getProgressBarClass = () => {
-    switch (step) {
-      case 1:
-        return "one-third";
-      case 2:
-        return "two-thirds";
-      case 3:
-        return "three-thirds";
-      default:
-        return "";
-    }
-  }
-  
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return <Step1 />;
-      case 2:
-        return <Step2 />;
-      case 3:
-        return <Step3 />;
-      default:
-        return (
-          <div>
-            There was an error signing you up. Please <a href="/">try again</a>.
-          </div>
-        );
-    }
-  }
+	const getProgressBarClass = () => {
+		switch (step) {
+			case 1:
+				return 'one-third';
+			case 2:
+				return 'two-thirds';
+			case 3:
+				return 'three-thirds';
+			default:
+				return '';
+		}
+	};
 
-  const continueSetUp = (event) => {
-    event.preventDefault();
-    navigate('/step3');
-  }
+	const renderStep = () => {
+		switch (step) {
+			case 1:
+				return <Step1 />;
+			case 2:
+				return <Step2 />;
+			case 3:
+				return <Step3 />;
+			default:
+				return (
+					<div>
+						There was an error signing you up. Please{' '}
+						<a href='/'>try again</a>.
+					</div>
+				);
+		}
+	};
 
-  const completeSetUp = (event) => {
-    event.preventDefault();
-    navigate('/dashboard');
-  }
+	const continueSetUp = (event) => {
+		event.preventDefault();
 
-  const navigateBack = (event) => {
-    event.preventDefault();
-    navigate(`/step${ step - 1 }`);
-  }
+		if (step === 1) {
+			navigate('/step2');
+		} else if (step === 2) {
+			navigate('/step3');
+		}
+	};
 
-  // TO DO: add route to dashboard for case 3
-  const renderBtns = () => {
-    switch (step) {
-      case 2:
-        return (
-          <button
-            form=""
-            onClick={ continueSetUp }
-            className="button"
-          >
-            Continue
-          </button>
-        );
-      case 3:
-        return (
-          <button
-            form=""
-            onClick={ completeSetUp }
-            className="button"
-          >
-            Go To Dashboard
-          </button>
-        );
-      default:
-        return <></>;
-    }
-  }
+	const completeSetUp = (event) => {
+		event.preventDefault();
+		navigate('/dashboard');
+	};
 
-  return (
-    <div className="set-up-container">
-      <div className={ `progress-bar ${ getProgressBarClass()}`}>
-        Step { step }/3
-      </div>
+	const navigateBack = (event) => {
+		event.preventDefault();
+		navigate(`/step${step - 1}`);
+	};
 
-      <div className={ `step${ step }`}>
-        { renderStep() }
-      </div>
+	// TO DO: add proper route to dashboard for case 3
+	const renderBtns = () => {
+		switch (step) {
+			case 1:
+				return (
+					<button
+						form=''
+						type='submit'
+						onClick={continueSetUp}
+						className='set-up-btn button'
+					>
+						Continue
+					</button>
+				);
+			case 2:
+				return (
+					<button
+						form=''
+						type='submit'
+						onClick={continueSetUp}
+						className='button'
+					>
+						Continue
+					</button>
+				);
+			case 3:
+				return (
+					<button
+						form=''
+						type='submit'
+						onClick={completeSetUp}
+						className='button'
+					>
+						Go To Dashboard
+					</button>
+				);
+			default:
+				return <></>;
+		}
+	};
 
-      { step !== 1 ? (
-        <div className="buttons">
-          <button
-            onClick={ navigateBack }
-            className="button gray-btn"
-          >
-            Back
-          </button>
-          { renderBtns()}
-        </div>
-      ) : <></>
-      }
-    </div>
-  );
-};
+	return (
+		<div className='set-up-container'>
+			<div
+				className={`progress-bar ${getProgressBarClass()}`}
+			>
+				Step {step}/3
+			</div>
+
+			<div className={`step${step}`}>{renderStep()}</div>
+
+			<div className='buttons'>
+				{step !== 1 ? (
+					<button
+						onClick={navigateBack}
+						className='button gray-btn back-btn'
+					>
+						Back
+					</button>
+				) : (
+					<></>
+				)}
+
+				{renderBtns()}
+			</div>
+		</div>
+	);
+}
 
 SetUp.propTypes = {
-  step: PropTypes.number.isRequired,
+	step: PropTypes.number.isRequired,
 };
 
 export default SetUp;
