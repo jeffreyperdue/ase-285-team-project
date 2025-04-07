@@ -1,10 +1,16 @@
-.admin-container {
-	height: 100%;
-	width: 100%;
-	margin: 0px 40px;
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
+.admin {
+	&-container {
+		height: 100%;
+		width: 100%;
+		margin: 0px 40px;
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+
+		&-table-container {
+			align-self: end;
+		}
+	}
 }
 
 .user-maintenance-container {
@@ -18,10 +24,6 @@
 	height: fit-content;
 	display: grid;
 	gap: 10px;
-}
-
-.admin-table-container {
-	align-self: end;
 }
 
 .email {
