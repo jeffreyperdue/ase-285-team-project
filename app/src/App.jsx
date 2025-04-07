@@ -1,6 +1,8 @@
 import Header from './components/Header';
 import SignInUp from './components/auth/SignInUp';
 import SetUp from './components/setup/SetUp';
+import MenuDashboard from './components/menu/MenuDashboard';
+import CreateRestaurant from './components/restaurant/CreateRestaurant';
 import ChangeLoginInfo from './components/auth/ChangeLoginInfo';
 import {
 	BrowserRouter as Router,
@@ -12,7 +14,6 @@ function App() {
 	return (
 		<>
 			<Header />
-
 			<Router>
 				<div className='content'>
 					<Routes>
@@ -38,6 +39,8 @@ function App() {
 							path='/changeLogin'
 							element={<ChangeLoginInfo />}
 						/>
+            <Route path="/dashboard" element={<MenuDashboard />} />
+            <Route path="/create-restaurant" element={<CreateRestaurant />} />
 					</Routes>
 				</div>
 			</Router>
