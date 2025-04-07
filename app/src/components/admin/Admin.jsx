@@ -1,4 +1,4 @@
-import '../../css/admin.css';
+import '../../css/admin.scss';
 import AdminTable from './AdminTable';
 import { useNavigate } from 'react-router-dom';
 
