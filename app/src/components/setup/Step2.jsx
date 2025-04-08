@@ -1,4 +1,4 @@
-import '../../css/setup.css';
+import '../../css/setup.scss';
 import GenerateAllergenList from '../auth/AllergenList';
 import GenerateDietList from '../auth/DietList';
 

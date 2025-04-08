@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import '../../css/auth.css';
+import '../../css/auth.scss';
 import GetPasswordField from './Password';
 import PropTypes from 'prop-types';
 

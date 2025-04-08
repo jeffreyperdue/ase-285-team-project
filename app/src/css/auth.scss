@@ -1,0 +1,161 @@
+/* Elements -------------------------------------------*/
+input {
+	height: 30px;
+	flex: 1 1 auto;
+	border: 0px;
+}
+
+input:not(.password),
+div.password-container {
+	// border-bottom: 1.5px solid rgba(0, 0, 0, 0.4);
+	// box-sizing: content-box;
+}
+
+input:focus:not(.password),
+div.password-container:focus-within {
+	// outline: none;
+	// border-bottom: 1.5px solid var(--hard-black);
+}
+
+a {
+	color: var(--dark-turq);
+	text-decoration: none;
+	font-weight: bold;
+
+	&:visited {
+		color: var(--dark-turq);
+	}
+
+	&:hover {
+		text-decoration: underline;
+		color: var(--turq) !important;
+	}
+}
+
+/* Classes --------------------------------------------*/
+.sign-up-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-areas: 'sign-up welcome';
+	width: 100%;
+}
+
+.sign-in-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.welcome {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1 1 auto;
+	width: 1fr;
+	color: var(--dark-turq);
+}
+
+.sign {
+	&-in {
+		width: 100%;
+
+		&-btn {
+			background-color: var(--salmon);
+		}
+	}
+
+	&-in,
+	&-up {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		flex: 1 1 auto;
+		width: 1fr;
+	}
+}
+
+.auth-form {
+	width: 50%;
+	max-width: 325px;
+	padding: 45px;
+	border: var(--border);
+	border-radius: var(--corners-round);
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+}
+
+.title {
+	text-align: center;
+	margin-bottom: 75px;
+	color: var(--dark-turq);
+}
+
+.change-form {
+	text-align: center;
+	padding: 15px;
+}
+
+.password {
+	// outline: none;
+
+	&-container {
+		// border-bottom: 1 solid rgba(0, 0, 0, 0.4);
+		display: flex;
+		flex: 1 1 auto;
+		align-items: center;
+	}
+
+	&-toggle-icon {
+		position: absolute;
+		top: 50%;
+		right: 10px;
+		transform: translateY(-50%);
+		cursor: pointer;
+
+		i {
+			font-size: 18px;
+			line-height: 1;
+			color: #333;
+			transition: color 0.3s ease-in-out;
+			margin-bottom: 20px;
+
+			&:hover {
+				color: #000;
+			}
+		}
+	}
+}
+
+.eye-icon {
+	cursor: pointer;
+}
+
+.change-login-info {
+	&-container {
+		display: flex;
+		flex-direction: column;
+		gap: 30px;
+		height: 100%;
+		justify-content: end;
+	}
+
+	&-form {
+		height: 100%;
+		max-width: 340px;
+		gap: 30px;
+
+		input {
+			width: 100%;
+		}
+
+		&-container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+		}
+	}
+}
