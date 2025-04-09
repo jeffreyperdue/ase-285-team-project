@@ -1,30 +1,34 @@
 import { useState, changeState } from 'react';
-import '.app/src/css/styles.css'
-import Checkbox from './assets/Checkbox.jsx';
+import '../../css/styles.css'
+import AllergenList from '../auth/AllergenList';
 
 const AddMenuItemForm = () => {
-    const [inputs, setInputs] = useState({});
-    const [selectedIds, setSelectedIds] = useState({});
-    const selectedAllergens = [];
+    const [inputs, setInputs] = useState({
+        name: '',
+        ingredients: '',
+        description: ''
+    });
+    const [selectedAllergens, setSelectedAllergens] = useState([]);
 
-    const handleCheckboxChange = (event) => {
-        const checkedId = event.target.value;
-        if (event.target.selected){
-            setSelectedId([...selectedIds, checkedId]);
-            selectedAllergens.push(selectedIds);
-            print(selectedAllergens);
-        }else{
-            setSelectedId(selectedIds.filter(id=>id !== checkedId))
+    useEffect(() => {
+        if (onAllergenChange) {
+            onAllergenChange(selectedAllergens);
         }
-    }
+    }, [selectedAllergens, onAllergenChange]);
 
-    // For testing the dynamically created check list.
-    const [allergens, setAllergens] = useState([
-        { allergenID: "1", name:"Peanut"},
-        { allergenID: "2", name:"Gluten"},
-        { allergenID: "3", name: "Eggs"},
-        { allergenID: "4", name: "Dairy"},
-    ]);
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setInputs(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleAllergenChange = (e) => {
+        const { value, checked } = e.target;
+        if (checked) {
+            setSelectedAllergens(prev => [...prev, value]);
+        } else {
+            setSelectedAllergens(prev => prev.filter(allergen => allergen !== value));
+        }
+    };
 
     return (
         <div className="flex-container">
@@ -47,20 +51,17 @@ const AddMenuItemForm = () => {
                 <div className="right-side">
                     <h3>This Item Contains the Following Allergens:</h3>
                     <div className="display-allergens">
-                        <p>A problem to communicate.</p>
+                        {selectedAllergens.length > 0 ? (
+                            selectedAllergens.join(', ')
+                        ) : (
+                            <p>No allergens selected</p>
+                        )}
                     </div>
                     <div className="allergen-add">
-                        {allergens.map((allergen) => (
-                            <div>
-                                <input 
-                                type="checkbox"
-                                id={allergen.allergenID}
-                                className="allergen-checkbox" 
-                                key={allergen.allergenID}
-                                />
-                                <label for={allergen.allergenID}>{ allergen.name}</label>
-                            </div>
-                        ))}
+                            <AllergenList 
+                                selectedAllergens={selectedAllergens}
+                                onChange={handleAllergenChange}
+                            />
                     </div>
                 </div>
                 <button>+ Add Another</button>
