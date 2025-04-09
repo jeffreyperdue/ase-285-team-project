@@ -1,14 +1,16 @@
 .restaurant-container {
 	display: flex;
 	flex-direction: column;
-	height: 100vh;
+	/* height: 100vh; */
 	padding: 20px;
 	box-sizing: border-box;
+	width: 100%;
+	margin: 0px 50px;
 }
 
 .top-section {
 	display: flex;
-	flex: 0 0 70%;
+	flex: 1 0 70%;
 	gap: 100px;
 }
 
@@ -28,7 +30,7 @@
 .form-columns {
 	display: flex;
 	justify-content: space-between;
-	width: 100%;
+	/* width: 100%; */
 	gap: 350px;
 	height: 25px;
 }
@@ -52,7 +54,7 @@ input[type='email'] {
 }
 
 .save-section {
-	flex: 0 0 20%;
+	/* flex: 0 0 20%; */
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;

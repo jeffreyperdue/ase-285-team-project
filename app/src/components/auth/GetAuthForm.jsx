@@ -13,7 +13,7 @@ function GetAuthForm({ formName }) {
 
 	const logIn = (event) => {
 		event.preventDefault();
-		navigate('/logIn');
+		navigate('/dashboard');
 	};
 
 	return (
