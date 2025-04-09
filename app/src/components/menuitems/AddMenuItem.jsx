@@ -1,5 +1,5 @@
 import { useState, changeState } from 'react';
-import '.app/src/css/styles.css'
+import '../../css/styles.css'
 import Checkbox from './assets/Checkbox.jsx';
 
 const AddMenuItemForm = () => {
@@ -12,7 +12,6 @@ const AddMenuItemForm = () => {
         if (event.target.selected){
             setSelectedId([...selectedIds, checkedId]);
             selectedAllergens.push(selectedIds);
-            print(selectedAllergens);
         }else{
             setSelectedId(selectedIds.filter(id=>id !== checkedId))
         }
