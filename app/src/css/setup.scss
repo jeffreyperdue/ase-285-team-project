@@ -145,13 +145,11 @@ ul {
 }
 
 .state {
-	width: 40px;
-	flex: 0 0 40px;
+	flex: 0 0 60px;
 }
 
 .zip {
-	width: 50px;
-	flex: 0 0 50px;
+	flex: 0 0 80px;
 
 	&::-webkit-inner-spin-button,
 	&::-webkit-outer-spin-button {
