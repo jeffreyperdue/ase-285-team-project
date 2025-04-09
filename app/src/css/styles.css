@@ -185,3 +185,56 @@ input[type='checkbox'].checkbox:checked {
 .allergen {
 	background-color: var(--salmon);
 }
+
+.left-side {
+	float: left;
+	padding: 15px;
+  }
+  
+  .displayAllergens{
+	align-items:center;
+	height: 20px;
+	width: 50%;
+	margin: 5px;
+	border-style: solid;
+	border-color: #d9d9d9;
+	border-width: 1px;
+	border-radius: 5px;
+  }
+
+  .allergen-add{
+	border-style: solid;
+	border-color: black;
+	border-width: 1px;
+	border-radius: 5px;
+	padding: 10px
+  }
+  
+  .right-side{
+	float: right;
+	padding: 15px;
+  }
+
+  /* Panels */
+.collapsible-panel {
+	border: 1px solid #d9d9d9;
+	margin: 10px 0;
+	border-radius: 4px;
+  }
+  
+  .panel-header {
+	cursor: pointer;
+	padding: 10px;
+	font-weight: bold;
+  }
+  
+  .panel-body {
+	padding: 10px;
+  }
+  
+  .panel-footer {
+	padding: 10px;
+	display: flex;
+	justify-content: space-between;
+  }
+  

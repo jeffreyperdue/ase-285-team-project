@@ -1,5 +1,5 @@
 import { useState, changeState } from 'react';
-import '.app/src/css/styles.css'
+import '../../css/styles.css'
 
 const MenuItemSearch = () => {
         // For testing the dynamically created check list.
