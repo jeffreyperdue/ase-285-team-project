@@ -29,6 +29,7 @@ function GetAuthForm({ formName }) {
 					name='email'
 					placeholder='Email'
 					required
+					className='email'
 				/>
 			</div>
 

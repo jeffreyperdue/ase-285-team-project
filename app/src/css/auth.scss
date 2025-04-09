@@ -3,6 +3,19 @@ input {
 	height: 30px;
 	flex: 1 1 auto;
 	border: 0px;
+
+	&[type='email'] {
+		&.email {
+			width: 100% !important;
+		}
+
+		&.current,
+		&.new {
+			&-email {
+				width: 100%;
+			}
+		}
+	}
 }
 
 a {
