@@ -8,6 +8,7 @@ import '../css/ProfileIcon.css';
 
 export default function ProfileIcon() {
 	const [isOpen, setIsOpen] = useState(false);
+	const [confirmation, setConfirmation] = useState(false);
 
 	const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -25,52 +26,75 @@ export default function ProfileIcon() {
 
 	const logout = () => {
 		setIsOpen(false);
+		setConfirmation(true);
+	};
+
+	const toLogin = (event) => {
+		event.preventDefault();
+		setConfirmation(false);
 		navigate('/');
 	};
 
 	return (
-		<div className='profile-icon-container'>
-			<img
-				src={avatar}
-				alt='User Profile'
-				className='avatar-icon'
-				onClick={toggleDropdown}
-			/>
-
-			{isOpen && (
-				<div className='dropdown-menu'>
-					<div
-						onClick={toEditLogin}
-						className='dropdown-item'
+		<>
+			{confirmation ? (
+				<div className='confirmation-container'>
+					You have been logged out successfully.
+					<button
+						type='button'
+						onClick={toLogin}
+						className='button'
 					>
-						<img
-							src={editLoginIcon}
-							alt='Edit Login'
-						/>
-						<span>Edit Login Info</span>
-					</div>
-					<div
-						onClick={toEditBusinessInfo}
-						className='dropdown-item'
-					>
-						<img
-							src={editBusinessIcon}
-							alt='Edit Business'
-						/>
-						<span>Edit Business Info</span>
-					</div>
-					<div
-						onClick={logout}
-						className='dropdown-item'
-					>
-						<img
-							src={logoutIcon}
-							alt='Logout'
-						/>
-						<span>Log Out</span>
-					</div>
+						Ok
+					</button>
 				</div>
+			) : (
+				<></>
 			)}
-		</div>
+
+			<div className='profile-icon-container'>
+				<img
+					src={avatar}
+					alt='User Profile'
+					className='avatar-icon'
+					onClick={toggleDropdown}
+				/>
+
+				{isOpen && (
+					<div className='dropdown-menu'>
+						<div
+							onClick={toEditLogin}
+							className='dropdown-item'
+						>
+							<img
+								src={editLoginIcon}
+								alt='Edit Login'
+							/>
+							<span>Edit Login Info</span>
+						</div>
+						<div
+							onClick={toEditBusinessInfo}
+							className='dropdown-item'
+						>
+							<img
+								src={editBusinessIcon}
+								alt='Edit Business'
+							/>
+							<span>Edit Business Info</span>
+						</div>
+						<div
+							onClick={logout}
+							className='dropdown-item'
+						>
+							<img
+								src={logoutIcon}
+								alt='Logout'
+							/>
+							<span>Log Out</span>
+						</div>
+					</div>
+				)}
+			</div>
+		</>
 	);
 }
