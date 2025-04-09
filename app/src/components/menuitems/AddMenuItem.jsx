@@ -3,27 +3,35 @@ import '../../css/styles.css'
 import Checkbox from './assets/Checkbox.jsx';
 
 const AddMenuItemForm = () => {
-    const [inputs, setInputs] = useState({});
-    const [selectedIds, setSelectedIds] = useState({});
-    const selectedAllergens = [];
+    const [inputs, setInputs] = useState({
+        itemName: '',
+        ingredients: '',
+        description: ''
+    });
+    const [selectedIds, setSelectedIds] = useState([]);
 
+    // Handling CheckboxChagnes
     const handleCheckboxChange = (event) => {
-        const checkedId = event.target.value;
-        if (event.target.selected){
-            setSelectedId([...selectedIds, checkedId]);
-            selectedAllergens.push(selectedIds);
-        }else{
-            setSelectedId(selectedIds.filter(id=>id !== checkedId))
+        const id = event.target.value;
+        if (event.target.checked) {
+          setSelectedIds(prev => [...prev, id]);
+        } else {
+          setSelectedIds(prev => prev.filter(existingId => existingId !== id));
         }
-    }
+      };
 
     // For testing the dynamically created check list.
-    const [allergens, setAllergens] = useState([
+    const [allergens] = useState([
         { allergenID: "1", name:"Peanut"},
         { allergenID: "2", name:"Gluten"},
         { allergenID: "3", name: "Eggs"},
         { allergenID: "4", name: "Dairy"},
     ]);
+
+    // Remove function for tags.
+    const removeAllergen = (id) => {
+        setSelectedIds(prev => prev.filter(existingId => existingId !== id));
+      };
 
     return (
         <div className="flex-container">
@@ -31,8 +39,9 @@ const AddMenuItemForm = () => {
                 <div className="left-side">
                     <div name="nameInput">
                         <h3 className="title">Name:</h3>
-                        <input type="text" id="itemName" cols="50"
-                        name="itemName"/>
+                        <input type="text" id="itemName" 
+                        name="itemName"
+                        style={{ width: '100%' }} />
                     </div>
                     <div name="ingredientsInput">
                         <h3 className="title">Ingredients</h3>
@@ -46,8 +55,17 @@ const AddMenuItemForm = () => {
                 <div className="right-side">
                     <h3>This Item Contains the Following Allergens:</h3>
                     <div className="display-allergens">
-                        <p>A problem to communicate.</p>
+                    {selectedIds.map(id => {
+                        const allergen = allergens.find(a => a.allergenID === id);
+                        return (
+                        <div key={id} className="tag">
+                            <p>{allergen?.name}</p>
+                            <button onClick={() => removeAllergen(id)}>×</button>
+                        </div>
+                        );
+                    })}
                     </div>
+                    <p>Most Common Allergens</p>
                     <div className="allergen-add">
                         {allergens.map((allergen) => (
                             <div>
@@ -56,15 +74,20 @@ const AddMenuItemForm = () => {
                                 id={allergen.allergenID}
                                 className="allergen-checkbox" 
                                 key={allergen.allergenID}
+                                checked={selectedIds.includes(allergen.allergenID)}
+                                onChange={handleCheckboxChange}
                                 />
-                                <label for={allergen.allergenID}>{ allergen.name}</label>
+                                <label htmlFor={allergen.allergenID}>{ allergen.name}</label>
                             </div>
                         ))}
                     </div>
                 </div>
-                <button>+ Add Another</button>
-                <button>Save</button>
+                <div>
+                    <button className="button">Save</button>
+                </div>
             </form>
+            
+        <button className="button">+ Add Another</button>
         </div>
     )
 }
