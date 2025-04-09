@@ -1,3 +1,9 @@
+/* Elements -------------------------------------------*/
+input[type='email'].user-email {
+	width: 100%;
+}
+
+/* Classes --------------------------------------------*/
 .admin {
 	&-container {
 		height: 100%;
@@ -13,10 +19,16 @@
 	}
 }
 
-.user-maintenance-container {
-	display: grid;
-	grid-template-columns: 340px auto;
-	gap: 100px;
+.user {
+	&-maintenance-container {
+		display: grid;
+		grid-template-columns: 340px auto;
+		gap: 100px;
+	}
+
+	&-email {
+		width: 100%;
+	}
 }
 
 .add-user-container {
@@ -28,6 +40,7 @@
 
 .email {
 	flex: 1 0 300px;
+	width: 100% !important;
 }
 
 .status {

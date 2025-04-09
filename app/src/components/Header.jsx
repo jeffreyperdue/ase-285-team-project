@@ -1,6 +1,6 @@
 import '../css/styles.css';
 import ProfileIcon from './ProfileIcon';
-import '../css/Header.css';
+import '../css/Header.scss';
 
 function Header() {
 	return (

@@ -1,4 +1,4 @@
-import '../../css/setup.css';
+import '../../css/setup.scss';
 import menuItemLayoutOption1 from '../../temp/menu-placeholder-right.jpg';
 import menuItemLayoutOption2 from '../../temp/menu-placeholder-left.jpg';
 import { useState } from 'react';

@@ -1,0 +1,19 @@
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: var(--turq);
+	color: var(--hard-white);
+	padding: 15px 25px;
+
+	&-title {
+		font-size: 20px;
+		color: var(--hard-white);
+		margin: 0;
+	}
+
+	&-right {
+		display: flex;
+		align-items: center;
+	}
+}

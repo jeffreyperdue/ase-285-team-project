@@ -1,4 +1,4 @@
-import '../../css/setup.css';
+import '../../css/setup.scss';
 
 function Step1() {
 	return (
