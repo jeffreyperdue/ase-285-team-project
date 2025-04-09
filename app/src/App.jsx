@@ -56,14 +56,6 @@ function App() {
 							path='/create-restaurant'
 							element={<CreateRestaurant />}
 						/>
-						<Route
-							path='/test'
-							element={<FilterPanel />}
-						/>
-						<Route
-							path='/test2'
-							element={<AddMenuItemForm />}
-						/>
 					</Routes>
 				</div>
 			</Router>

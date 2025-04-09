@@ -124,7 +124,7 @@
 }
 
 .search-button {
-    background-color: #4CAF50;
+    background-color: #3eb489;
     color: white;
 }
 
@@ -134,7 +134,7 @@
 }
 
 .search-button:hover {
-    background-color: #45a049;
+    background-color: #3eb489;
 }
 
 .cancel-button:hover {

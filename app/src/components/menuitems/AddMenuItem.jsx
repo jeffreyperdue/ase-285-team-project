@@ -19,14 +19,6 @@ const AddMenuItemForm = () => {
         }
     }
 
-    // For testing the dynamically created check list.
-    const [allergens, setAllergens] = useState([
-        { allergenID: "1", name:"Peanut"},
-        { allergenID: "2", name:"Gluten"},
-        { allergenID: "3", name: "Eggs"},
-        { allergenID: "4", name: "Dairy"},
-    ]);
-
     return (
         <div className="flex-container">
             <form>
