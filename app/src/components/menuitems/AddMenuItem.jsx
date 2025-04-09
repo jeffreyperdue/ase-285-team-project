@@ -1,6 +1,7 @@
 import { useState, changeState } from 'react';
-import '.app/src/css/styles.css'
-import Checkbox from './assets/Checkbox.jsx';
+import '../../css/styles.css'
+//import Checkbox from './assets/Checkbox.jsx';
+import AllergenList from '../auth/AllergenList';
 
 const AddMenuItemForm = () => {
     const [inputs, setInputs] = useState({});
@@ -10,21 +11,13 @@ const AddMenuItemForm = () => {
     const handleCheckboxChange = (event) => {
         const checkedId = event.target.value;
         if (event.target.selected){
-            setSelectedId([...selectedIds, checkedId]);
+            setSelectedIds([...selectedIds, checkedId]);
             selectedAllergens.push(selectedIds);
-            print(selectedAllergens);
+            console.log(selectedAllergens);
         }else{
-            setSelectedId(selectedIds.filter(id=>id !== checkedId))
+            setSelectedIds(selectedIds.filter(id=>id !== checkedId))
         }
     }
-
-    // For testing the dynamically created check list.
-    const [allergens, setAllergens] = useState([
-        { allergenID: "1", name:"Peanut"},
-        { allergenID: "2", name:"Gluten"},
-        { allergenID: "3", name: "Eggs"},
-        { allergenID: "4", name: "Dairy"},
-    ]);
 
     return (
         <div className="flex-container">
@@ -47,20 +40,16 @@ const AddMenuItemForm = () => {
                 <div className="right-side">
                     <h3>This Item Contains the Following Allergens:</h3>
                     <div className="display-allergens">
-                        <p>A problem to communicate.</p>
+                        {selectedAllergens.length > 0 ? (
+                            selectedAllergens.join(', ')
+                        ) : (
+                            <p>No allergens selected</p>
+                        )}
                     </div>
                     <div className="allergen-add">
-                        {allergens.map((allergen) => (
-                            <div>
-                                <input 
-                                type="checkbox"
-                                id={allergen.allergenID}
-                                className="allergen-checkbox" 
-                                key={allergen.allergenID}
-                                />
-                                <label for={allergen.allergenID}>{ allergen.name}</label>
-                            </div>
-                        ))}
+                        <AllergenList 
+                            selectedAllergens={selectedAllergens}
+                        />
                     </div>
                 </div>
                 <button>+ Add Another</button>
