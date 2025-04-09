@@ -236,7 +236,7 @@ input[type='checkbox'].checkbox:checked {
 
   /* Panels */
 .collapsible-panel {
-	border: 1px solid #d9d9d9;
+	border: 1px solid #aeaeae;
 	margin: 10px 0;
 	border-radius: 4px;
   }
