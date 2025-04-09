@@ -205,6 +205,7 @@ input[type='checkbox'].checkbox:checked {
 	border-color: black;
 	border-width: 1px;
 	border-radius: 5px;
+	padding: 10px
   }
   
   .right-side{
