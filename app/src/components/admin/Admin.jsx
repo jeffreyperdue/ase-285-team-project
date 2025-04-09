@@ -22,14 +22,16 @@ function Admin() {
 				>
 					<div class='question'>Add a user:</div>
 
-					<input
-						type='email'
-						name='userEmail'
-						placeholder='User Email*'
-						required
-						maxLength={50}
-						className='user-email'
-					/>
+					<div>
+						<input
+							type='email'
+							name='userEmail'
+							placeholder='User Email*'
+							required
+							maxLength={50}
+							className='user-email'
+						/>
+					</div>
 
 					<button
 						type='submit'

@@ -23,12 +23,14 @@ function GetAuthForm({ formName }) {
 		>
 			<h2 className='title'>NomNom Safe</h2>
 
-			<input
-				type='text'
-				name='email'
-				placeholder='Email'
-				required
-			/>
+			<div>
+				<input
+					type='text'
+					name='email'
+					placeholder='Email'
+					required
+				/>
+			</div>
 
 			<GetPasswordField
 				name='password'

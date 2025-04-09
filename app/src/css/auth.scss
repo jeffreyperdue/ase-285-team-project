@@ -5,18 +5,6 @@ input {
 	border: 0px;
 }
 
-input:not(.password),
-div.password-container {
-	// border-bottom: 1.5px solid rgba(0, 0, 0, 0.4);
-	// box-sizing: content-box;
-}
-
-input:focus:not(.password),
-div.password-container:focus-within {
-	// outline: none;
-	// border-bottom: 1.5px solid var(--hard-black);
-}
-
 a {
 	color: var(--dark-turq);
 	text-decoration: none;
@@ -99,13 +87,21 @@ a {
 }
 
 .password {
-	// outline: none;
+	outline: none;
+	border-radius: var(--corners-round);
 
 	&-container {
-		// border-bottom: 1 solid rgba(0, 0, 0, 0.4);
 		display: flex;
 		flex: 1 1 auto;
 		align-items: center;
+		padding: 0px 10px;
+		font-size: 14px;
+		border: 1px solid #ccc;
+		border-radius: var(--corners-round);
+
+		&:focus-within {
+			border: 2px solid var(--hard-black);
+		}
 	}
 
 	&-toggle-icon {
