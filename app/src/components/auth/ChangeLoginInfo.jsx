@@ -1,11 +1,12 @@
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import ChangeEmail from './ChangeEmail';
 import ChangePassword from './ChangePassword';
+import GetConfirmationMessage from '../ConfirmationMessage';
+import '../../css/auth.scss';
 
 function ChangeLoginInfo() {
-	const navigate = useNavigate();
 	const [option, setOption] = useState('');
+	const [confirmation, setConfirmation] = useState(false);
 
 	const getChangeLoginForm = (option) => {
 		switch (option) {
@@ -20,11 +21,17 @@ function ChangeLoginInfo() {
 
 	const save = (event) => {
 		event.preventDefault();
-		navigate('/changeLogin');
+		setConfirmation(true);
 	};
 
 	return (
 		<div className='change-login-info-page-container'>
+			{confirmation ? (
+				<GetConfirmationMessage type='change-login-info' />
+			) : (
+				<></>
+			)}
+
 			<h1>Change Log In Information</h1>
 
 			<div className='change-login-info-form-container'>

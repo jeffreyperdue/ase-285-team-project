@@ -1,3 +1,5 @@
+import '../../css/auth.scss';
+
 function ChangeEmail() {
 	return (
 		<>
@@ -8,6 +10,7 @@ function ChangeEmail() {
 					placeholder='Current Email*'
 					required
 					maxLength={50}
+					className='current-email'
 				/>
 			</div>
 
@@ -18,6 +21,7 @@ function ChangeEmail() {
 					placeholder='New Email*'
 					required
 					maxLength={50}
+					className='new-email'
 				/>
 			</div>
 		</>

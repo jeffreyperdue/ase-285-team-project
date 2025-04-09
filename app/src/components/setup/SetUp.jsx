@@ -3,7 +3,7 @@ import Step2 from './Step2';
 import Step3 from './Step3';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import '../../css/setup.css';
+import '../../css/setup.scss';
 
 function SetUp({ step }) {
 	const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import { useState, changeState } from 'react';
 import '../../css/styles.css'
-import Checkbox from './assets/Checkbox.jsx';
+import AllergenList from '../auth/AllergenList';
 
 // Collapsible Panel Component
 const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
@@ -22,15 +22,21 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
 
     const [selectedIds, setSelectedIds] = useState([]);
 
-    // Handling CheckboxChagnes
-    const handleCheckboxChange = (event) => {
-        const id = event.target.value;
-        if (event.target.checked) {
-          setSelectedIds(prev => [...prev, id]);
-        } else {
-          setSelectedIds(prev => prev.filter(existingId => existingId !== id));
-        }
-      };
+
+	const selectedAllergens = [];
+
+	const handleCheckboxChange = (event) => {
+		const checkedId = event.target.value;
+		if (event.target.selected) {
+			setSelectedIds([...selectedIds, checkedId]);
+			selectedAllergens.push(selectedIds);
+			console.log(selectedAllergens);
+		} else {
+			setSelectedIds(
+				selectedIds.filter((id) => id !== checkedId)
+			);
+		}
+	};
 
     // For testing the dynamically created check list.
     const [allergens] = useState([
@@ -81,32 +87,17 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
                     <div className="right-side">
                         <h3>This Item Contains the Following Allergens:</h3>
                         <div className="display-allergens">
-                        {selectedIds.map(id => {
-                            const allergen = allergens.find(a => a.allergenID === id);
-                            return (
-                            <div key={id} className="tag">
-                                <p>{allergen?.name}</p>
-                                <p>AllergenNameHere</p>
-                                <button onClick={() => removeAllergen(id)}>×</button>
-                            </div>
-                            );
-                        })}
-                        </div>
+						{selectedAllergens.length > 0 ? (
+							selectedAllergens.join(', ')
+						) : (
+							<p>No allergens selected</p>
+						)}
+					</div>
                         <p>Most Common Allergens</p>
                         <div className="allergen-add">
-                            {allergens.map((allergen) => (
-                                <div>
-                                    <input 
-                                    type="checkbox"
-                                    id={allergen.allergenID}
-                                    className="allergen-checkbox" 
-                                    key={allergen.allergenID}
-                                    checked={selectedIds.includes(allergen.allergenID)}
-                                    onChange={handleCheckboxChange}
-                                    />
-                                    <label htmlFor={allergen.allergenID}>{ allergen.name}</label>
-                                </div>
-                            ))}
+                            <AllergenList
+							    selectedAllergens={selectedAllergens}
+						    />
                         </div>
                     </div>
                 </form>

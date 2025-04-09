@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import '../../css/auth.css';
+import '../../css/auth.scss';
 import GetPasswordField from './Password';
 import PropTypes from 'prop-types';
 
@@ -23,12 +23,15 @@ function GetAuthForm({ formName }) {
 		>
 			<h2 className='title'>NomNom Safe</h2>
 
-			<input
-				type='text'
-				name='email'
-				placeholder='Email'
-				required
-			/>
+			<div>
+				<input
+					type='text'
+					name='email'
+					placeholder='Email'
+					required
+					className='email'
+				/>
+			</div>
 
 			<GetPasswordField
 				name='password'

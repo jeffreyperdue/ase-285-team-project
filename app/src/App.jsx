@@ -4,6 +4,7 @@ import SetUp from './components/setup/SetUp';
 import MenuDashboard from './components/menu/MenuDashboard';
 import CreateRestaurant from './components/restaurant/CreateRestaurant';
 import ChangeLoginInfo from './components/auth/ChangeLoginInfo';
+// import FilterPanel from './components/menu/FilterPanel';
 import AddMenuItem from './components/menuitems/AddMenuItem.jsx';
 import MenuItemSwap from './components/menuitems/MenuItemSwap.jsx';
 import {

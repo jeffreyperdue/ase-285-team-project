@@ -53,6 +53,7 @@ body {
 	color: var(--hard-white);
 	text-align: left;
 	font-size: 20px;
+	font-weight: normal;
 }
 
 .content {
@@ -184,6 +185,7 @@ input[type='checkbox'].checkbox:checked {
 .allergen {
 	background-color: var(--salmon);
 }
+
 .left-side {
 	float: left;
 	padding: 15px;
@@ -235,6 +237,4 @@ input[type='checkbox'].checkbox:checked {
 	display: flex;
 	justify-content: space-between;
   }
-  
-
   
