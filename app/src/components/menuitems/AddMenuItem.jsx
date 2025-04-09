@@ -1,34 +1,31 @@
 import { useState, changeState } from 'react';
 import '../../css/styles.css'
+//import Checkbox from './assets/Checkbox.jsx';
 import AllergenList from '../auth/AllergenList';
 
 const AddMenuItemForm = () => {
-    const [inputs, setInputs] = useState({
-        name: '',
-        ingredients: '',
-        description: ''
-    });
-    const [selectedAllergens, setSelectedAllergens] = useState([]);
+    const [inputs, setInputs] = useState({});
+    const [selectedIds, setSelectedIds] = useState({});
+    const selectedAllergens = [];
 
-    useEffect(() => {
-        if (onAllergenChange) {
-            onAllergenChange(selectedAllergens);
+    const handleCheckboxChange = (event) => {
+        const checkedId = event.target.value;
+        if (event.target.selected){
+            setSelectedIds([...selectedIds, checkedId]);
+            selectedAllergens.push(selectedIds);
+            console.log(selectedAllergens);
+        }else{
+            setSelectedIds(selectedIds.filter(id=>id !== checkedId))
         }
-    }, [selectedAllergens, onAllergenChange]);
+    }
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setInputs(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleAllergenChange = (e) => {
-        const { value, checked } = e.target;
-        if (checked) {
-            setSelectedAllergens(prev => [...prev, value]);
-        } else {
-            setSelectedAllergens(prev => prev.filter(allergen => allergen !== value));
-        }
-    };
+    // For testing the dynamically created check list.
+    const [allergens, setAllergens] = useState([
+        { allergenID: "1", name:"Peanut"},
+        { allergenID: "2", name:"Gluten"},
+        { allergenID: "3", name: "Eggs"},
+        { allergenID: "4", name: "Dairy"},
+    ]);
 
     return (
         <div className="flex-container">
@@ -58,10 +55,9 @@ const AddMenuItemForm = () => {
                         )}
                     </div>
                     <div className="allergen-add">
-                            <AllergenList 
-                                selectedAllergens={selectedAllergens}
-                                onChange={handleAllergenChange}
-                            />
+                        <AllergenList 
+                            selectedAllergens={selectedAllergens}
+                        />
                     </div>
                 </div>
                 <button>+ Add Another</button>

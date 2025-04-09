@@ -5,6 +5,7 @@ import MenuDashboard from './components/menu/MenuDashboard';
 import CreateRestaurant from './components/restaurant/CreateRestaurant';
 import ChangeLoginInfo from './components/auth/ChangeLoginInfo';
 import FilterPanel from './components/menu/FilterPanel';
+import AddMenuItemForm from './components/menuitems/AddMenuItem';
 import {
 	BrowserRouter as Router,
 	Route,
@@ -58,6 +59,10 @@ function App() {
 						<Route
 							path='/test'
 							element={<FilterPanel />}
+						/>
+						<Route
+							path='/test2'
+							element={<AddMenuItemForm />}
 						/>
 					</Routes>
 				</div>
