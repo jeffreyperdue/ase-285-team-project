@@ -10,8 +10,7 @@ export default function MenuCard({
 	const navigate = useNavigate();
 
 	const toMenu = () => {
-		// TO DO: add correct route to menu
-		navigate('/dashboard');
+		navigate('/menuitems');
 	};
 
 	return (
