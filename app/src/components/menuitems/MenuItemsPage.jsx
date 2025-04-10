@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import MenuItemPanel from './assets/MenuItemPanel.jsx';
 import '../../css/styles.css';
 
@@ -26,16 +27,16 @@ const MenuItemsPage = () => {
     setMenuItems(mockMenuItems);
   }, []);
 
-  const handleAddItem = () => {
-    const newItem = {
-      id: Date.now(),
-      name: '[Menu Item]',
-      description: '',
-      ingredients: '',
-    };
-    setMenuItems((prev) => [...prev, newItem]);
-    // TODO: Send new item to backend
+const handleAddItem = () => {
+  const newItem = {
+    id: Date.now(),
+    name: '[Menu Item]',
+    description: '',
+    ingredients: '',
   };
+  setMenuItems((prev) => [...prev, newItem]);
+  // TODO: Send new item to backend
+};
 
   const handleSave = (updatedItem) => {
     setMenuItems((prev) =>
@@ -53,12 +54,16 @@ const MenuItemsPage = () => {
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const location = useLocation();
+  const menuTitle = location.state?.menuTitle || 'Untitled Menu';
+
+
   return (
     <div className="menu-items-container">
       {/* Top section: buttons + menu name */}
       <div className="menu-header-row">
         <button className="button" onClick={handleAddItem}>+ Add Item</button>
-        <div className="menu-name">Spring Menu</div>
+        <div className="menu-name">{menuTitle}</div>
         <button className="button">Integrate Menus</button>
       </div>
 
