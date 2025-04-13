@@ -1,10 +1,17 @@
 import React from 'react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import GetConfirmationMessage from '../ConfirmationMessage';
 import '../../css/CreateRestaurant.css';
 
 const CreateRestaurant = () => {
 	const [confirmation, setConfirmation] = useState(false);
+	const navigate = useNavigate();
+
+	const cancel = (event) => {
+		event.preventDefault();
+		navigate('/dashboard');
+	};
 
 	const save = (event) => {
 		event.preventDefault();
@@ -87,18 +94,31 @@ const CreateRestaurant = () => {
 				{/* </div> */}
 			</div>
 
-			<div className='save-section'>
-				<p className='note'>
-					* This information will be displayed to users of
-					the app
-				</p>
-				<button
-					type='submit'
-					onClick={save}
-					className='save-button'
-				>
-					Save
-				</button>
+			<div className='buttons edit-business'>
+				<div>
+					<button
+						type='button'
+						onClick={cancel}
+						className='button gray-btn cancel-btn'
+					>
+						Cancel
+					</button>
+				</div>
+
+				<div className='save-section'>
+					<span className='note'>
+						* This information will be displayed to users of
+						the app
+					</span>
+
+					<button
+						type='submit'
+						onClick={save}
+						className='button'
+					>
+						Save
+					</button>
+				</div>
 			</div>
 		</div>
 	);

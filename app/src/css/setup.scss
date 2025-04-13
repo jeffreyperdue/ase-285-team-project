@@ -269,7 +269,7 @@ ul {
 	justify-content: space-between;
 	margin: 0px 30px;
 
-	&:not(:has(.back-btn)) {
+	&:not(:has(.back-btn, .cancel-btn)) {
 		justify-content: right;
 	}
 }
