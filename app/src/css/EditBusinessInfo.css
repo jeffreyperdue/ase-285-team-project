@@ -36,15 +36,6 @@
 	flex: 1 1 auto;
 }
 
-input[type='text'],
-input[type='number'],
-input[type='email'] {
-	padding: 10px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	font-size: 14px;
-}
-
 .edit-business-info {
 	align-items: end;
 	flex: 1 1 auto;
