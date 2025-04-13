@@ -4,7 +4,9 @@ function ChangeEmail() {
 	return (
 		<>
 			<div className='form-field-container'>
-				<label for='currentEmail'>Current Email</label>
+				<label for='currentEmail'>
+					Current Email <span className='required'>*</span>
+				</label>
 
 				<input
 					type='email'
@@ -16,7 +18,9 @@ function ChangeEmail() {
 			</div>
 
 			<div className='form-field-container'>
-				<label for='newEmail'>New Email</label>
+				<label for='newEmail'>
+					New Email <span className='required'>*</span>
+				</label>
 
 				<input
 					type='email'

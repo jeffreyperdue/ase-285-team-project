@@ -13,7 +13,9 @@ function GetPasswordField({ name, placeholder }) {
 
 	return (
 		<div className='form-field-container'>
-			<label for={name}>{placeholder}</label>
+			<label for={name}>
+				{placeholder} <span className='required'>*</span>
+			</label>
 
 			<div className='password-container'>
 				{/* dynamically changes input type to hide or show password
