@@ -269,3 +269,20 @@ input[type='checkbox'].checkbox:checked {
 	display: flex;
 	justify-content: space-between;
 }
+  .p-tree {
+    margin-top: 10px;
+    max-height: 12rem;
+    overflow-y: auto;
+  }
+
+  /* Add a light grey border to the PickList */
+.p-picklist {
+    border: 1px solid #d3d3d3; /* Light grey border */
+    border-radius: var(--corners-round); /* Optional: rounded corners */
+    padding: 10px; /* Add some padding for better spacing */
+}
+
+/* Indent child menu items under their parent */
+.picklist-item .menu-item {
+    margin-left: 20px; /* Indent child items */
+}
