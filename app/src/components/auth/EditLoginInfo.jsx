@@ -4,7 +4,7 @@ import ChangePassword from './ChangePassword';
 import GetConfirmationMessage from '../ConfirmationMessage';
 import '../../css/auth.scss';
 
-function ChangeLoginInfo() {
+function EditLoginInfo() {
 	const [option, setOption] = useState('');
 	const [confirmation, setConfirmation] = useState(false);
 
@@ -94,4 +94,4 @@ function ChangeLoginInfo() {
 	);
 }
 
-export default ChangeLoginInfo;
+export default EditLoginInfo;

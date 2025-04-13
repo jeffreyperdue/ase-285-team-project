@@ -14,9 +14,9 @@ export default function ProfileIcon() {
 
 	const navigate = useNavigate();
 
-	const toEditLogin = () => {
+	const toEditLoginInfo = () => {
 		setIsOpen(false);
-		navigate('/change-login-info');
+		navigate('/edit-login-info');
 	};
 
 	const toEditBusinessInfo = () => {
@@ -63,7 +63,7 @@ export default function ProfileIcon() {
 				{isOpen && (
 					<div className='dropdown-menu'>
 						<div
-							onClick={toEditLogin}
+							onClick={toEditLoginInfo}
 							className='dropdown-item'
 						>
 							<img

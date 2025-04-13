@@ -3,7 +3,7 @@ import SignInUp from './components/auth/SignInUp';
 import SetUp from './components/setup/SetUp';
 import MenuDashboard from './components/menu/MenuDashboard';
 import EditBusinessInfo from './components/restaurant/EditBusinessInfo';
-import ChangeLoginInfo from './components/auth/ChangeLoginInfo';
+import EditLoginInfo from './components/auth/EditLoginInfo';
 // import FilterPanel from './components/menu/FilterPanel';
 import AddMenuItem from './components/menuitems/AddMenuItem.jsx';
 import MenuItemSwap from './components/menuitems/MenuItemSwap.jsx';
@@ -42,7 +42,7 @@ function App() {
 
 						<Route
 							path='/edit-login-info'
-							element={<ChangeLoginInfo />}
+							element={<EditLoginInfo />}
 						/>
 
 						<Route
