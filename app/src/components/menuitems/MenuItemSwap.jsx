@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { PickList } from 'primereact/picklist';
+import { Tree } from 'primereact/tree';
+import { NodeService } from './service/NodeService';
 import '../../css/styles.css'
 
-const MenuItemSearch = () => {
+const MenuItemSwap = () => {
     // For testing the dynamically created check list.
     const [menus, setMenus] = useState([
         { 
@@ -81,4 +83,4 @@ const MenuItemSearch = () => {
      );
 }
  
-export default MenuItemSearch;
+export default MenuItemSwap;
