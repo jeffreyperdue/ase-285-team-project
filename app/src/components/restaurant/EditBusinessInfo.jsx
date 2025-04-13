@@ -21,7 +21,7 @@ const EditBusinessInfo = () => {
 	return (
 		<form className='edit-business-info-container'>
 			{confirmation ? (
-				<GetConfirmationMessage type='change-business-info' />
+				<GetConfirmationMessage type='edit-business-info' />
 			) : (
 				<></>
 			)}

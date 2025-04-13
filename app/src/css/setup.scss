@@ -57,7 +57,7 @@ ul {
 	background: var(--mint-green);
 }
 
-.change-login-info-page-container,
+.edit-login-info-page-container,
 .step1,
 .step2,
 .step3 {
@@ -71,7 +71,7 @@ ul {
 	}
 }
 
-.change-login-info,
+.edit-login-info,
 .step1,
 .step2,
 .step3 {
@@ -93,7 +93,7 @@ ul {
 	}
 }
 
-.change-login-info,
+.edit-login-info,
 .step3 {
 	&-form {
 		display: flex;
@@ -178,7 +178,7 @@ ul {
 
 .allergen,
 .diet,
-.change-login-info {
+.edit-login-info {
 	&-label {
 		display: flex;
 		width: fit-content;

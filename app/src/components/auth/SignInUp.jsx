@@ -30,7 +30,7 @@ function SignInUp() {
 				<GetAuthForm formName={formType} />
 
 				{signUpForm ? (
-					<div className='change-form'>
+					<div className='swap-form'>
 						Already have an account?&nbsp;
 						<a
 							href='#'
@@ -40,7 +40,7 @@ function SignInUp() {
 						</a>
 					</div>
 				) : (
-					<div className='change-form'>
+					<div className='swap-form'>
 						Don't have an account?&nbsp;
 						<a
 							href='#'
