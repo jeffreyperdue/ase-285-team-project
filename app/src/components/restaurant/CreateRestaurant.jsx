@@ -31,38 +31,60 @@ const CreateRestaurant = () => {
 					</div>
 				</div>
 
-				<div className='form-columns'>
-					<div className='form-left'>
+				{/* <div className='form-columns'> */}
+				<div className='form-left'>
+					<div className='form-field-container'>
 						<label>Business Name</label>
 						<input type='text' />
+					</div>
+
+					<div className='form-field-container'>
 						<label>Website URL</label>
 						<input type='text' />
+					</div>
+
+					<div className='form-field-container'>
 						<label>Address(es)</label>
 						<input
 							type='text'
 							placeholder='Separate Multiple locations by a comma'
 						/>
+					</div>
+
+					<div className='form-field-container'>
 						<label>Phone Number</label>
 						<input type='text' />
 					</div>
+				</div>
 
-					<div className='form-right'>
+				<div className='form-right'>
+					<div className='form-field-container'>
 						<label>Business Disclaimer</label>
 						<input type='text' />
+					</div>
+
+					<div className='form-field-container'>
 						<label>Cuisine</label>
 						<input
 							type='text'
 							placeholder='example: Mexican'
 						/>
+					</div>
+
+					<div className='form-field-container'>
 						<label>Special Preparations</label>
 						<input
 							type='text'
 							placeholder='example: Kosher'
 						/>
+					</div>
+
+					<div className='form-field-container'>
 						<label>Hours</label>
 						<input type='text' />
 					</div>
 				</div>
+				{/* </div> */}
 			</div>
 
 			<div className='save-section'>

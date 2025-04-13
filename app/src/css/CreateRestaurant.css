@@ -1,16 +1,14 @@
 .restaurant-container {
+	width: 100%;
+	height: 100%;
+	padding: 20px;
+	margin: 0px 50px;
 	display: flex;
 	flex-direction: column;
-	/* height: 100vh; */
-	padding: 20px;
-	box-sizing: border-box;
-	width: 100%;
-	margin: 0px 50px;
 }
 
 .top-section {
 	display: flex;
-	flex: 1 0 70%;
 	gap: 100px;
 }
 
@@ -27,39 +25,29 @@
 	color: #666;
 }
 
-.form-columns {
-	display: flex;
-	justify-content: space-between;
-	/* width: 100%; */
-	gap: 350px;
-	height: 25px;
-}
-
 .form-left,
 .form-right {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	gap: 15px;
+	display: grid;
+	gap: 20px;
+	flex: 1 1 auto;
 }
 
 input[type='text'],
 input[type='number'],
 input[type='email'] {
 	padding: 10px;
-	font-size: 14px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
-	width: 250%;
+	font-size: 14px;
 }
 
 .save-section {
-	/* flex: 0 0 20%; */
+	padding-right: 30px;
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
-	justify-content: flex-start;
-	padding-right: 30px;
+	justify-content: flex-end;
+	flex: 1 1 auto;
 }
 
 .note {
