@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import '../../css/auth.scss';
 import GetPasswordField from './Password';
-import PropTypes from 'prop-types';
 
 function GetAuthForm({ formName }) {
 	const navigate = useNavigate();
@@ -21,7 +21,15 @@ function GetAuthForm({ formName }) {
 			name={formName}
 			className='auth-form'
 		>
-			<h2 className='title'>NomNom Safe</h2>
+			<h2
+				className={
+					formName === 'signUpForm'
+						? ' sign-up-title'
+						: 'login-title'
+				}
+			>
+				NomNom Safe
+			</h2>
 
 			{formName === 'signUpForm' ? (
 				<>
