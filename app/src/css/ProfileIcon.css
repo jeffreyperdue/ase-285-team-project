@@ -1,42 +1,42 @@
 .profile-icon-container {
-  position: relative;
-  display: inline-block;
+	height: 40px;
+	position: relative;
 }
 
 .avatar-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	cursor: pointer;
 }
 
 .dropdown-menu {
-  position: absolute;
-  top: 50px;
-  right: 0;
-  background-color: white;
-  border: var(--border);
-  border-radius: var(--corners-round);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-  width: 200px;
-  z-index: 10;
-  padding: 0.5rem 0;
+	position: absolute;
+	top: 45px;
+	right: 0;
+	background-color: white;
+	border: var(--border);
+	border-radius: var(--corners-round);
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+	width: 200px;
+	z-index: 10;
+	padding: 0.5rem 0;
 }
 
 .dropdown-item {
-  display: flex;
-  align-items: center;
-  padding: 10px 15px;
-  gap: 10px;
-  cursor: pointer;
-  color: var(--hard-black);
+	display: flex;
+	align-items: center;
+	padding: 10px 15px;
+	gap: 10px;
+	cursor: pointer;
+	color: var(--hard-black);
 }
 
 .dropdown-item:hover {
-  background-color: #f0f0f0;
+	background-color: #f0f0f0;
 }
 
 .dropdown-item img {
-  width: 20px;
-  height: 20px;
+	width: 20px;
+	height: 20px;
 }
