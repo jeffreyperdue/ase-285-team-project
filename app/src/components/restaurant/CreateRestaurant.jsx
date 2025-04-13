@@ -19,14 +19,14 @@ const CreateRestaurant = () => {
 	};
 
 	return (
-		<div className='restaurant-container'>
+		<form className='edit-business-info-container'>
 			{confirmation ? (
 				<GetConfirmationMessage type='change-business-info' />
 			) : (
 				<></>
 			)}
 
-			<div className='top-section'>
+			<div className='edit-business-info-form-fields'>
 				<div className='logo-upload'>
 					<div className='upload-box'>
 						↑<br />
@@ -38,8 +38,7 @@ const CreateRestaurant = () => {
 					</div>
 				</div>
 
-				{/* <div className='form-columns'> */}
-				<div className='form-left'>
+				<div className='form-column'>
 					<div className='form-field-container'>
 						<label>Business Name</label>
 						<input type='text' />
@@ -64,7 +63,7 @@ const CreateRestaurant = () => {
 					</div>
 				</div>
 
-				<div className='form-right'>
+				<div className='form-column'>
 					<div className='form-field-container'>
 						<label>Business Disclaimer</label>
 						<input type='text' />
@@ -91,10 +90,9 @@ const CreateRestaurant = () => {
 						<input type='text' />
 					</div>
 				</div>
-				{/* </div> */}
 			</div>
 
-			<div className='buttons edit-business'>
+			<div className='buttons edit-business-info'>
 				<div>
 					<button
 						type='button'
@@ -106,7 +104,7 @@ const CreateRestaurant = () => {
 				</div>
 
 				<div className='save-section'>
-					<span className='note'>
+					<span className='save-note'>
 						* This information will be displayed to users of
 						the app
 					</span>
@@ -120,7 +118,7 @@ const CreateRestaurant = () => {
 					</button>
 				</div>
 			</div>
-		</div>
+		</form>
 	);
 };
 
