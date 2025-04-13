@@ -2,7 +2,7 @@ import Header from './components/Header';
 import SignInUp from './components/auth/SignInUp';
 import SetUp from './components/setup/SetUp';
 import MenuDashboard from './components/menu/MenuDashboard';
-import CreateRestaurant from './components/restaurant/CreateRestaurant';
+import EditBusinessInfo from './components/restaurant/EditBusinessInfo';
 import ChangeLoginInfo from './components/auth/ChangeLoginInfo';
 // import FilterPanel from './components/menu/FilterPanel';
 import AddMenuItem from './components/menuitems/AddMenuItem.jsx';
@@ -55,7 +55,7 @@ function App() {
 						/>
 						<Route
 							path='/create-restaurant'
-							element={<CreateRestaurant />}
+							element={<EditBusinessInfo />}
 						/>
 						<Route
 							path='/addmenuitem'

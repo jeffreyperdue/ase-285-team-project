@@ -2,9 +2,9 @@ import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GetConfirmationMessage from '../ConfirmationMessage';
-import '../../css/CreateRestaurant.css';
+import '../../css/EditBusinessInfo.css';
 
-const CreateRestaurant = () => {
+const EditBusinessInfo = () => {
 	const [confirmation, setConfirmation] = useState(false);
 	const navigate = useNavigate();
 
@@ -122,4 +122,4 @@ const CreateRestaurant = () => {
 	);
 };
 
-export default CreateRestaurant;
+export default EditBusinessInfo;
