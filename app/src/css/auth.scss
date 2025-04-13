@@ -33,6 +33,10 @@ a {
 	}
 }
 
+label {
+	font-size: 15px;
+}
+
 /* Classes --------------------------------------------*/
 .confirmation-container {
 	position: absolute;
@@ -91,6 +95,11 @@ a {
 		align-items: center;
 		flex: 1 1 auto;
 		width: 1fr;
+
+		&-btn {
+			margin-bottom: 0px;
+			margin-top: 0px;
+		}
 	}
 }
 
@@ -102,18 +111,27 @@ a {
 	border-radius: var(--corners-round);
 	display: flex;
 	flex-direction: column;
-	gap: 30px;
+	gap: 20px;
 }
 
 .title {
 	text-align: center;
-	margin-bottom: 75px;
+	margin: 0px;
 	color: var(--dark-turq);
+}
+
+.form-field-container {
+	display: grid;
+	gap: 5px;
 }
 
 .change-form {
 	text-align: center;
 	padding: 15px;
+}
+
+.name {
+	width: 100% !important;
 }
 
 .password {

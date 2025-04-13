@@ -23,11 +23,43 @@ function GetAuthForm({ formName }) {
 		>
 			<h2 className='title'>NomNom Safe</h2>
 
-			<div>
+			{formName === 'signUpForm' ? (
+				<>
+					<div className='form-field-container'>
+						<label for='fname'>First Name</label>
+
+						<input
+							type='text'
+							name='fname'
+							placeholder='First Name'
+							required
+							className='name'
+						/>
+					</div>
+
+					<div className='form-field-container'>
+						<label for='lname'>Last Name</label>
+
+						<input
+							type='text'
+							name='lname'
+							placeholder='Last Name'
+							required
+							className='name'
+						/>
+					</div>
+				</>
+			) : (
+				<></>
+			)}
+
+			<div className='form-field-container'>
+				<label for='email'>Email</label>
+
 				<input
 					type='text'
 					name='email'
-					placeholder='Email'
+					placeholder='johndoe@mail.com'
 					required
 					className='email'
 				/>
