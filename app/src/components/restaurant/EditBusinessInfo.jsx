@@ -26,7 +26,7 @@ const EditBusinessInfo = () => {
 				<></>
 			)}
 
-			<h1>Edit Business Info</h1>
+			<h1>Edit Business Information</h1>
 
 			<div className='edit-business-info-form-fields'>
 				<div className='logo-upload'>
