@@ -156,16 +156,18 @@ label {
 	border-radius: var(--corners-round);
 
 	&-container {
+		border: 1px solid #ccc;
+		border-radius: var(--corners-round);
+		margin: 0.8px;
+		padding: 0px 10px;
 		display: flex;
 		flex: 1 1 auto;
 		align-items: center;
-		padding: 0px 10px;
 		font-size: 14px;
-		border: 1px solid #ccc;
-		border-radius: var(--corners-round);
 
 		&:focus-within {
 			border: 2px solid var(--hard-black);
+			margin: 0px;
 		}
 	}
 
