@@ -7,6 +7,8 @@ import EditLoginInfo from './components/auth/EditLoginInfo';
 // import FilterPanel from './components/menu/FilterPanel';
 import AddMenuItem from './components/menuitems/AddMenuItem.jsx';
 import MenuItemSwap from './components/menuitems/MenuItemSwap.jsx';
+import MenuItemsPage from './components/menuitems/MenuItemsPage.jsx';
+
 import {
 	BrowserRouter as Router,
 	Route,
@@ -64,6 +66,10 @@ function App() {
 						<Route
 							path='/swap-menu-item'
 							element={<MenuItemSwap />}
+						/>
+						<Route
+							path='/menuitems'
+							element={<MenuItemsPage />}
 						/>
 					</Routes>
 				</div>

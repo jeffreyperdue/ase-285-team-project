@@ -49,7 +49,26 @@ input[type='email'] {
 
 .flex-container {
 	display: flex;
-	flex: 100%;
+	width: 100%;
+}
+.flex-container-picklist {
+	width:100%;
+	justify-content: center;
+}
+
+.picklist-card {
+	flex: 1;
+	width: 50%;
+}
+/* Overriding some default PrimeReact styles */
+.p-picklist {
+    width: 100% !important;
+}
+
+.p-picklist-filter-input p-inputtext p-component {
+    width: 50% !important;
+    margin: 0 auto; /* Optional: centers the input */
+    display: block;
 }
 
 .header {
@@ -230,7 +249,7 @@ input[type='checkbox'].checkbox:checked {
 
 /* Panels */
 .collapsible-panel {
-	border: 1px solid #d9d9d9;
+	border: 1px solid #aeaeae;
 	margin: 10px 0;
 	border-radius: 4px;
 }
