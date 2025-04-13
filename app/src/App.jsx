@@ -41,7 +41,7 @@ function App() {
 						/>
 
 						<Route
-							path='/changeLogin'
+							path='/edit-login-info'
 							element={<ChangeLoginInfo />}
 						/>
 
@@ -54,15 +54,15 @@ function App() {
 							element={<MenuDashboard />}
 						/>
 						<Route
-							path='/create-restaurant'
+							path='/edit-business-info'
 							element={<EditBusinessInfo />}
 						/>
 						<Route
-							path='/addmenuitem'
+							path='/add-menu-item'
 							element={<AddMenuItem />}
 						/>
 						<Route
-							path='/swapmenuitem'
+							path='/swap-menu-item'
 							element={<MenuItemSwap />}
 						/>
 					</Routes>

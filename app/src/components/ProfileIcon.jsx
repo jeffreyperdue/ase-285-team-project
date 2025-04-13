@@ -16,12 +16,12 @@ export default function ProfileIcon() {
 
 	const toEditLogin = () => {
 		setIsOpen(false);
-		navigate('/changeLogin');
+		navigate('/change-login-info');
 	};
 
 	const toEditBusinessInfo = () => {
 		setIsOpen(false);
-		navigate('/create-restaurant');
+		navigate('/edit-business-info');
 	};
 
 	const logout = () => {
