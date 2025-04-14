@@ -34,10 +34,26 @@ body {
 input[type='text']:not(.password),
 input[type='number'],
 input[type='email'] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: var(--corners-round);
-    font-size: 14px;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: var(--corners-round);
+	font-size: 14px;
+}
+
+#root {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.flex-container {
+	display: flex;
+	width: 100%;
+}
+.flex-container-picklist {
+	width:100%;
+	justify-content: center;
 }
 
 #root {
@@ -90,20 +106,26 @@ input[type='email'] {
     color: red;
 }
 
+.required {
+	color: red;
+}
+
 /* BUTTONS */
 /* general button */
 .button {
-    background-color: var(--mint-green);
-    border: none;
-    border-radius: var(--corners-round);
-    padding: 10px 32px;
-    color: var(--hard-white);
-    font-family: var(--font-family);
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    cursor: pointer;
+
+	background-color: var(--mint-green);
+	border: none;
+	border-radius: var(--corners-round);
+	padding: 10px 32px;
+	/* margin: 5px; */
+	color: var(--hard-white);
+	font-family: var(--font-family);
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	cursor: pointer;
 }
 
 .gray-btn {
@@ -362,3 +384,4 @@ input[type='checkbox'].checkbox:checked {
     margin: 0 auto;
     display: block;
 }
+
