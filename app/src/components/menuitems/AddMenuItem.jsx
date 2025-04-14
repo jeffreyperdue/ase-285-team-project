@@ -1,6 +1,7 @@
 import { useState, changeState } from 'react';
 import '../../css/styles.css'
 import AllergenList from '../auth/AllergenList';
+import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
 
 // Collapsible Panel Component
 const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
@@ -52,65 +53,73 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
       };
   
     return (
-      <div className="collapsible-panel">
-        <div className="panel-header" onClick={togglePanel}>
-          {header}
-        </div>
-        {isOpen && (
-          <div className="panel-body">
-            <div className="flex-container">
-                <form>
-                    <div className="left-side">
-                        <div name="nameInput">
-                            <h3>Name:</h3>
-                            <input type="text" id="name" 
-                            name="name"
-                            value={formData.itemName}
-                            onChange={handleInputChange}
-                            style={{ width: '100%' }}/>
-                        </div>
-                        <div name="ingredientsInput">
-                            <h3>Ingredients</h3>
-                            <textarea id="ingredients" name="ingredients" 
-                            value={formData.Ingredients}
-                            onChange={handleInputChange} 
-                            rows="4" cols="50">List Ingredients Here</textarea>
-                        </div>
-                        <div className="descriptionInput">
-                            <h3>Description</h3>
-                            <textarea id="description" name="description" 
-                            value={formData.description}
-                            onChange={handleInputChange} 
-                            rows="4" cols="50">Enter Description</textarea>
-                        </div>
-                    </div>
-                    <div className="right-side">
-                        <h3>This Item Contains the Following Allergens:</h3>
-                        <div className="display-allergens">
-						{selectedAllergens.length > 0 ? (
-							selectedAllergens.join(', ')
-						) : (
-							<p>No allergens selected</p>
-						)}
-					</div>
-                        <p>Most Common Allergens</p>
-                        <div className="allergen-add">
-                            <AllergenList
-							    selectedAllergens={selectedAllergens}
-						    />
-                        </div>
-                    </div>
-                </form>
-            </div>
+      <div className="center">
+        <div className="collapsible-panel-add">
+          <div className="panel-header" onClick={togglePanel}>
+            <span
+            className='angle-icon'
+            onClick={togglePanel}
+            >
+            {isOpen ? <FaAngleDown /> : <FaAngleRight />}
+          </span>
+            {formData.name || header || `New Menu Item`}
           </div>
-        )}
-        <div className="panel-footer">
-          <button onClick={handleSave} className="button">
-            Save
-          </button>
-          <button onClick={onAddPanel} className="button">
-            Add Another Panel
-          </button>
+          {isOpen && (
+            <div className="panel-body">
+              <div className="flex-container">
+                  <form>
+                      <div className="left-side">
+                          <div name="nameInput">
+                              <h3>Name:</h3>
+                              <input type="text" id="name" 
+                              name="name"
+                              value={formData.itemName}
+                              onChange={handleInputChange}
+                              style={{ width: '100%' }}/>
+                          </div>
+                          <div name="ingredientsInput">
+                              <h3>Ingredients</h3>
+                              <textarea id="ingredients" name="ingredients" 
+                              value={formData.Ingredients}
+                              onChange={handleInputChange} 
+                              rows="4" cols="50">List Ingredients Here</textarea>
+                          </div>
+                          <div className="descriptionInput">
+                              <h3>Description</h3>
+                              <textarea id="description" name="description" 
+                              value={formData.description}
+                              onChange={handleInputChange} 
+                              rows="4" cols="50">Enter Description</textarea>
+                          </div>
+                      </div>
+                      <div className="right-side">
+                          <h3>This Item Contains the Following Allergens:</h3>
+                          <div className="display-allergens">
+              {selectedAllergens.length > 0 ? (
+                selectedAllergens.join(', ')
+              ) : (
+                <p>No allergens selected</p>
+              )}
+            </div>
+                          <p>Most Common Allergens</p>
+                          <div className="allergen-add">
+                              <AllergenList
+                    selectedAllergens={selectedAllergens}
+                  />
+                          </div>
+                      </div>
+                  </form>
+              </div>
+            </div>
+          )}
+          <div className="panel-footer">
+            <button onClick={handleSave} className="button">
+              Save
+            </button>
+            <button onClick={onAddPanel} className="button">
+              Add Another Panel
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -133,7 +142,7 @@ const AddMenuItemForm = () => {
             {panels.map((panel, index) => (
                 <CollapsiblePanel
                 key={index}
-                header={`Menu Item ${index + 1}`}
+                header={`New Menu Item ${index + 1}`}
                 onSave={handleSave}
                 onAddPanel={handleAddPanel}  // Pass the add panel function as a prop
                 />

@@ -38,16 +38,18 @@ const MenuItemsPage = () => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Menu Items</h2>
-      {menuItems.map((item) => (
-        <MenuItemPanel
-          key={item.id}
-          item={item}
-          onSave={handleSave}
-          onDelete={handleDelete}
-        />
-      ))}
+    <div className="center">
+      <div style={{ padding: '20px' }}>
+        <h2>Menu Items</h2>
+        {menuItems.map((item) => (
+          <MenuItemPanel
+            key={item.id}
+            item={item}
+            onSave={handleSave}
+            onDelete={handleDelete}
+          />
+        ))}
+      </div>
     </div>
   );
 };
