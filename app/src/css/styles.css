@@ -42,25 +42,6 @@ body {
 	display: flex;
 	width: 100%;
 }
-.flex-container-picklist {
-	width:100%;
-	justify-content: center;
-}
-
-.picklist-card {
-	flex: 1;
-	width: 50%;
-}
-/* Overriding some default PrimeReact styles */
-.p-picklist {
-    width: 100% !important;
-}
-
-.p-picklist-filter-input p-inputtext p-component {
-    width: 50% !important;
-    margin: 0 auto; /* Optional: centers the input */
-    display: block;
-}
 
 .header {
 	background-color: var(--turq);
@@ -245,6 +226,7 @@ input[type='checkbox'].checkbox:checked {
 	cursor: pointer;
 	padding: 10px;
 	font-weight: bold;
+	display: flex;
   }
 
   .collapsible-panel-add {
@@ -253,11 +235,14 @@ input[type='checkbox'].checkbox:checked {
     border: 1px solid #aeaeae;
     margin: 10px 0;
     border-radius: 4px;
-    overflow: hidden; /* Prevent content overflow */
+	flex-shrink: 0; /* Prevent the panel from stretching vertically */
+    overflow: hidden; 
+	height: auto; 
+    max-height: none; 
+
 }
 
 .collapsible-panel-add .panel-header {
-    display: flex; /* Use flexbox for alignment */
     align-items: center; /* Vertically center the content */
     cursor: pointer;
     padding: 10px;
@@ -294,6 +279,43 @@ input[type='checkbox'].checkbox:checked {
     overflow-y: auto;
   }
 
+  .menu-item-panel {
+    width: 100%; /* Stretch the panel to the full width of its container */
+}
+
+.menu-item-panel .panel-header span {
+    color: var(--gray); 
+    font-size: 1rem; 
+	flex: 1; /* Allow the title to take up remaining space */
+    text-align: left; 
+}
+
+
+.menu-item-panel .panel-actions {
+	display: flex; 
+    gap: 10px; 
+	justify-content: flex-end; /* Ensure icons stay at the far right */
+	align-items: center;
+}
+
+.menu-item-panel .panel-actions .fa-trash {
+    color: var(--delete-red); /* Set the FaTrash icon color to red */
+    cursor: pointer; /* Make the icon clickable */
+}
+
+.menu-item-panel .panel-actions .fa-pencil-alt {
+    color: var(--hard-black); /* Set the FaPencil icon color to hard black */
+    cursor: pointer; /* Make the icon clickable */
+}
+
+.center {
+	width: 100vw;
+    display: flex; 
+    justify-content: center; /* Horizontally center the content */
+    box-sizing: border-box; 
+}
+
+/* ATTEMPTING PICK LIST */
   /* Add a light grey border to the PickList */
 .p-picklist {
     border: 1px solid #d3d3d3; /* Light grey border */
@@ -304,4 +326,23 @@ input[type='checkbox'].checkbox:checked {
 /* Indent child menu items under their parent */
 .picklist-item .menu-item {
     margin-left: 20px; /* Indent child items */
+}
+.flex-container-picklist {
+	width:100%;
+	justify-content: center;
+}
+
+.picklist-card {
+	flex: 1;
+	width: 50%;
+}
+/* Overriding some default PrimeReact styles */
+.p-picklist {
+    width: 100% !important;
+}
+
+.p-picklist-filter-input p-inputtext p-component {
+    width: 50% !important;
+    margin: 0 auto; /* Optional: centers the input */
+    display: block;
 }

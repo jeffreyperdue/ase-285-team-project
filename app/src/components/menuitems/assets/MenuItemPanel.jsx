@@ -25,8 +25,8 @@ const MenuItemPanel = ({ item, onSave, onDelete }) => {
         <div className="panel-header" onClick={toggleOpen}>
           <span>{item.name}</span>
           <div className="panel-actions">
-            <FaPencilAlt size={18} onClick={(e) => { e.stopPropagation(); toggleEdit(); }} />
-            <FaTrash size={18} onClick={(e) => { e.stopPropagation(); onDelete(item.id); }} />
+            <FaPencilAlt className="fa-pencil-alt" size={18} onClick={(e) => { e.stopPropagation(); toggleEdit(); }} />
+            <FaTrash className="fa-trash" size={18} onClick={(e) => { e.stopPropagation(); onDelete(item.id); }} />
           </div>
         </div>
   
