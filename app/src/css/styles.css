@@ -235,18 +235,37 @@ input[type='checkbox'].checkbox:checked {
   }
 
   /* Panels */
-.collapsible-panel {
-	border: 1px solid #aeaeae;
-	margin: 10px 0;
-	border-radius: 4px;
-  }
+  .collapsible-panel {
+    display: flex;
+    flex-direction: column; /* Stack header and body vertically */
+    border: 1px solid #aeaeae;
+    margin: 10px 0;
+    border-radius: 4px;
+    overflow: hidden; /* Prevent content overflow */
+}
+
+.panel-header {
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Vertically center the content */
+    cursor: pointer;
+    padding: 10px;
+    font-weight: bold;
+    background-color: var(--hard-white); /* Optional: Set a distinct background color */
+    border-bottom: 1px solid #d3d3d3; /* Add a separator between the header and body */
+}
   
-  .panel-header {
-	cursor: pointer;
-	padding: 10px;
-	font-weight: bold;
-  }
-  
+.panel-header .angle-icon {
+    margin-right: 10px; /* Add spacing between the icon and the title */
+    font-size: 1.2rem; /* Adjust the size of the icon */
+    color: var(--gray); /* Optional: Set the color of the icon */
+}
+
+.panel-header .header-title {
+    flex: 1; /* Allow the title to take up remaining space */
+    text-align: left; /* Align the title text to the left */
+    font-size: 1rem; /* Adjust the font size of the title */
+}
+
   .panel-body {
 	padding: 10px;
   }

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { PickList } from 'primereact/picklist';
 import { Tree } from 'primereact/tree';
-import { NodeService } from './service/NodeService';
 import '../../css/styles.css'
 
 const MenuItemSwap = () => {

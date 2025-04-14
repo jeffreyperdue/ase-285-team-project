@@ -2,7 +2,6 @@ import React, {useState } from 'react';
 import { FaPencilAlt, FaTrash, FaSave } from 'react-icons/fa';
 import '../../../css/styles.css'
 
-
 const MenuItemPanel = ({ item, onSave, onDelete }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);

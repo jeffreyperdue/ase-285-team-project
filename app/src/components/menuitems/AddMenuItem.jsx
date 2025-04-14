@@ -1,6 +1,7 @@
 import { useState, changeState } from 'react';
 import '../../css/styles.css'
 import AllergenList from '../auth/AllergenList';
+import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
 
 // Collapsible Panel Component
 const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
@@ -54,7 +55,13 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
     return (
       <div className="collapsible-panel">
         <div className="panel-header" onClick={togglePanel}>
-          {header}
+          <span
+          className='angle-icon'
+          onClick={togglePanel}
+          >
+          {isOpen ? <FaAngleDown /> : <FaAngleRight />}
+        </span>
+          {formData.name || header || `New Menu Item`}
         </div>
         {isOpen && (
           <div className="panel-body">
@@ -133,7 +140,7 @@ const AddMenuItemForm = () => {
             {panels.map((panel, index) => (
                 <CollapsiblePanel
                 key={index}
-                header={`Menu Item ${index + 1}`}
+                header={`New Menu Item ${index + 1}`}
                 onSave={handleSave}
                 onAddPanel={handleAddPanel}  // Pass the add panel function as a prop
                 />
