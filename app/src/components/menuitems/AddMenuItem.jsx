@@ -53,7 +53,7 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
       };
   
     return (
-      <div className="collapsible-panel">
+      <div className="collapsible-panel-add">
         <div className="panel-header" onClick={togglePanel}>
           <span
           className='angle-icon'

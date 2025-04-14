@@ -236,6 +236,18 @@ input[type='checkbox'].checkbox:checked {
 
   /* Panels */
   .collapsible-panel {
+	border: 1px solid #aeaeae;
+	margin: 10px 0;
+	border-radius: 4px;
+  }
+  
+  .panel-header {
+	cursor: pointer;
+	padding: 10px;
+	font-weight: bold;
+  }
+
+  .collapsible-panel-add {
     display: flex;
     flex-direction: column; /* Stack header and body vertically */
     border: 1px solid #aeaeae;
@@ -244,7 +256,7 @@ input[type='checkbox'].checkbox:checked {
     overflow: hidden; /* Prevent content overflow */
 }
 
-.panel-header {
+.collapsible-panel-add .panel-header {
     display: flex; /* Use flexbox for alignment */
     align-items: center; /* Vertically center the content */
     cursor: pointer;
