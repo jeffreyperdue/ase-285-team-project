@@ -3,339 +3,355 @@
 
 /* vars for easier down the road management */
 :root {
-	--turq: #008080;
-	--check-turq: #007074;
-	--dark-turq: #034c53;
-	--mint-green: #3eb489;
-	--salmon: #fa8072;
-	--light-salmon: #ffb6ae;
-	--delete-red: #dc3545;
-	--light-pink: #ffe5e5;
-	--gray: #7e7d7d;
-	--gray-hover: #666666;
-	--table-row-hover: #e3e3e3;
-	--hard-black: #000000;
-	--hard-white: #ffffff;
-	--font-family: 'Josefin Sans', sans-serif;
-	--corners-round: 5px;
-	--border: 1px solid rgba(0, 0, 0, 0.25);
-	--border-dashed: 1px dashed rgba(0, 0, 0, 0.25);
+    --turq: #008080;
+    --check-turq: #007074;
+    --dark-turq: #034c53;
+    --mint-green: #3eb489;
+    --salmon: #fa8072;
+    --light-salmon: #ffb6ae;
+    --delete-red: #dc3545;
+    --light-pink: #ffe5e5;
+    --gray: #7e7d7d;
+    --gray-hover: #666666;
+    --table-row-hover: #e3e3e3;
+    --hard-black: #000000;
+    --hard-white: #ffffff;
+    --font-family: 'Josefin Sans', sans-serif;
+    --corners-round: 5px;
+    --border: 1px solid rgba(0, 0, 0, 0.25);
+    --border-dashed: 1px dashed rgba(0, 0, 0, 0.25);
 }
 
 * {
-	font-family: var(--font-family);
-	box-sizing: border-box;
+    font-family: var(--font-family);
+    box-sizing: border-box;
 }
 
 body {
-	margin: 0px;
+    margin: 0px;
+}
+
+input[type='text']:not(.password),
+input[type='number'],
+input[type='email'] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: var(--corners-round);
+    font-size: 14px;
 }
 
 #root {
-	width: 100vw;
-	height: 100vh;
-	display: flex;
-	flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .flex-container {
-	display: flex;
-	width: 100%;
+    display: flex;
+    width: 100%;
 }
 
 .header {
-	background-color: var(--turq);
-	color: var(--hard-white);
-	padding: 15px 25px;
+    background-color: var(--turq);
+    color: var(--hard-white);
+    padding: 15px 25px;
 }
 
 .header-title {
-	color: var(--hard-white);
-	text-align: left;
-	font-size: 20px;
-	font-weight: normal;
+    color: var(--hard-white);
+    text-align: left;
+    font-size: 20px;
+    font-weight: normal;
 }
 
 .content {
-	background-color: var(--hard-white);
-	padding: 20px 25px;
-	flex: 1 1 auto;
-	display: flex;
+    background-color: var(--hard-white);
+    padding: 20px 25px;
+    flex: 1 1 auto;
+    display: flex;
 }
 
 .text {
-	color: var(--hard-black);
-	text-align: left;
-	font-family: var(--font-family);
+    color: var(--hard-black);
+    text-align: left;
+    font-family: var(--font-family);
 }
 
 .dash-title {
-	color: var(--dark-turq);
-	text-align: center;
-	font-size: 30px;
-	font-weight: bold;
-	font-family: var(--font-family);
+    color: var(--dark-turq);
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    font-family: var(--font-family);
+}
+
+.required {
+    color: red;
 }
 
 /* BUTTONS */
 /* general button */
 .button {
-	background-color: var(--mint-green);
-	border: none;
-	border-radius: var(--corners-round);
-	padding: 10px 32px;
-	margin: 5px;
-	color: var(--hard-white);
-	font-family: var(--font-family);
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	font-size: 16px;
-	cursor: pointer;
+    background-color: var(--mint-green);
+    border: none;
+    border-radius: var(--corners-round);
+    padding: 10px 32px;
+    color: var(--hard-white);
+    font-family: var(--font-family);
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 .gray-btn {
-	background-color: var(--gray);
+    background-color: var(--gray);
 }
 
 .gray-btn:hover {
-	background-color: var(--gray-hover);
+    background-color: var(--gray-hover);
 }
 
 /* This section tentatively for Confirm Deletion and its parts. */
 .confirm-delete-box {
-	display: flex;
-	background-color: var(--light-pink);
+    display: flex;
+    background-color: var(--light-pink);
 }
 
 /* Throw the buttons in this container. */
 .delete-buttons-box {
-	display: flex;
-	flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 /* button */
 .delete-cancel {
-	flex: 25%;
-	order: 1;
-	background-color: var(--dark-turq);
+    flex: 25%;
+    order: 1;
+    background-color: var(--dark-turq);
 }
 
 /* invisible div to space .delete-confirm and .delete-cancel */
 .delete-spacer {
-	flex: 50%;
-	flex-direction: row;
-	order: 2;
+    flex: 50%;
+    flex-direction: row;
+    order: 2;
 }
 
 /* button */
 .delete-confirm {
-	flex: 25%;
-	order: 3;
-	background-color: var(--delete-red);
+    flex: 25%;
+    order: 3;
+    background-color: var(--delete-red);
 }
 
 /* CHECKBOXES */
 .unchecked {
-	background-color: var(--check-box);
-	border-radius: 5px;
-	border: 1px solid black;
+    background-color: var(--check-box);
+    border-radius: 5px;
+    border: 1px solid black;
 }
 
 .checked {
-	background-color: var(--check-turq);
-	border-radius: var(--corners-round);
-	border: 1px solid black;
+    background-color: var(--check-turq);
+    border-radius: var(--corners-round);
+    border: 1px solid black;
 }
 
 input[type='checkbox'].checkbox:checked {
-	background-color: var(--check-turq);
-	border-radius: var(--corners-round);
-	border: 1px solid black;
+    background-color: var(--check-turq);
+    border-radius: var(--corners-round);
+    border: 1px solid black;
 }
 
 /* CARDS */
 .card {
-	width: 250px;
-	margin: 10px;
-	text-align: center;
+    width: 250px;
+    margin: 10px;
+    text-align: center;
 }
 
 .card-title {
-	text-align: center;
-	font-size: 20 px;
-	text-decoration-line: underline;
+    text-align: center;
+    font-size: 20px;
+    text-decoration-line: underline;
 }
 
 .card-text {
-	font-size: 14 px;
+    font-size: 14px;
 }
 
 /* MENU */
 .menu {
-	box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2),
-		0 10px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.2),
+        0 10px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
 .menu-text {
-	font-size: 30 px;
-	color: var(--hard-black);
+    font-size: 30px;
+    color: var(--hard-black);
 }
 
 /* ALLERGEN */
 .allergen {
-	background-color: var(--salmon);
+    background-color: var(--salmon);
 }
 
 .left-side {
-	float: left;
-	padding: 15px;
-  }
-  
-  .displayAllergens{
-	align-items:center;
-	height: 20px;
-	width: 50%;
-	margin: 5px;
-	border-style: solid;
-	border-color: #d9d9d9;
-	border-width: 1px;
-	border-radius: 5px;
-  }
+    float: left;
+    padding: 15px;
+}
 
-  .allergen-add{
-	border-style: solid;
-	border-color: black;
-	border-width: 1px;
-	border-radius: 5px;
-	padding: 10px
-  }
-  
-  .right-side{
-	float: right;
-	padding: 15px;
-  }
+.displayAllergens {
+    align-items: center;
+    height: 20px;
+    width: 50%;
+    margin: 5px;
+    border-style: solid;
+    border-color: #d9d9d9;
+    border-width: 1px;
+    border-radius: 5px;
+}
 
-  /* Panels */
-  .collapsible-panel {
-	border: 1px solid #aeaeae;
-	margin: 10px 0;
-	border-radius: 4px;
-  }
-  
-  .panel-header {
-	cursor: pointer;
-	padding: 10px;
-	font-weight: bold;
-	display: flex;
-  }
+.allergen-add {
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    border-radius: 5px;
+    padding: 10px;
+}
 
-  .collapsible-panel-add {
-    display: flex;
-    flex-direction: column; /* Stack header and body vertically */
+.right-side {
+    float: right;
+    padding: 15px;
+}
+
+/* Panels */
+.collapsible-panel {
     border: 1px solid #aeaeae;
     margin: 10px 0;
     border-radius: 4px;
-	flex-shrink: 0; /* Prevent the panel from stretching vertically */
-    overflow: hidden; 
-	height: auto; 
-    max-height: none; 
-
 }
 
-.collapsible-panel-add .panel-header {
-    align-items: center; /* Vertically center the content */
+.panel-header {
     cursor: pointer;
     padding: 10px;
     font-weight: bold;
-    background-color: var(--hard-white); /* Optional: Set a distinct background color */
-    border-bottom: 1px solid #d3d3d3; /* Add a separator between the header and body */
 }
-  
+
+.panel-body {
+    display: flex;
+}
+
+.collapsible-panel-add {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #aeaeae;
+    margin: 10px 0;
+    border-radius: 4px;
+    flex-shrink: 0;
+    overflow: hidden;
+    height: auto;
+    max-height: none;
+}
+
+.collapsible-panel-add .panel-header {
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    font-weight: bold;
+    background-color: var(--hard-white);
+    border-bottom: 1px solid #d3d3d3;
+}
+
 .panel-header .angle-icon {
-    margin-right: 10px; /* Add spacing between the icon and the title */
-    font-size: 1.2rem; /* Adjust the size of the icon */
-    color: var(--gray); /* Optional: Set the color of the icon */
+    margin-right: 10px;
+    font-size: 1.2rem;
+    color: var(--gray);
 }
 
 .panel-header .header-title {
-    flex: 1; /* Allow the title to take up remaining space */
-    text-align: left; /* Align the title text to the left */
-    font-size: 1rem; /* Adjust the font size of the title */
+    flex: 1;
+    text-align: left;
+    font-size: 1rem;
 }
 
-  .panel-body {
-	padding: 10px;
-  }
-  
-  .panel-footer {
-	padding: 10px;
-	display: flex;
-	justify-content: space-between;
-  }
-  
-  .p-tree {
+.panel-body {
+    padding: 10px;
+}
+
+.panel-footer {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.p-tree {
     margin-top: 10px;
     max-height: 12rem;
     overflow-y: auto;
-  }
+}
 
-  .menu-item-panel {
-    width: 100%; /* Stretch the panel to the full width of its container */
+.menu-item-panel {
+    width: 100%;
 }
 
 .menu-item-panel .panel-header span {
-    color: var(--gray); 
-    font-size: 1rem; 
-	flex: 1; /* Allow the title to take up remaining space */
-    text-align: left; 
+    color: var(--gray);
+    font-size: 1rem;
+    flex: 1;
+    text-align: left;
 }
 
-
 .menu-item-panel .panel-actions {
-	display: flex; 
-    gap: 10px; 
-	justify-content: flex-end; /* Ensure icons stay at the far right */
-	align-items: center;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .menu-item-panel .panel-actions .fa-trash {
-    color: var(--delete-red); /* Set the FaTrash icon color to red */
-    cursor: pointer; /* Make the icon clickable */
+    color: var(--delete-red);
+    cursor: pointer;
 }
 
 .menu-item-panel .panel-actions .fa-pencil-alt {
-    color: var(--hard-black); /* Set the FaPencil icon color to hard black */
-    cursor: pointer; /* Make the icon clickable */
+    color: var(--hard-black);
+    cursor: pointer;
 }
 
 .center {
-	width: 100vw;
-    display: flex; 
-    justify-content: center; /* Horizontally center the content */
-    box-sizing: border-box; 
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
 /* ATTEMPTING PICK LIST */
-  /* Add a light grey border to the PickList */
+/* Add a light grey border to the PickList */
 .p-picklist {
-    border: 1px solid #d3d3d3; /* Light grey border */
-    border-radius: var(--corners-round); /* Optional: rounded corners */
-    padding: 10px; /* Add some padding for better spacing */
+    border: 1px solid #d3d3d3;
+    border-radius: var(--corners-round);
+    padding: 10px;
 }
 
 /* Indent child menu items under their parent */
 .picklist-item .menu-item {
-    margin-left: 20px; /* Indent child items */
+    margin-left: 20px;
 }
+
 .flex-container-picklist {
-	width:100%;
-	justify-content: center;
+    width: 100%;
+    justify-content: center;
 }
 
 .picklist-card {
-	flex: 1;
-	width: 50%;
+    flex: 1;
+    width: 50%;
 }
+
 /* Overriding some default PrimeReact styles */
 .p-picklist {
     width: 100% !important;
@@ -343,6 +359,6 @@ input[type='checkbox'].checkbox:checked {
 
 .p-picklist-filter-input p-inputtext p-component {
     width: 50% !important;
-    margin: 0 auto; /* Optional: centers the input */
+    margin: 0 auto;
     display: block;
 }
