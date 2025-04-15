@@ -1,5 +1,6 @@
 import '../css/styles.css';
 import '../css/Header.scss';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import ProfileIcon from './ProfileIcon';
 
@@ -27,7 +28,6 @@ function Header() {
 					NomNom Safe
 				</h1>
 			</div>
-
 			<div className='header-right'>
 				<ProfileIcon />
 			</div>
