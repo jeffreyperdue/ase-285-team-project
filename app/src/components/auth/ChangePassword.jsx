@@ -6,21 +6,21 @@ function ChangePassword() {
 			<div>
 				<GetPasswordField
 					name='currentPassword'
-					placeholder='Current Password*'
+					placeholder='Current Password'
 				/>
 			</div>
 
 			<div>
 				<GetPasswordField
 					name='newPassword'
-					placeholder='New Password*'
+					placeholder='New Password'
 				/>
 			</div>
 
 			<div>
 				<GetPasswordField
 					name='confirmNewPassword'
-					placeholder='Confirm New Password*'
+					placeholder='Confirm New Password'
 				/>
 			</div>
 		</>

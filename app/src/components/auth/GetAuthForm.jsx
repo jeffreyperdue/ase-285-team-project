@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import '../../css/auth.scss';
 import GetPasswordField from './Password';
-import PropTypes from 'prop-types';
 
 function GetAuthForm({ formName }) {
 	const navigate = useNavigate();
@@ -21,13 +21,59 @@ function GetAuthForm({ formName }) {
 			name={formName}
 			className='auth-form'
 		>
-			<h2 className='title'>NomNom Safe</h2>
+			<h2
+				className={
+					formName === 'signUpForm'
+						? ' sign-up-title'
+						: 'login-title'
+				}
+			>
+				NomNom Safe
+			</h2>
 
-			<div>
+			{formName === 'signUpForm' ? (
+				<>
+					<div className='form-field-container'>
+						<label for='fname'>
+							First Name <span className='required'>*</span>
+						</label>
+
+						<input
+							type='text'
+							name='fname'
+							placeholder='First Name'
+							required
+							className='name'
+						/>
+					</div>
+
+					<div className='form-field-container'>
+						<label for='lname'>
+							Last Name <span className='required'>*</span>
+						</label>
+
+						<input
+							type='text'
+							name='lname'
+							placeholder='Last Name'
+							required
+							className='name'
+						/>
+					</div>
+				</>
+			) : (
+				<></>
+			)}
+
+			<div className='form-field-container'>
+				<label for='email'>
+					Email <span className='required'>*</span>
+				</label>
+
 				<input
 					type='text'
 					name='email'
-					placeholder='Email'
+					placeholder='johndoe@mail.com'
 					required
 					className='email'
 				/>

@@ -9,7 +9,7 @@ function GetConfirmationMessage({ type }) {
 		navigate('/dashboard');
 	};
 
-	if (type === 'change-login-info') {
+	if (type === 'edit-login-info') {
 		return (
 			<div className='confirmation-container'>
 				Login information changed successfully.
@@ -24,7 +24,7 @@ function GetConfirmationMessage({ type }) {
 		);
 	}
 
-	if (type === 'change-business-info') {
+	if (type === 'edit-business-info') {
 		return (
 			<div className='confirmation-container'>
 				Business information changed successfully.

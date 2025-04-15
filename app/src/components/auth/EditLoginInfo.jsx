@@ -4,11 +4,11 @@ import ChangePassword from './ChangePassword';
 import GetConfirmationMessage from '../ConfirmationMessage';
 import '../../css/auth.scss';
 
-function ChangeLoginInfo() {
+function EditLoginInfo() {
 	const [option, setOption] = useState('');
 	const [confirmation, setConfirmation] = useState(false);
 
-	const getChangeLoginForm = (option) => {
+	const getEditLoginForm = (option) => {
 		switch (option) {
 			case 'email':
 				return <ChangeEmail />;
@@ -25,19 +25,19 @@ function ChangeLoginInfo() {
 	};
 
 	return (
-		<div className='change-login-info-page-container'>
+		<div className='edit-login-info-page-container'>
 			{confirmation ? (
-				<GetConfirmationMessage type='change-login-info' />
+				<GetConfirmationMessage type='edit-login-info' />
 			) : (
 				<></>
 			)}
 
-			<h1>Change Log In Information</h1>
+			<h1>Edit Login Information</h1>
 
-			<div className='change-login-info-form-container'>
+			<div className='edit-login-info-form-container'>
 				<form
-					name='changeLoginInfoForm'
-					className='change-login-info-form'
+					name='editLoginInfoForm'
+					className='edit-login-info-form'
 				>
 					<div>
 						<span className='question'>
@@ -47,11 +47,11 @@ function ChangeLoginInfo() {
 						<div>
 							<label
 								key='email'
-								className='change-login-info-label'
+								className='edit-login-info-label'
 							>
 								<input
 									type='radio'
-									name='changeLoginInfo'
+									name='editLoginInfo'
 									value='email'
 									onChange={() => setOption('email')}
 								/>
@@ -60,11 +60,11 @@ function ChangeLoginInfo() {
 
 							<label
 								key='password'
-								className='change-login-info-label'
+								className='edit-login-info-label'
 							>
 								<input
 									type='radio'
-									name='changeLoginInfo'
+									name='editLoginInfo'
 									value='password'
 									onChange={() => setOption('password')}
 								/>
@@ -73,8 +73,8 @@ function ChangeLoginInfo() {
 						</div>
 					</div>
 
-					<div className='change-login-info-container'>
-						{getChangeLoginForm(option)}
+					<div className='edit-login-info-container'>
+						{getEditLoginForm(option)}
 
 						{option ? (
 							<button
@@ -94,4 +94,4 @@ function ChangeLoginInfo() {
 	);
 }
 
-export default ChangeLoginInfo;
+export default EditLoginInfo;
