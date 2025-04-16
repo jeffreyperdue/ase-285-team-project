@@ -37,4 +37,30 @@
   .view-menu-button:hover {
     background-color: #35a07b;
   }
+
+  .menu-title-input {
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    outline: none;
+    width: 100%;
+    text-align: center;
+    background-color: transparent;
+    font-family: inherit;
+    cursor: text;
+  }
+  
+  .menu-description-textarea {
+    width: 100%;
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    color: #555;
+    resize: none;
+    background-color: transparent;
+    font-family: inherit;
+    text-align: center;
+    cursor: text;
+  }
+  
   
