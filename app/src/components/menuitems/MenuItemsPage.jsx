@@ -62,10 +62,15 @@ return (
   <div className="menu-items-container">
     {/* Top section: buttons + menu name */}
     <div className="menu-header-row">
-      <button className="button" onClick={handleAddItem}>+ Add Item</button>
-      <div className="menu-name">{menuTitle}</div>
-      <button className="button">Integrate Menus</button>
-    </div>
+  <div style={{ flex: 1 }}>
+    <button className="button" onClick={handleAddItem}>+ Add Item</button>
+  </div>
+  <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>{menuTitle}</div>
+  <div style={{ flex: 1, textAlign: 'right' }}>
+    <button className="button">Integrate Menus</button>
+  </div>
+</div>
+
 
     {/* Search bar */}
     <div className="menu-search-wrapper">
