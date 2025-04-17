@@ -385,3 +385,56 @@ input[type='checkbox'].checkbox:checked {
     display: block;
 }
 
+.menu-items-container {
+    padding: 30px;
+  }
+  
+  .menu-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 100px;
+  }
+  
+  .menu-name {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--dark-turq);
+    flex-grow: 1;
+  }
+  
+  .menu-header-row > .button:first-child {
+    margin-right: auto;
+  }
+  
+  .menu-header-row > .button:last-child {
+    margin-left: auto;
+  }
+  
+  .menu-search-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .menu-search {
+    width: 40%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: var(--corners-round);
+  }
+  
+  .menu-item-list {
+    text-align: center;
+  }
+  
+  .menu-item-list h2 {
+    font-size: 24px;
+    color: #034c53;
+    margin-bottom: 20px;
+  }
+
+  
+
