@@ -1,32 +1,33 @@
-const connectDB = require('./config/db');
-const Menu = require('./schemas/Menu');
-
-const mongoose = require('mongoose');
-
-// Load env variables
+// Load environment variables from .env (MongoDB connection string)
 require('dotenv').config();
 
-const runTest = async () => {
-  try {
-    await connectDB();
+// Import Express framework and MongoDB connection logic
+const express = require('express');
+const connectDB = require('./config/db');
 
-    // Create a dummy menu
-    const testMenu = new Menu({
-      title: 'Test Menu',
-      description: 'Temporary test menu',
-      restaurant: new mongoose.Types.ObjectId(), // just a placeholder ID
-      menuItems: []
-    });
+// Create an instance of an Express application
+const app = express();
 
-    const savedMenu = await testMenu.save();
-    console.log('Test menu saved successfully:', savedMenu);
+// Connect to MongoDB using Mongoose
+// This uses the MONGO_URI defined in the .env file
+connectDB();
 
-    // Exit cleanly
-    mongoose.connection.close();
-  } catch (err) {
-    console.error('Test failed:', err.message);
-    mongoose.connection.close();
-  }
-};
+// Tells Express to automatically parse incoming JSON in requests
+app.use(express.json());
 
-runTest();
+// ROUTES
+// All endpoints related to menus will be handled in menuRoutes.js
+// For example: GET /api/menus or POST /api/menus
+const menuRoutes = require('./routes/menuRoutes');
+app.use('/api/menus', menuRoutes);
+
+// You can test this by visiting http://localhost:5000/
+app.get('/', (req, res) => {
+  res.send('NomNomSafe API is running');
+});
+
+// Start the server and listen on the specified port
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
