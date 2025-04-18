@@ -421,3 +421,20 @@ input[type='checkbox'].checkbox:checked {
 	color: #034c53;
 	margin-bottom: 20px;
 }
+
+ul {
+	list-style-type: none; /* Removes the bullet points */
+	padding: 0; /* Removes default padding */
+	margin: 0; /* Removes default margin */
+}
+
+/* Align the checkbox with the text */
+.form-check {
+	display: flex; /* Use flexbox for alignment */
+	align-items: center; /* Vertically center the checkbox and text */
+	gap: 8px; /* Add spacing between the checkbox and the text */
+}
+
+.form-check-input {
+	margin: 0; /* Remove default margin from the checkbox */
+}

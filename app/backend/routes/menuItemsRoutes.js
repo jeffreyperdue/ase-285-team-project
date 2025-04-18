@@ -1,45 +1,73 @@
 const express = require('express');
 const router = express.Router();
-const Menu = require('../schemas/MenuItem');
+const MenuItem = require('../schemas/MenuItem');
 const mongoose = require('mongoose');
 
-// @route   GET /api/menus
-// @desc    Get all menus
+// @route   GET /api/menuitems
+// @desc    Get all menu items
 // @access  Public (no auth yet)
-router.get('/addmenuitem', async (req, res) => {
+router.get('/menuitems', async (req, res) => {
     try {
-      let menus = await Menu.find();
+      let menuitems = await MenuItem.find();
   
-      if (menus.length === 0) {
-        // Create Master Menu
-        const masterMenu = new Menu({
-          title: 'Master Menu',
-          description: 'This menu will be shown to customers',
-          restaurant: new mongoose.Types.ObjectId(), // replace later with real one
-          menuItems: []
+      // If ther eare no menuItiems pulled from mongodb
+      if (menuitems.length === 0) {
+        // Create Menu Item
+        const menuItem = new MenuItem({
+          title: 'Example Menu Item',
+          description: 'This is shown to customers',
+          ingredients: 'Cheese, bread, broccoli',
+          allergens: ['Dairy, Wheat']
         });
   
-        const saved = await masterMenu.save();
-        menus = [saved]; // start list with Master Menu
+        const saved = await menuItem.save();
+        menuitems = [saved]; // start list with Master Menu
       } else {
-        // Always ensure Master Menu is first
-        menus.sort((a, b) => {
-          if (a.title === 'Master Menu') return -1;
-          if (b.title === 'Master Menu') return 1;
-          return 0;
-        });
+       
       }
   
-      res.json(menus);
+      res.json(menuitems || []);
     } catch (err) {
-      res.status(500).json({ error: 'Could not fetch menus' });
-    }
+    console.error('Error fetching menu items:', err);
+    res.status(500).json({ error: 'Could not fetch menu items' });
+  }
   });
   
-  
 
-// @route   POST /api/menus
-// @desc    Create a new menu
+// @route   POST /api/menuitems
+// @desc    Edit an existing menu item
+// @access  Public (no auth yet)
+router.post('/menuitems', async (req, res) => {
+  try {
+    const { name, description, ingredients, allergens } = req.body;
+
+    // Ensure the ID is provided
+    if (!id) {
+      return res.status(400).json({ error: 'Menu item ID is required' });
+    }
+
+    const updatedMenuItem = await MenuItem.findByIdAndUpdate(
+      id,
+      // updated fields
+      { name, description, ingredients, allergens },
+       // Return the updated document and validate the data
+      { new: true, runValidators: true}
+    );
+
+    // If no menu item is found, return an error
+    if (!updatedMenuItem) {
+      return res.status(404).json({ error: 'Menu item not found' });
+    }
+
+    res.status(200).json(updatedMenuItem);
+  } catch (err) {
+    res.status(500).json({ error: 'Error editing menu item: ' + err.message });
+  }
+});
+
+
+// @route   POST /api/menuitems
+// @desc    Create a new menu item
 // @access  Public (no auth yet)
 router.post('/addmenuitem', async (req, res) => {
   try {
