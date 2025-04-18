@@ -8,18 +8,19 @@ function MenuDashboard() {
 		{
 			title: 'Master Menu',
 			description: 'This menu will be shown to customers',
-			isEditable: false,
-		},
+			isEditable: false
+		}
 	]);
 
 	const [showConfirm, setShowConfirm] = useState(false);
 	const [menuToDelete, setMenuToDelete] = useState(null);
 
+	// Temporarily just update local state for new menus
 	const handleAddMenu = () => {
 		const newMenu = {
 			title: 'Untitled Menu',
 			description: 'New menu created',
-			isEditable: true,
+			isEditable: true
 		};
 		setMenus([...menus, newMenu]);
 	};
@@ -57,10 +58,7 @@ function MenuDashboard() {
 	return (
 		<div className='dashboard-container'>
 			<div className='dashboard-header'>
-				<button
-					className='button add-menu-btn'
-					onClick={handleAddMenu}
-				>
+				<button className='button add-menu-btn' onClick={handleAddMenu}>
 					+ Add a Menu
 				</button>
 				<h2 className='dashboard-title'>Your Menu Dashboard</h2>
@@ -101,16 +99,10 @@ function MenuDashboard() {
 						</p>
 					</div>
 					<div className='delete-buttons-box'>
-						<button
-							className='delete-cancel'
-							onClick={handleCancelDelete}
-						>
+						<button className='delete-cancel' onClick={handleCancelDelete}>
 							No, do not Delete
 						</button>
-						<button
-							className='delete-confirm'
-							onClick={handleConfirmDelete}
-						>
+						<button className='delete-confirm' onClick={handleConfirmDelete}>
 							Yes, Delete
 						</button>
 					</div>
