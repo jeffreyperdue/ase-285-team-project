@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 class Business {
-  constructor(name, url, address, restaurantId, menus = [], description = '') {
+  constructor(name, url, address, restaurantId, menus = []) {
     this.name = name;
     this.url = url;
     this.address = address;
