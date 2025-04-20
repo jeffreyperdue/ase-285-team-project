@@ -7,9 +7,11 @@
 	padding: 10px 25px;
 
 	&-title {
-		font-size: 20px;
-		color: var(--hard-white);
 		margin: 0;
+		font-size: 20px;
+		font-weight: normal;
+		color: var(--hard-white);
+		text-align: left;
 		cursor: pointer;
 	}
 

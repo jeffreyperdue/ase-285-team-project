@@ -34,7 +34,7 @@ function GetAuthForm({ formName }) {
 			{formName === 'signUpForm' ? (
 				<>
 					<div className='form-field-container'>
-						<label for='fname'>
+						<label HTMLFor='fname'>
 							First Name <span className='required'>*</span>
 						</label>
 
@@ -48,7 +48,7 @@ function GetAuthForm({ formName }) {
 					</div>
 
 					<div className='form-field-container'>
-						<label for='lname'>
+						<label HTMLFor='lname'>
 							Last Name <span className='required'>*</span>
 						</label>
 
@@ -66,7 +66,7 @@ function GetAuthForm({ formName }) {
 			)}
 
 			<div className='form-field-container'>
-				<label for='email'>
+				<label HTMLFor='email'>
 					Email <span className='required'>*</span>
 				</label>
 

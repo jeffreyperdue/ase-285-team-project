@@ -26,8 +26,8 @@ const UserSchema = new Schema({
 	last_name: { type: String, required: true },
 	email: { type: String, required: true },
 	password: { type: String, required: true },
-	business_id: { type: Number, required: true },
-	menu_item_layout: { type: Number, required: true },
+	business_id: { type: String },
+	menu_item_layout: { type: Number },
 	admin: { type: Boolean, required: true },
 });
 
