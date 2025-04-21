@@ -9,12 +9,14 @@ const mockMenuItems = [
     name: 'Cheeseburger',
     description: 'Classic burger with cheese and pickles.',
     ingredients: 'Beef, Cheese, Bun, Pickles, Onion, Tomato',
+    allergens: []
   },
   {
     id: 2,
     name: 'Vegan Wrap',
     description: 'Fresh and healthy wrap with veggies.',
     ingredients: 'Lettuce, Tomato, Cucumber, Hummus, Wrap',
+    allergens: []
   },
 ];
 
