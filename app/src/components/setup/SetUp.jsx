@@ -4,7 +4,6 @@ import Step3 from './Step3';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import '../../css/setup.scss';
-import axios from 'axios';
 
 function SetUp({ step }) {
 	const [formData, setFormData] = useState({
@@ -32,13 +31,20 @@ function SetUp({ step }) {
 		  menuLayout: formData.menuLayout
 		};
   
-		// Send to API
-		const response = await axios.post('/api/businesses', businessData);
-		
-		// Navigate to dashboard on success
-		navigate('/dashboard', { state: { business: response.data } });
-	  } catch (error) {
-		console.error('Error creating business:', error);
+		const response = await fetch('/api/businesses', {
+			method: 'POST',
+			headers: {
+			  'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(businessData)
+		  });
+	  
+		  if (!response.ok) throw new Error('Network response was not ok');
+		  
+		  const data = await response.json();
+		  navigate('/dashboard', { state: { business: data } });
+		} catch (error) {
+		  console.error('Error:', error);
 	  }
 	};
   
