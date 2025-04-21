@@ -4,39 +4,59 @@ import Step3 from './Step3';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import '../../css/setup.scss';
+import axios from 'axios';
 
 function SetUp({ step }) {
-	const navigate = useNavigate();
-
-	const getProgressBarClass = () => {
-		switch (step) {
-			case 1:
-				return 'one-third';
-			case 2:
-				return 'two-thirds';
-			case 3:
-				return 'three-thirds';
-			default:
-				return '';
-		}
+	const [formData, setFormData] = useState({
+	  // Step 1 data
+	  name: '',
+	  url: '',
+	  address: '',
+	  // Step 2 data
+	  allergens: [],
+	  diets: [],
+	  // Step 3 data
+	  menuLayout: ''
+	});
+  
+	const completeSetUp = async (event) => {
+	  event.preventDefault();
+	  
+	  try {
+		// Combine all form data
+		const businessData = {
+		  name: formData.name,
+		  url: formData.url,
+		  address: formData.address,
+		  allergens: formData.allergens,
+		  menuLayout: formData.menuLayout
+		};
+  
+		// Send to API
+		const response = await axios.post('/api/businesses', businessData);
+		
+		// Navigate to dashboard on success
+		navigate('/dashboard', { state: { business: response.data } });
+	  } catch (error) {
+		console.error('Error creating business:', error);
+	  }
 	};
-
+  
+	const updateFormData = (stepData) => {
+	  setFormData(prev => ({ ...prev, ...stepData }));
+	};
+  
 	const renderStep = () => {
-		switch (step) {
-			case 1:
-				return <Step1 />;
-			case 2:
-				return <Step2 />;
-			case 3:
-				return <Step3 />;
-			default:
-				return (
-					<div>
-						There was an error signing you up. Please{' '}
-						<a href='/'>try again</a>.
-					</div>
-				);
-		}
+	  switch (step) {
+		case 1:
+		  return <Step1 updateFormData={updateFormData} />;
+		case 2:
+		  return <Step2 updateFormData={updateFormData} />;
+		case 3:
+		  return <Step3 updateFormData={updateFormData} />;
+		default:
+		  return <div>Error...</div>;
+	  }
 	};
 
 	const continueSetUp = (event) => {
@@ -47,11 +67,6 @@ function SetUp({ step }) {
 		} else if (step === 2) {
 			navigate('/step3');
 		}
-	};
-
-	const completeSetUp = (event) => {
-		event.preventDefault();
-		navigate('/dashboard');
 	};
 
 	const navigateBack = (event) => {

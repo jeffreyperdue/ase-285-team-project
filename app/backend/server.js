@@ -18,8 +18,8 @@ app.use(express.json());
 // ROUTES
 // All endpoints related to menus will be handled in menuRoutes.js
 // For example: GET /api/menus or POST /api/menus
-const menuRoutes = require('./routes/menuRoutes');
-app.use('/api/menus', menuRoutes);
+const businessRoutes = require('./routes/businessRoutes');
+app.use('/api/business', businessRoutes);
 
 // You can test this by visiting http://localhost:5000/
 app.get('/', (req, res) => {
