@@ -6,11 +6,7 @@ const User = require('../schemas/User');
 // @desc    Get a user
 // @access  Public (no auth yet)
 router.post('/signin', async (req, res) => {
-	// console.log('req.body: ', req.body.email);
-	// console.log('hit signin api');
-
 	try {
-		// console.log('entered try block before filters');
 		if (!req.body.email || !req.body.password) {
 			return res.status(400).json({
 				error: 'Email and password are required.',
@@ -20,13 +16,10 @@ router.post('/signin', async (req, res) => {
 		const filters = {
 			email: req.body.email,
 		};
-		console.log('filters: ', filters);
-		// const foundUser = await User.findOne(filters);
 		const foundUser = await User.findOne({
 			email: 'johndoe@todosburgers.com',
 			password: '123',
 		});
-		console.log('foundUser: ' + foundUser);
 
 		if (foundUser) {
 			console.log('Found user in db');
@@ -48,10 +41,7 @@ router.post('/signin', async (req, res) => {
 // @desc    Create a new user
 // @access  Public (no auth yet)
 router.post('/signup', async (req, res) => {
-	console.log('hit signup api');
-
 	try {
-		console.log('req.body: ' + req.body);
 		const { first_name, last_name, email, password } =
 			req.body;
 
@@ -71,11 +61,8 @@ router.post('/signup', async (req, res) => {
 			menu_item_layout: 0,
 			admin: true,
 		});
-
-		console.log('newUser: ', newUser);
-
 		const savedUser = await newUser.save();
-		console.log('savedUser: ' + savedUser);
+
 		res.status(201).json(savedUser);
 	} catch (err) {
 		res.status(400).json({
