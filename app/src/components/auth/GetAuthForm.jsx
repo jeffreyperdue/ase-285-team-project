@@ -6,19 +6,95 @@ import GetPasswordField from './Password';
 function GetAuthForm({ formName }) {
 	const navigate = useNavigate();
 
-	const signUp = (event) => {
+	const signUp = async (event) => {
 		event.preventDefault();
-		navigate('/step1');
+		const form = event.target;
+
+		const formData = {
+			first_name: form.first_name.value,
+			last_name: form.last_name.value,
+			email: form.email.value,
+			password: form.password.value,
+			business_id: '',
+			menu_item_layout: 0,
+			admin: true,
+		};
+
+		console.log(formData);
+
+		try {
+			const response = await fetch(
+				'http://localhost:5000/api/auth/signup',
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(formData),
+				}
+			);
+
+			if (response.ok) {
+				const result = await response;
+				console.log(result.message);
+				navigate('/step1'); // Redirect on success
+			} else {
+				console.log('sign up response: ' + response.body);
+				const error = await response;
+				console.error('Error:', error);
+			}
+		} catch (err) {
+			console.error('Error: ', err.message);
+		}
 	};
 
-	const logIn = (event) => {
+	const logIn = async (event) => {
 		event.preventDefault();
-		navigate('/dashboard');
+		const form = event.target;
+		console.log('form.email: ' + form.email.value);
+		console.log('form.password: ' + form.password.value);
+
+		const formData = {
+			email: form.email.value,
+			password: form.password.value,
+		};
+
+		console.log('formData: ' + formData);
+
+		try {
+			const response = await fetch(
+				'http://localhost:5000/api/auth/signin',
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						email: 'johndoe@todosburgers.com',
+						password: '123',
+					}),
+				}
+			);
+
+			if (response.ok) {
+				const result = await response.json();
+				console.log(result.message);
+				navigate('/dashboard');
+			} else {
+				console.log('sign in response: ' + response.body);
+				const error = await response;
+				console.error('Error:', error);
+			}
+		} catch (err) {
+			console.error('Error: ', err.message);
+		}
 	};
 
 	return (
 		<form
 			name={formName}
+			onSubmit={formName === 'signUpForm' ? signUp : logIn}
+			method='POST'
 			className='auth-form'
 		>
 			<h2
@@ -34,13 +110,13 @@ function GetAuthForm({ formName }) {
 			{formName === 'signUpForm' ? (
 				<>
 					<div className='form-field-container'>
-						<label HTMLFor='fname'>
+						<label htmlFor='first_name'>
 							First Name <span className='required'>*</span>
 						</label>
 
 						<input
 							type='text'
-							name='fname'
+							name='first_name'
 							placeholder='First Name'
 							required
 							className='name'
@@ -48,13 +124,13 @@ function GetAuthForm({ formName }) {
 					</div>
 
 					<div className='form-field-container'>
-						<label HTMLFor='lname'>
+						<label htmlFor='last_name'>
 							Last Name <span className='required'>*</span>
 						</label>
 
 						<input
 							type='text'
-							name='lname'
+							name='last_name'
 							placeholder='Last Name'
 							required
 							className='name'
@@ -66,7 +142,7 @@ function GetAuthForm({ formName }) {
 			)}
 
 			<div className='form-field-container'>
-				<label HTMLFor='email'>
+				<label htmlFor='email'>
 					Email <span className='required'>*</span>
 				</label>
 
@@ -96,7 +172,6 @@ function GetAuthForm({ formName }) {
 
 					<button
 						type='submit'
-						onClick={signUp}
 						className='sign-up-btn button'
 					>
 						Sign Up
@@ -105,7 +180,6 @@ function GetAuthForm({ formName }) {
 			) : (
 				<button
 					type='submit'
-					onClick={logIn}
 					className='sign-in-btn button'
 				>
 					Log In
