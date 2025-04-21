@@ -76,17 +76,36 @@ const MenuItemPicklist = () => {
 
     // When a checkbox is clicked, select that item and get its parent menuID too
     const handleCheckboxChange = (menuID, itemID) => {
-        setMenus(prevMenus =>
-            prevMenus.map(menu =>
+        setMenus((prevMenus) => {
+            // Map through the menus array
+            return prevMenus.map((menu) => {
+                // Check if the current menu matches the menuID
+                if (menu.menuID === menuID) {
+                    // Map through the menuItems array to toggle the isSelected property
+                    const updatedMenuItems = menu.menuItems.map((item) => {
+                        if (item.itemID === itemID) {
+                            // Toggle the isSelected property for the matching item
+                            return { ...item, isSelected: !item.isSelected };
+                        }
+                        // Return the item unchanged if it doesn't match
+                        return item;
+                    });
+    
+                    // Return the updated menu with the modified menuItems array
+                    return { ...menu, menuItems: updatedMenuItems };
+                }
+    
+                // Return the menu unchanged if it doesn't match the menuID
+                return menu;
+            });
+        });
+    };
+
+    const handleMenuCheckboxChange = (menuID) => {
+        setMenus((prevMenus) =>
+            prevMenus.map((menu) =>
                 menu.menuID === menuID
-                    ? {
-                          ...menu,
-                          menuItems: menu.menuItems.map(item =>
-                              item.itemID === itemID
-                                  ? { ...item, isSelected: !item.isSelected }
-                                  : item
-                          )
-                      }
+                    ? { ...menu, isSelected: !menu.isSelected } // Toggle isSelected for the menu
                     : menu
             )
         );
@@ -96,7 +115,12 @@ const MenuItemPicklist = () => {
     const renderMenuTree = (menu) => {
         return (
             <div key={menu.menuID} className="menu-tree">
-                <div className="font-bold">{menu.name}</div>
+                {/* Checkbox for the menu itself */}
+                <Checkbox
+                    label={menu.name}
+                    isSelected={menu.isSelected || false} // Add isSelected for the menu
+                    onCheckboxChange={() => handleMenuCheckboxChange(menu.menuID)}
+                />
                 <ul className="ml-4 mt-2">
                     {menu.menuItems.map(item => (
                         <li key={item.itemID} className="text-sm text-gray-500">
@@ -114,20 +138,87 @@ const MenuItemPicklist = () => {
         );
     };
 
-    // TODO:
+    
     const handleMoveToMenu = () => {
-        /* When this is clicked, we move the Menu Item ID
-         from MasterMenu to the MenuItem array in the 
-         target menu. */
-        console.log("Move to menu clicked");
+        setMenus((prevMenus) => {
+            // Find the selected menu in "Other Menus"
+            const targetMenu = prevMenus.find((menu) => menu.isSelected && menu.menuID !== "0");
+    
+            if (!targetMenu) {
+                console.log("No target menu selected.");
+                return prevMenus; // If no menu is selected, return the original menus
+            }
+    
+            // Find the selected menu item in the "Master Menu"
+            const selectedItem = masterMenu.menuItems.find((item) => item.isSelected);
+    
+            if (!selectedItem) {
+                console.log("No menu item selected in Master Menu.");
+                return prevMenus; // If no item is selected, return the original menus
+            }
+    
+            // Remove the selected item from the Master Menu
+            const updatedMasterMenu = {
+                ...masterMenu,
+                menuItems: masterMenu.menuItems.filter((item) => item.itemID !== selectedItem.itemID),
+            };
+    
+            // Add the selected item to the target menu
+            const updatedTargetMenu = {
+                ...targetMenu,
+                menuItems: [...targetMenu.menuItems, { ...selectedItem, isSelected: false }], // Reset isSelected
+            };
+    
+            // Update the menus array
+            return prevMenus.map((menu) => {
+                if (menu.menuID === masterMenu.menuID) {
+                    return updatedMasterMenu; // Update the Master Menu
+                } else if (menu.menuID === targetMenu.menuID) {
+                    return updatedTargetMenu; // Update the target menu
+                }
+                return menu; // Return other menus unchanged
+            });
+        });
     };
 
-    // TODO:
+    
     const handleMoveToMasterMenu = () => {
-        /* When this is clicked, we move the Menu Item ID
-        from SourceMenu to the MenuItem array in the 
-        MasterMenu. */
-        console.log("Move to Master Menu clicked");
+        setMenus((prevMenus) => {
+            // Find the menu that contains the selected menu item
+            const sourceMenu = prevMenus.find((menu) =>
+                menu.menuItems.some((item) => item.isSelected)
+            );
+    
+            if (!sourceMenu) {
+                console.log("No menu item selected to move.");
+                return prevMenus; // If no item is selected, return the original menus
+            }
+    
+            // Get the selected menu item
+            const selectedItem = sourceMenu.menuItems.find((item) => item.isSelected);
+    
+            // Remove the selected item from the source menu
+            const updatedSourceMenu = {
+                ...sourceMenu,
+                menuItems: sourceMenu.menuItems.filter((item) => item.itemID !== selectedItem.itemID),
+            };
+    
+            // Add the selected item to the Master Menu
+            const updatedMasterMenu = {
+                ...masterMenu,
+                menuItems: [...masterMenu.menuItems, { ...selectedItem, isSelected: false }], // Reset isSelected
+            };
+    
+            // Update the menus array
+            return prevMenus.map((menu) => {
+                if (menu.menuID === sourceMenu.menuID) {
+                    return updatedSourceMenu; // Update the source menu
+                } else if (menu.menuID === masterMenu.menuID) {
+                    return updatedMasterMenu; // Update the Master Menu
+                }
+                return menu; // Return other menus unchanged
+            });
+        });
     };
 
     return (
