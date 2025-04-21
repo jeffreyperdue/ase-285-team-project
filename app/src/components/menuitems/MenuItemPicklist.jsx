@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa'; 
 import Checkbox from './assets/Checkbox';
-import '../../css/styles.css';
+// import '../../css/styles.css';
+import '../../css/picklist.scss';
 
 const MenuItemPicklist = () => {
     const [menus, setMenus] = useState([
@@ -70,9 +71,21 @@ const MenuItemPicklist = () => {
         },
     ]);
 
+    const [searchTerms, setSearchTerms] = useState({ masterMenu: '', otherMenus: '' });
+
     // Initialize masterMenu and otherMenus directly from the menus array
     const masterMenu = menus.find(menu => menu.menuID === "0");
     const otherMenus = menus.filter(menu => menu.menuID !== "0");
+
+    const handleSearchChange = (menuID, value) => {
+        setSearchTerms((prev) => ({ ...prev, [menuID]: value }));
+    };
+
+    const filteredMenuItems = (menu, searchTerm) => {
+        return menu.menuItems.filter(item => 
+            item.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    };
 
     // When a checkbox is clicked, select that item and get its parent menuID too
     const handleCheckboxChange = (menuID, itemID) => {
@@ -112,7 +125,7 @@ const MenuItemPicklist = () => {
     };
 
     // Rendering the Tree of Menus and their MenuItems
-    const renderMenuTree = (menu) => {
+    const renderMenuTree = (menu, searchTerm) => {
         return (
             <div key={menu.menuID} className="menu-tree">
                 {/* Checkbox for the menu itself */}
@@ -122,7 +135,7 @@ const MenuItemPicklist = () => {
                     onCheckboxChange={() => handleMenuCheckboxChange(menu.menuID)}
                 />
                 <ul className="ml-4 mt-2">
-                    {menu.menuItems.map(item => (
+                    {filteredMenuItems(menu, searchTerm).map(item => (
                         <li key={item.itemID} className="text-sm text-gray-500">
                             <Checkbox
                                 label={`${item.name}`}
@@ -223,26 +236,49 @@ const MenuItemPicklist = () => {
 
     return (
         <div className="flex-container menu-items-container">
-            {/* Left Tree for Other Menus */}
+          {/* Left Tree for Other Menus */}
+          <div className="menu-wrapper">
+            <div className="menu-header-wrapper">
+              <h3 className="menu-header-row">Other Menus</h3>
+            </div>
+            <input
+                type="text"
+                placeholder="Search Other Menus"
+                value={searchTerms.otherMenus}
+                onChange={(e) => handleSearchChange('otherMenus', e.target.value)}
+                className="menu-search-bar"
+            />
             <div className="menu-tree-container">
-                <h3 className="menu-header-row">Other Menus</h3>
-                {otherMenus.map(menu => renderMenuTree(menu))}
+              {otherMenus.map((menu) => renderMenuTree(menu, searchTerms.otherMenus))}
             </div>
-
-            <div className="menu-buttons-container">
-                <button className="menu-button" onClick={handleMoveToMenu}>
-                    <FaChevronLeft size={20} />
-                </button>
-                <button className="menu-button" onClick={handleMoveToMasterMenu}>
-                    <FaChevronRight size={20} />
-                </button>
+          </div>
+      
+          {/* Buttons in the middle */}
+          <div className="menu-buttons-container">
+            <button className="menu-button" onClick={handleMoveToMenu}>
+              <FaChevronLeft size={20} />
+            </button>
+            <button className="menu-button" onClick={handleMoveToMasterMenu}>
+              <FaChevronRight size={20} />
+            </button>
+          </div>
+      
+          {/* Right Tree for Master Menu */}
+          <div className="menu-wrapper">
+            <div className="menu-header-wrapper">
+              <h3 className="menu-header-row">Master Menu</h3>
             </div>
-
-            {/* Right Tree for Master Menu */}
+            <input
+                type="text"
+                placeholder="Search Master Menu"
+                value={searchTerms.masterMenu}
+                onChange={(e) => handleSearchChange('masterMenu', e.target.value)}
+                className="menu-search-bar"
+            />
             <div className="menu-tree-container">
-                <h3 className="menu-header-row">Master Menu</h3>
-                {masterMenu && renderMenuTree(masterMenu)}
+              {masterMenu && renderMenuTree(masterMenu, searchTerms.masterMenu)}
             </div>
+          </div>
         </div>
     );
 };

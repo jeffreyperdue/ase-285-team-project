@@ -65,17 +65,12 @@ function App() {
 							element={<AddMenuItem />}
 						/>
 						<Route
-							path='/swap-menu-item'
-							element={<MenuItemSwap />}
+							path='/swap-menu'
+							element={<MenuItemPicklist />}
 						/>
 						<Route
 							path='/menuitems'
 							element={<MenuItemsPage />}
-						/>
-
-						<Route
-							path='/picklist'
-							element={<MenuItemPicklist />}
 						/>
 					</Routes>
 				</div>
