@@ -37,7 +37,7 @@ router.get('/menuitems', async (req, res) => {
 // @route   POST /api/menuitems
 // @desc    Edit an existing menu item
 // @access  Public (no auth yet)
-router.post('/menuitems', async (req, res) => {
+router.put('/menuitems', async (req, res) => {
   try {
     const { name, description, ingredients, allergens } = req.body;
 
@@ -82,7 +82,7 @@ router.post('/addmenuitem', async (req, res) => {
     });
 
     const savedMenuItem = await newMenuItem.save();
-    res.status(201).json(savedMenu);
+    res.status(201).json(savedMenuItem);
   } catch (err) {
     res.status(400).json({ error: 'Error creating menu: ' + err.message });
   }
