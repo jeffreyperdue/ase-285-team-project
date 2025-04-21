@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 class MenuItem {
-  constructor(title, ingredients=[], allergens = [], description = '') {
-    this.title = title;
+  constructor(name, ingredients=[], allergens = [], description = '') {
+    this.name = title;
     this.ingredients = ingredients;
     this.description = description;
     this.allergens = allergens;
@@ -19,4 +19,4 @@ const MenuItemSchema = new Schema({
 
 MenuItemSchema.loadClass(MenuItem);
 
-module.exports = mongoose.model('Menu', MenuSchema);
+module.exports = mongoose.model('MenuItem', MenuItemSchema);
