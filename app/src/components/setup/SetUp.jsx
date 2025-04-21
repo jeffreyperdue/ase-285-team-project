@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import Step3 from './Step3';
@@ -6,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../css/setup.scss';
 
 function SetUp({ step }) {
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
 	  // Step 1 data
 	  name: '',
@@ -17,6 +19,19 @@ function SetUp({ step }) {
 	  // Step 3 data
 	  menuLayout: ''
 	});
+
+	const getProgressBarClass = () => {
+		switch (step) {
+		  case 1:
+			return 'one-third';
+		  case 2:
+			return 'two-thirds';
+		  case 3:
+			return 'three-thirds';
+		  default:
+			return '';
+		}
+	  };
   
 	const completeSetUp = async (event) => {
 	  event.preventDefault();

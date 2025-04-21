@@ -184,3 +184,29 @@ input[type='checkbox'].checkbox:checked {
 .allergen {
 	background-color: var(--salmon);
 }
+.allergen-tag {
+    padding: 6px 12px;
+    background-color: var(--salmon);
+    color: var(--hard-white);
+    border-radius: var(--corners-round);
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    font-weight: bold;
+}
+.allergen-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+    min-height: 40px;
+    align-items: center;
+}
+.allergen-label {
+    padding: 6px 12px;
+    background-color: var(--hard-white);
+    border: var(--border);
+    border-radius: var(--corners-round);
+    font-size: 14px;
+    transition: all 0.2s;
+}

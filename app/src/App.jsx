@@ -56,6 +56,10 @@ function App() {
 							path='/create-restaurant'
 							element={<CreateRestaurant />}
 						/>
+						<Route
+							path='/add-menu-item'
+							element={<AddMenuItemForm />}
+						/>
 					</Routes>
 				</div>
 			</Router>

@@ -1,62 +1,78 @@
-import { useState, changeState } from 'react';
-import '../../css/styles.css'
-//import Checkbox from './assets/Checkbox.jsx';
+import { useState } from 'react';
+import '../../css/styles.css';
 import AllergenList from '../auth/AllergenList';
 
 const AddMenuItemForm = () => {
     const [inputs, setInputs] = useState({});
-    const [selectedIds, setSelectedIds] = useState({});
-    const selectedAllergens = [];
+    const [selectedAllergens, setSelectedAllergens] = useState([]);
 
-    const handleCheckboxChange = (event) => {
-        const checkedId = event.target.value;
-        if (event.target.selected){
-            setSelectedIds([...selectedIds, checkedId]);
-            selectedAllergens.push(selectedIds);
-            console.log(selectedAllergens);
-        }else{
-            setSelectedIds(selectedIds.filter(id=>id !== checkedId))
+    const handleAllergenChange = (event, allergenValue) => {
+        if (event.target.checked) {
+            setSelectedAllergens([...selectedAllergens, allergenValue]);
+        } else {
+            setSelectedAllergens(selectedAllergens.filter(item => item !== allergenValue));
         }
-    }
+    };
+
+    // Function to display allergen labels instead of values
+    const getAllergenLabels = () => {
+        const allergenMap = {
+            'lactose': 'Lactose (milk)',
+            'gluten': 'Gluten',
+            'meat': 'Meat',
+            'fish': 'Fish',
+            'animalProducts': 'Animal Products',
+            'eggs': 'Eggs',
+            'shellfish': 'Shellfish',
+            'treeNuts': 'Tree Nuts',
+            'peanuts': 'Peanuts'
+        };
+        
+        return selectedAllergens.map(value => allergenMap[value]).join(', ');
+    };
 
     return (
-        <div className="flex-container">
-            <form>
-                <div className="left-side">
-                    <div name="nameInput">
+        <div className="add-menu-item-container">
+            <form className="menu-item-form">
+                <div className="form-column left-column">
+                    {/* Left side content */}
+                    <div className="form-group">
                         <h3 className="title">Name:</h3>
-                        <input type="text" id="itemName" cols="50"
-                        name="itemName"/>
+                        <input type="text" id="itemName" name="itemName" className="form-input"/>
                     </div>
-                    <div name="ingredientsInput">
+                    <div className="form-group">
                         <h3 className="title">Ingredients</h3>
-                        <textarea id="ingredients" name="ingredients" rows="4" cols="50">List Ingredients Here</textarea>
+                        <textarea id="ingredients" name="ingredients" rows="4" className="form-textarea"/>
                     </div>
-                    <div className="descriptionInput">
+                    <div className="form-group">
                         <h3 className="title">Description</h3>
-                        <textarea id="description" name="description" rows="4" cols="50">   </textarea>
+                        <textarea id="description" name="description" rows="4" className="form-textarea"/>
                     </div>
                 </div>
-                <div className="right-side">
-                    <h3>This Item Contains the Following Allergens:</h3>
-                    <div className="display-allergens">
-                        {selectedAllergens.length > 0 ? (
-                            selectedAllergens.join(', ')
-                        ) : (
-                            <p>No allergens selected</p>
+                
+                <div className="form-column right-column">
+                    {/* Right side content */}
+                    <h3 className="title">This Item Contains the Following Allergens:</h3>
+                    <div className="allergen-tags-container">
+                        {selectedAllergens.length > 0 ? getAllergenLabels() : (
+                            <p className="no-allergens-message">No allergens selected</p>
                         )}
                     </div>
-                    <div className="allergen-add">
+                    <div className="allergen-selection">
                         <AllergenList 
                             selectedAllergens={selectedAllergens}
+                            onAllergenChange={handleAllergenChange}
                         />
                     </div>
                 </div>
-                <button>+ Add Another</button>
-                <button>Save</button>
+                
+                <div className="form-actions">
+                    <button type="button" className="button">+ Add Another</button>
+                    <button type="submit" className="button">Save</button>
+                </div>
             </form>
         </div>
-    )
-}
+    );
+};
 
 export default AddMenuItemForm;
