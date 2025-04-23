@@ -69,10 +69,7 @@ function GetAuthForm({ formName }) {
 					headers: {
 						'Content-Type': 'application/json',
 					},
-					body: JSON.stringify({
-						email: 'johndoe@todosburgers.com',
-						password: '123',
-					}),
+					body: JSON.stringify(formData),
 				}
 			);
 

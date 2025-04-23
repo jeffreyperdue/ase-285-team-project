@@ -15,11 +15,9 @@ router.post('/signin', async (req, res) => {
 
 		const filters = {
 			email: req.body.email,
+			password: req.body.password,
 		};
-		const foundUser = await User.findOne({
-			email: 'johndoe@todosburgers.com',
-			password: '123',
-		});
+		const foundUser = await User.findOne(filters);
 
 		if (foundUser) {
 			console.log('Found user in db');
