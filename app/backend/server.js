@@ -5,6 +5,7 @@ require('dotenv').config();
 const express = require('express');
 const connectDB = require('./config/db');
 const cors = require('cors');
+const cookieparser = require('cookie-parser');
 const mongoose = require('mongoose');
 
 mongoose
@@ -26,7 +27,11 @@ connectDB();
 // Tells Express to automatically parse incoming JSON in requests
 app.use(express.json());
 
-app.use(cors({ origin: 'http://localhost:3000' })); // Allow requests from the frontend
+// Allow requests from the frontend
+app.use(cors({ origin: 'http://localhost:3000' }));
+
+// Middleware for parsing cookies
+app.use(cookieparser());
 
 // ROUTES
 // All endpoints related to menus will be handled in menuRoutes.js
