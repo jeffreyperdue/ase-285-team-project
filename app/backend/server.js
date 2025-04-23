@@ -4,8 +4,6 @@ require('dotenv').config();
 // Import Express framework and MongoDB connection logic
 const express = require('express');
 const connectDB = require('./config/db');
-const cors = require('cors');
-const cookieparser = require('cookie-parser');
 const mongoose = require('mongoose');
 
 mongoose
@@ -28,9 +26,16 @@ connectDB();
 app.use(express.json());
 
 // Allow requests from the frontend
-app.use(cors({ origin: 'http://localhost:3000' }));
+const cors = require('cors');
+app.use(
+	cors({
+		origin: 'http://localhost:3000',
+		credentials: true,
+	})
+);
 
 // Middleware for parsing cookies
+const cookieparser = require('cookie-parser');
 app.use(cookieparser());
 
 // ROUTES
@@ -46,15 +51,19 @@ const auth = require('./routes/user.routes');
 app.use('/api/auth', auth);
 
 // You can test this by visiting http://localhost:5000/
-app.get('/', (req, res) => {
-	res.send('NomNomSafe API is running');
-});
+// app.get('/', (req, res) => {
+// 	res.send('NomNomSafe API is running');
+// });
 
 // Cookie handler
-app.get('/cookies', (req, res) => {
-	res.cookie('mycookie', 'express');
-	res.end('cookies inserted…');
-});
+// app.post('/', (req, res) => {
+// 	console.log('cookies:', req.body.email);
+// 	res.cookie('cookies', req.body.email, {
+// 		sameSite: 'None',
+// 	});
+// 	console.log('cookies:', req.cookies);
+// 	res.end('cookies inserted...');
+// });
 
 // 404 handler
 app.use((req, res, next) => {

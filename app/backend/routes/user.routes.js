@@ -15,14 +15,34 @@ router.post('/signin', async (req, res) => {
 
 		const filters = {
 			email: req.body.email,
+			password: req.body.password,
 		};
-		const foundUser = await User.findOne({
-			email: 'johndoe@todosburgers.com',
-			password: '123',
-		});
+		const foundUser = await User.findOne(filters);
 
 		if (foundUser) {
 			console.log('Found user in db');
+
+			// Set 'cookies' to 'express'
+			res.cookie('cookies', 'express', {
+				secure: true,
+				sameSite: 'None',
+			});
+			// Add email cookie
+			res.cookie('email', req.body.email, {
+				secure: true,
+				sameSite: 'None',
+			});
+			// Add admin status cookie
+			res.cookie('isAdmin', foundUser.admin, {
+				secure: true,
+				sameSite: 'None',
+			});
+			// Add authorized status cookie
+			res.cookie('isAuthorized', true, {
+				secure: true,
+				sameSite: 'None',
+			});
+
 			res.status(200).json(foundUser);
 		} else {
 			// Email and/or password is wrong or doesn't exist

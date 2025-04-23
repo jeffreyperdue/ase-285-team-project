@@ -66,19 +66,18 @@ function GetAuthForm({ formName }) {
 				'http://localhost:5000/api/auth/signin',
 				{
 					method: 'POST',
+					credentials: 'include',
 					headers: {
 						'Content-Type': 'application/json',
 					},
-					body: JSON.stringify({
-						email: 'johndoe@todosburgers.com',
-						password: '123',
-					}),
+					body: JSON.stringify(formData),
 				}
 			);
 
 			if (response.ok) {
 				const result = await response.json();
-				console.log(result.message);
+				console.log(result.email);
+				console.log('result.cookies:', document.cookie);
 				navigate('/dashboard');
 			} else {
 				console.log('sign in response: ' + response.body);
