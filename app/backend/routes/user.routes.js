@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../schemas/User');
+const Business = require('../schemas/Business');
 
 // @route   GET /api/auth/signin
 // @desc    Get a user
@@ -49,13 +50,23 @@ router.post('/signup', async (req, res) => {
 				.json({ error: 'All fields are required.' });
 		}
 
+		// Creates a new business tied to user
+		const newBusiness = new Business({
+			name: `${first_name}'s Restaurant`,
+			url: '',
+			address: '',
+			allergens: [],
+			menus: [],
+		});
+		const savedBusiness = await newBusiness.save();
+
 		// Create new user document from request body
 		const newUser = new User({
 			first_name,
 			last_name,
 			email,
 			password,
-			business_id: '',
+			business_id: savedBusiness._id.toString(),
 			menu_item_layout: 0,
 			admin: true,
 		});

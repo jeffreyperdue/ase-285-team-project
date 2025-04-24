@@ -3,37 +3,31 @@ const router = express.Router();
 const Business = require('../schemas/Business');
 const mongoose = require('mongoose');
 
-// @route   GET /api/menus
-// @desc    Get a business
+// @route   GET /api/businesses/:id
+// @desc    Get a business by ID
 // @access  Public (no auth yet)
 router.get('/:id', async (req, res) => {
   try {
     const business = await Business.findById(req.params.id).populate('menus');
-    
-    if (!business) {
-      return res.status(404).json({ error: 'Business not found' });
-    }
-    
+    if (!business) return res.status(404).json({ error: 'Business not found' });
     res.json(business);
   } catch (err) {
     res.status(500).json({ error: 'Could not fetch business' });
   }
 });
 
-// @route   POST /api/menus
+// @route   POST /api/businesses
 // @desc    Create a new business
 // @access  Public (no auth yet)
 router.post('/', async (req, res) => {
   try {
-    const { name, url, address, allergens, restaurant } = req.body;
+    const { name, url, address, allergens = [] } = req.body;
 
-    // Create new business document from request body
     const newBusiness = new Business({
-      name,
-      url,
-      address,
-      allergens: [],
-      restaurant: restaurant || new mongoose.Types.ObjectId(), // use provided or create new
+      name: name?.trim(),
+      url: url?.trim().toLowerCase(),
+      address: address?.trim(),
+      allergens,
       menus: []
     });
 
@@ -53,20 +47,17 @@ router.put('/:id', async (req, res) => {
 
     const updatedBusiness = await Business.findByIdAndUpdate(
       req.params.id,
-      { 
-        name, 
-        url, 
-        address, 
-        allergens, 
-        menus 
+      {
+        name: name?.trim(),
+        url: url?.trim().toLowerCase(),
+        address: address?.trim(),
+        allergens,
+        menus
       },
-      { new: true } // Return the updated document
+      { new: true }
     );
 
-    if (!updatedBusiness) {
-      return res.status(404).json({ error: 'Business not found' });
-    }
-
+    if (!updatedBusiness) return res.status(404).json({ error: 'Business not found' });
     res.json(updatedBusiness);
   } catch (err) {
     res.status(400).json({ error: 'Error updating business: ' + err.message });
@@ -79,11 +70,7 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const deletedBusiness = await Business.findByIdAndDelete(req.params.id);
-
-    if (!deletedBusiness) {
-      return res.status(404).json({ error: 'Business not found' });
-    }
-
+    if (!deletedBusiness) return res.status(404).json({ error: 'Business not found' });
     res.json({ message: 'Business deleted successfully' });
   } catch (err) {
     res.status(500).json({ error: 'Could not delete business' });

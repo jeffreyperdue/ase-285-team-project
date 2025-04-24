@@ -41,7 +41,7 @@ const auth = require('./routes/user.routes');
 app.use('/api/auth', auth);
 
 const businessRoutes = require('./routes/businessRoutes');
-app.use('/api/business', businessRoutes);
+app.use('/api/businesses', businessRoutes);
 
 // You can test this by visiting http://localhost:5000/
 app.get('/', (req, res) => {
