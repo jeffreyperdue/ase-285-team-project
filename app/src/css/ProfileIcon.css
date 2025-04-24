@@ -24,14 +24,14 @@
 }
 
 .dropdown-item,
-.dropdown-email {
+.dropdown-user-info {
 	padding: 10px 15px;
 	display: flex;
 	align-items: center;
 	color: var(--hard-black);
 }
 
-.dropdown-email {
+.dropdown-user-info {
 	justify-content: center;
 }
 

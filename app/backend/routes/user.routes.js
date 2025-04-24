@@ -23,6 +23,11 @@ router.post('/signin', async (req, res) => {
 		if (foundUser) {
 			console.log('Found user in db');
 
+			// Add name cookie
+			res.cookie('fullName', foundUser.getFullName(), {
+				secure: true,
+				sameSite: 'None',
+			});
 			// Add email cookie
 			res.cookie('email', req.body.email, {
 				secure: true,

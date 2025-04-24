@@ -95,7 +95,11 @@ export default function ProfileIcon() {
 
 				{isOpen && (
 					<div className='dropdown-menu'>
-						<div className='dropdown-email'>
+						<div className='dropdown-user-info'>
+							{getCookie('fullName')}
+						</div>
+
+						<div className='dropdown-user-info'>
 							{getCookie('email')}
 						</div>
 
