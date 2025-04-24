@@ -35,20 +35,28 @@ function MenuDashboard() {
 	
 
     // Add a new menu to backend and update state
-    const handleAddMenu = async () => {
-        try {
-            const res = await axios.post('/api/menus', {
-                title: 'Untitled Menu',
-                description: 'New menu created',
-                restaurant: 'PLACEHOLDER_ID', // Replace with actual restaurant ID
-                menuItems: []
-            });
-            const newMenu = { ...res.data, isEditable: true };
-            setMenus([...menus, newMenu]);
-        } catch (err) {
-            console.error('Error adding menu:', err);
-        }
-    };
+	const handleAddMenu = async () => {
+		const businessId = localStorage.getItem('business_id');
+		if (!businessId) {
+			console.error('No business ID found in localStorage.');
+			return;
+		}
+	
+		try {
+			const res = await axios.post('/api/menus', {
+				title: 'Untitled Menu',
+				description: 'New menu created',
+				restaurant: businessId,
+				menuItems: []
+			});
+	
+			const newMenu = { ...res.data, isEditable: true };
+			setMenus((prev) => [...prev, newMenu]); // Append to current menus
+		} catch (err) {
+			console.error('Error adding menu:', err);
+		}
+	};
+	
 
     const handleRequestDelete = (index) => {
         setMenuToDelete(index);
