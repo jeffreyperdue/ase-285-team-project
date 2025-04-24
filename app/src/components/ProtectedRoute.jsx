@@ -3,13 +3,7 @@ import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import getCookie from '../assets/cookies';
 
-function ProtectedRoute({
-	component,
-	route,
-	admin,
-	checkBusiness,
-	step,
-}) {
+function ProtectedRoute({ component, route, admin }) {
 	const isAuthorized = getCookie('isAuthorized') === 'true';
 	const isAdmin = getCookie('isAdmin') === 'true';
 	const hasBusiness = getCookie('hasBusiness') === 'true';
@@ -84,8 +78,6 @@ ProtectedRoute.propTypes = {
 	component: PropTypes.element.isRequired,
 	route: PropTypes.string,
 	admin: PropTypes.bool,
-	checkBusiness: PropTypes.bool,
-	step: PropTypes.number,
 };
 
 export default ProtectedRoute;
