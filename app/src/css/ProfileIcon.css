@@ -25,17 +25,23 @@
 
 .dropdown-item,
 .dropdown-user-info {
-	padding: 10px 15px;
 	display: flex;
 	align-items: center;
 	color: var(--hard-black);
 }
 
 .dropdown-user-info {
+	margin: 0px 15px;
+	border-bottom: var(--border);
+	padding: 10px 0px;
 	justify-content: center;
+	flex-direction: column;
+	gap: 5px;
+	font-size: 17px;
 }
 
 .dropdown-item {
+	padding: 10px 15px;
 	gap: 10px;
 	cursor: pointer;
 }

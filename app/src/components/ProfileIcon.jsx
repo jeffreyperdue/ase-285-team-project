@@ -96,11 +96,8 @@ export default function ProfileIcon() {
 				{isOpen && (
 					<div className='dropdown-menu'>
 						<div className='dropdown-user-info'>
-							{getCookie('fullName')}
-						</div>
-
-						<div className='dropdown-user-info'>
-							{getCookie('email')}
+							<span>{getCookie('fullName')}</span>
+							<span>{getCookie('email')}</span>
 						</div>
 
 						{isAdmin === 'true' ? (
