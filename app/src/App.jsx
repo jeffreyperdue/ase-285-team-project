@@ -26,26 +26,54 @@ function App() {
 
 				<div className='content'>
 					<Routes>
-						{/* Public Routes */}
+						{/* Public Route */}
 						<Route
 							path='/'
-							element={SignInUp()}
-						/>
-
-						<Route
-							path='/step1'
-							element={<SetUp step={1} />}
-						/>
-						<Route
-							path='/step2'
-							element={<SetUp step={2} />}
-						/>
-						<Route
-							path='/step3'
-							element={<SetUp step={3} />}
+							element={
+								<ProtectedRoute
+									route={'signInUp'}
+									component={SignInUp()}
+								/>
+							}
 						/>
 
 						{/* Protected Routes */}
+						<Route
+							path='/step1'
+							element={
+								<ProtectedRoute
+									checkBusiness={true}
+									step={1}
+									route={'setup'}
+									component={<SetUp step={1} />}
+								/>
+							}
+						/>
+
+						<Route
+							path='/step2'
+							element={
+								<ProtectedRoute
+									checkBusiness={true}
+									step={2}
+									route={'setup'}
+									component={<SetUp step={2} />}
+								/>
+							}
+						/>
+
+						<Route
+							path='/step3'
+							element={
+								<ProtectedRoute
+									checkBusiness={true}
+									step={3}
+									route={'setup'}
+									component={<SetUp step={3} />}
+								/>
+							}
+						/>
+
 						<Route
 							path='/edit-login-info'
 							element={
