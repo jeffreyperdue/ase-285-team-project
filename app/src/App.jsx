@@ -59,6 +59,7 @@ function App() {
 							path='/user-maintenance'
 							element={
 								<ProtectedRoute
+									admin={true}
 									component={<UserMaintenance />}
 								/>
 							}
