@@ -2,11 +2,12 @@ const express = require('express');
 const router = express.Router();
 const User = require('../schemas/User');
 
-// @route   GET /api/auth/signin
+// @route   POST /api/auth/signin
 // @desc    Get a user
 // @access  Public (no auth yet)
 router.post('/signin', async (req, res) => {
 	try {
+		// Check if email or password is missing
 		if (!req.body.email || !req.body.password) {
 			return res.status(400).json({
 				error: 'Email and password are required.',
@@ -38,6 +39,7 @@ router.post('/signin', async (req, res) => {
 				sameSite: 'None',
 			});
 
+			// Return the user's data
 			res.status(200).json(foundUser);
 		} else {
 			// Email and/or password is wrong or doesn't exist
@@ -60,6 +62,7 @@ router.post('/signup', async (req, res) => {
 		const { first_name, last_name, email, password } =
 			req.body;
 
+		// Check if first_name, last_name, email or password is missing
 		if (!first_name || !last_name || !email || !password) {
 			return res
 				.status(400)
@@ -86,6 +89,9 @@ router.post('/signup', async (req, res) => {
 	}
 });
 
+// @route   POST /api/auth/logout
+// @desc    Create a new user
+// @access  Public (no auth yet)
 router.post('/logout', async (req, res) => {
 	try {
 		// Clear cookies
