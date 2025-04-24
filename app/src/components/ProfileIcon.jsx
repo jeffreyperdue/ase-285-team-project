@@ -5,10 +5,12 @@ import editLoginIcon from '../icons/edit_login.png';
 import editBusinessIcon from '../icons/edit_business.png';
 import logoutIcon from '../icons/logout.png';
 import userMaintenanceIcon from '../icons/user-maintenance.png';
+import getCookie from '../assets/cookies';
 import '../css/ProfileIcon.css';
 
 export default function ProfileIcon() {
 	const navigate = useNavigate();
+	const isAdmin = getCookie('isAdmin');
 
 	// Define states
 	const [isOpen, setIsOpen] = useState(false);
@@ -93,16 +95,20 @@ export default function ProfileIcon() {
 
 				{isOpen && (
 					<div className='dropdown-menu'>
-						<div
-							onClick={toUserMaintenance}
-							className='dropdown-item'
-						>
-							<img
-								src={userMaintenanceIcon}
-								alt='User Maintenance Icon'
-							/>
-							<span>User Maintenance</span>
-						</div>
+						{isAdmin === 'true' ? (
+							<div
+								onClick={toUserMaintenance}
+								className='dropdown-item'
+							>
+								<img
+									src={userMaintenanceIcon}
+									alt='User Maintenance Icon'
+								/>
+								<span>User Maintenance</span>
+							</div>
+						) : (
+							<></>
+						)}
 
 						<div
 							onClick={toEditLoginInfo}
