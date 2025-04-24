@@ -24,34 +24,22 @@ router.post('/signin', async (req, res) => {
 			console.log('Found user in db');
 
 			// Set name cookie
-			res.cookie(
-				'fullName',
-				encodeURIComponent(foundUser.getFullName()),
-				{
-					secure: true,
-					sameSite: 'None',
-				}
-			);
+			res.cookie('fullName', foundUser.getFullName(), {
+				secure: true,
+				sameSite: 'None',
+			});
 			// Set email cookie
-			res.cookie(
-				'email',
-				encodeURIComponent(req.body.email),
-				{
-					secure: true,
-					sameSite: 'None',
-				}
-			);
+			res.cookie('email', req.body.email, {
+				secure: true,
+				sameSite: 'None',
+			});
 			// Set admin status cookie
-			res.cookie(
-				'isAdmin',
-				encodeURIComponent(foundUser.admin),
-				{
-					secure: true,
-					sameSite: 'None',
-				}
-			);
+			res.cookie('isAdmin', foundUser.admin, {
+				secure: true,
+				sameSite: 'None',
+			});
 			// Set authorized status cookie
-			res.cookie('isAuthorized', encodeURIComponent(true), {
+			res.cookie('isAuthorized', true, {
 				secure: true,
 				sameSite: 'None',
 			});
