@@ -13,6 +13,7 @@ function ChangeEmail() {
 					name='currentEmail'
 					required
 					maxLength={50}
+					placeholder='Current Email'
 					className='current-email'
 				/>
 			</div>
@@ -27,6 +28,7 @@ function ChangeEmail() {
 					name='newEmail'
 					required
 					maxLength={50}
+					placeholder='New Email'
 					className='new-email'
 				/>
 			</div>

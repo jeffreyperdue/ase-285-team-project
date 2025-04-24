@@ -12,7 +12,7 @@ function Header() {
 	const toHome = (event) => {
 		event.preventDefault();
 
-		if (isAuthorized === true) {
+		if (isAuthorized === 'true') {
 			navigate('/dashboard');
 		} else {
 			navigate('/');
