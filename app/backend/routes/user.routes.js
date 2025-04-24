@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../schemas/User');
 const Business = require('../schemas/Business');
+const Menu = require('../schemas/Menu');
 
 // @route   GET /api/auth/signin
 // @desc    Get a user
@@ -59,6 +60,19 @@ router.post('/signup', async (req, res) => {
 			menus: [],
 		});
 		const savedBusiness = await newBusiness.save();
+
+		// Creates master menu
+		const masterMenu = new Menu({
+			title: 'Master Menu',
+			description: 'This menu will be shown to customers',
+			restaurant: savedBusiness._id,
+			menuItems: [],
+		});
+		const savedMenu = await masterMenu.save();
+
+		// That menu is added to business's menus array
+		savedBusiness.menus.push(savedMenu._id);
+		await savedBusiness.save();
 
 		// Create new user document from request body
 		const newUser = new User({

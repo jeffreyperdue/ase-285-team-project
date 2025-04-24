@@ -10,21 +10,23 @@ function MenuDashboard() {
     const [menuToDelete, setMenuToDelete] = useState(null);
 
     // Fetch menus from backend on initial render
-    useEffect(() => {
-        const fetchMenus = async () => {
-            try {
-                const res = await axios.get('/api/menus');
-                const fetchedMenus = res.data.map(menu => ({
-                    ...menu,
-                    isEditable: menu.title !== 'Master Menu',
-                }));
-                setMenus(fetchedMenus);
-            } catch (err) {
-                console.error('Error fetching menus:', err);
-            }
-        };
-        fetchMenus();
-    }, []);
+	useEffect(() => {
+		const fetchMenus = async () => {
+			try {
+				const businessId = localStorage.getItem('business_id'); // or from auth
+				const res = await axios.get(`/api/businesses/${businessId}`);
+				const fetchedMenus = res.data.menus.map(menu => ({
+					...menu,
+					isEditable: menu.title !== 'Master Menu',
+				}));
+				setMenus(fetchedMenus);
+			} catch (err) {
+				console.error('Error fetching business menus:', err);
+			}
+		};
+		fetchMenus();
+	}, []);
+	
 
     // Add a new menu to backend and update state
     const handleAddMenu = async () => {
