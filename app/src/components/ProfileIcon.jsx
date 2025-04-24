@@ -4,6 +4,7 @@ import avatar from '../icons/avatar.png';
 import editLoginIcon from '../icons/edit_login.png';
 import editBusinessIcon from '../icons/edit_business.png';
 import logoutIcon from '../icons/logout.png';
+import adminPanelIcon from '../icons/admin-panel.png';
 import '../css/ProfileIcon.css';
 
 export default function ProfileIcon() {
@@ -14,6 +15,12 @@ export default function ProfileIcon() {
 	const [confirmation, setConfirmation] = useState(false);
 
 	const toggleDropdown = () => setIsOpen(!isOpen);
+
+	const toAdmin = (event) => {
+		event.preventDefault();
+		setIsOpen(false);
+		navigate('/admin');
+	};
 
 	const toEditLoginInfo = (event) => {
 		event.preventDefault();
@@ -87,6 +94,17 @@ export default function ProfileIcon() {
 				{isOpen && (
 					<div className='dropdown-menu'>
 						<div
+							onClick={toAdmin}
+							className='dropdown-item'
+						>
+							<img
+								src={adminPanelIcon}
+								alt='Admin Panel Icon'
+							/>
+							<span>User Maintenance</span>
+						</div>
+
+						<div
 							onClick={toEditLoginInfo}
 							className='dropdown-item'
 						>
@@ -96,6 +114,7 @@ export default function ProfileIcon() {
 							/>
 							<span>Edit Login Info</span>
 						</div>
+
 						<div
 							onClick={toEditBusinessInfo}
 							className='dropdown-item'
@@ -106,6 +125,7 @@ export default function ProfileIcon() {
 							/>
 							<span>Edit Business Info</span>
 						</div>
+
 						<div
 							onClick={logout}
 							className='dropdown-item'
