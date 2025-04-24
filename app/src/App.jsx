@@ -16,6 +16,7 @@ import {
 	Routes,
 } from 'react-router-dom';
 import UserMaintenance from './components/admin/UserMaintenance';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 function App() {
 	return (
@@ -25,6 +26,7 @@ function App() {
 
 				<div className='content'>
 					<Routes>
+						{/* Public Routes */}
 						<Route
 							path='/'
 							element={SignInUp()}
@@ -43,34 +45,68 @@ function App() {
 							element={<SetUp step={3} />}
 						/>
 
+						{/* Protected Routes */}
 						<Route
 							path='/edit-login-info'
-							element={<EditLoginInfo />}
+							element={
+								<ProtectedRoute
+									component={<EditLoginInfo />}
+								/>
+							}
 						/>
 
 						<Route
 							path='/user-maintenance'
-							element={<UserMaintenance />}
+							element={
+								<ProtectedRoute
+									component={<UserMaintenance />}
+								/>
+							}
 						/>
+
 						<Route
 							path='/dashboard'
-							element={<MenuDashboard />}
+							element={
+								<ProtectedRoute
+									component={<MenuDashboard />}
+								/>
+							}
 						/>
+
 						<Route
 							path='/edit-business-info'
-							element={<EditBusinessInfo />}
+							element={
+								<ProtectedRoute
+									component={<EditBusinessInfo />}
+								/>
+							}
 						/>
+
 						<Route
 							path='/add-menu-item'
-							element={<AddMenuItem />}
+							element={
+								<ProtectedRoute
+									component={<AddMenuItem />}
+								/>
+							}
 						/>
+
 						<Route
 							path='/swap-menu'
-							element={<MenuItemPicklist />}
+							element={
+								<ProtectedRoute
+									component={<MenuItemPicklist />}
+								/>
+							}
 						/>
+
 						<Route
 							path='/menuitems'
-							element={<MenuItemsPage />}
+							element={
+								<ProtectedRoute
+									component={<MenuItemsPage />}
+								/>
+							}
 						/>
 					</Routes>
 				</div>
