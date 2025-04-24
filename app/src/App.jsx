@@ -17,6 +17,7 @@ import {
 } from 'react-router-dom';
 import UserMaintenance from './components/admin/UserMaintenance';
 
+// TODO: check authorized status for routes
 function App() {
 	return (
 		<>
