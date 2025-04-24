@@ -206,7 +206,6 @@ input[type='checkbox'].checkbox:checked {
 .allergen {
 	background-color: var(--salmon);
 }
-<<<<<<< HEAD
 
 .left-side {
 	float: left;
@@ -439,7 +438,6 @@ ul {
 .form-check-input {
 	margin: 0; /* Remove default margin from the checkbox */
 }
-=======
 .allergen-tag {
     padding: 6px 12px;
     background-color: var(--salmon);
@@ -466,4 +464,3 @@ ul {
     font-size: 14px;
     transition: all 0.2s;
 }
->>>>>>> owen/main

@@ -10,6 +10,7 @@ import MenuItemSwap from './components/menuitems/MenuItemSwap.jsx';
 import MenuItemsPage from './components/menuitems/MenuItemsPage.jsx';
 import MenuItemPicklist from './components/menuitems/MenuItemPicklist.jsx'
 
+
 import {
 	BrowserRouter as Router,
 	Route,
@@ -71,10 +72,6 @@ function App() {
 						<Route
 							path='/menuitems'
 							element={<MenuItemsPage />}
-						/>
-						<Route
-							path='/add-menu-item'
-							element={<AddMenuItemForm />}
 						/>
 					</Routes>
 				</div>

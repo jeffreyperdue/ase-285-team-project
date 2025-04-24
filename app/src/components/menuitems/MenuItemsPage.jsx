@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import MenuItemPanel from './assets/MenuItemPanel.jsx';
 import '../../css/styles.css';
+import { Link } from 'react-router-dom';
 
 const mockMenuItems = [
   {
@@ -69,8 +70,11 @@ return (
   </div>
   <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>{menuTitle}</div>
   <div style={{ flex: 1, textAlign: 'right' }}>
+  <Link to="/swap-menu">
     <button className="button">Integrate Menus</button>
-  </div>
+  </Link>
+</div>
+
 </div>
 
 
