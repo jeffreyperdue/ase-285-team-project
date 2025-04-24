@@ -95,6 +95,10 @@ export default function ProfileIcon() {
 
 				{isOpen && (
 					<div className='dropdown-menu'>
+						<div className='dropdown-email'>
+							{getCookie('email')}
+						</div>
+
 						{isAdmin === 'true' ? (
 							<div
 								onClick={toUserMaintenance}
