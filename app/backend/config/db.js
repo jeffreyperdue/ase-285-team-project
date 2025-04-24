@@ -11,4 +11,8 @@ const connectDB = async () => {
   }
 };
 
+<<<<<<< HEAD
 module.exports = connectDB;
+=======
+module.exports = connectDB;
+>>>>>>> owen/main

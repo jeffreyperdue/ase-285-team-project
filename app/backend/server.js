@@ -40,6 +40,9 @@ app.use('/api', menuItemRoutes);
 const auth = require('./routes/user.routes');
 app.use('/api/auth', auth);
 
+const businessRoutes = require('./routes/businessRoutes');
+app.use('/api/business', businessRoutes);
+
 // You can test this by visiting http://localhost:5000/
 app.get('/', (req, res) => {
 	res.send('NomNomSafe API is running');
@@ -55,3 +58,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
 });
+

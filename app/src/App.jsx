@@ -72,6 +72,10 @@ function App() {
 							path='/menuitems'
 							element={<MenuItemsPage />}
 						/>
+						<Route
+							path='/add-menu-item'
+							element={<AddMenuItemForm />}
+						/>
 					</Routes>
 				</div>
 			</Router>
