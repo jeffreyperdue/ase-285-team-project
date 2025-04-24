@@ -91,4 +91,35 @@ router.post('/signup', async (req, res) => {
 	}
 });
 
+router.post('/logout', async (req, res) => {
+	try {
+		// Clear cookies
+		res.clearCookie('cookies', {
+			secure: true,
+			sameSite: 'None',
+		});
+		res.clearCookie('email', {
+			secure: true,
+			sameSite: 'None',
+		});
+		res.clearCookie('isAdmin', {
+			secure: true,
+			sameSite: 'None',
+		});
+		res.clearCookie('isAuthorized', {
+			secure: true,
+			sameSite: 'None',
+		});
+
+		// Send response
+		res
+			.status(200)
+			.json({ message: 'Logged out successfully' });
+	} catch (err) {
+		res.status(400).json({
+			error: 'Error logging out: ' + err.message,
+		});
+	}
+});
+
 module.exports = router;

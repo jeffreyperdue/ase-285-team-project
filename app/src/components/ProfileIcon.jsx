@@ -24,9 +24,28 @@ export default function ProfileIcon() {
 		navigate('/edit-business-info');
 	};
 
-	const logout = () => {
-		setIsOpen(false);
-		setConfirmation(true);
+	const logout = async () => {
+		try {
+			const response = await fetch(
+				'http://localhost:5000/api/auth/logout',
+				{
+					method: 'POST',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				}
+			);
+
+			if (response.ok) {
+				setIsOpen(false);
+				setConfirmation(true);
+			} else {
+				console.log('Response from server not ok');
+			}
+		} catch (err) {
+			console.error(err);
+		}
 	};
 
 	const toLogin = (event) => {

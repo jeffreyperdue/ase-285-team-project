@@ -51,19 +51,9 @@ const auth = require('./routes/user.routes');
 app.use('/api/auth', auth);
 
 // You can test this by visiting http://localhost:5000/
-// app.get('/', (req, res) => {
-// 	res.send('NomNomSafe API is running');
-// });
-
-// Cookie handler
-// app.post('/', (req, res) => {
-// 	console.log('cookies:', req.body.email);
-// 	res.cookie('cookies', req.body.email, {
-// 		sameSite: 'None',
-// 	});
-// 	console.log('cookies:', req.cookies);
-// 	res.end('cookies inserted...');
-// });
+app.get('/', (req, res) => {
+	res.send('NomNomSafe API is running');
+});
 
 // 404 handler
 app.use((req, res, next) => {
