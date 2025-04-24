@@ -42,8 +42,6 @@ function App() {
 							path='/step1'
 							element={
 								<ProtectedRoute
-									checkBusiness={true}
-									step={1}
 									route={'setup'}
 									component={<SetUp step={1} />}
 								/>
@@ -54,8 +52,6 @@ function App() {
 							path='/step2'
 							element={
 								<ProtectedRoute
-									checkBusiness={true}
-									step={2}
 									route={'setup'}
 									component={<SetUp step={2} />}
 								/>
@@ -66,8 +62,6 @@ function App() {
 							path='/step3'
 							element={
 								<ProtectedRoute
-									checkBusiness={true}
-									step={3}
 									route={'setup'}
 									component={<SetUp step={3} />}
 								/>
