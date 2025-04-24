@@ -28,6 +28,7 @@ function EditLoginInfo() {
 		if (option === 'email') {
 			newCred = form.newEmail.value;
 		} else if (option === 'password') {
+			// TODO: add password validation (check newPassword against confirmNewPassword)
 			newCred = form.newPassword.value;
 		}
 

@@ -20,7 +20,7 @@ function UserMaintenance() {
 					name='addUserForm'
 					className='add-user-container'
 				>
-					<div class='question'>Add a user:</div>
+					<div className='question'>Add a user:</div>
 
 					<div>
 						<input
