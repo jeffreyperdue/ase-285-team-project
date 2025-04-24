@@ -10,7 +10,8 @@ import '../css/ProfileIcon.css';
 
 export default function ProfileIcon() {
 	const navigate = useNavigate();
-	const isAdmin = getCookie('isAdmin');
+	const isAdmin = getCookie('isAdmin') === 'true';
+	const hasBusiness = getCookie('hasBusiness') === 'true';
 
 	// Define states
 	const [isOpen, setIsOpen] = useState(false);
@@ -100,7 +101,7 @@ export default function ProfileIcon() {
 							<span>{getCookie('email')}</span>
 						</div>
 
-						{isAdmin === 'true' ? (
+						{isAdmin ? (
 							<div
 								onClick={toUserMaintenance}
 								className='dropdown-item'
@@ -126,16 +127,20 @@ export default function ProfileIcon() {
 							<span>Edit Login Info</span>
 						</div>
 
-						<div
-							onClick={toEditBusinessInfo}
-							className='dropdown-item'
-						>
-							<img
-								src={editBusinessIcon}
-								alt='Edit Business'
-							/>
-							<span>Edit Business Info</span>
-						</div>
+						{hasBusiness ? (
+							<div
+								onClick={toEditBusinessInfo}
+								className='dropdown-item'
+							>
+								<img
+									src={editBusinessIcon}
+									alt='Edit Business'
+								/>
+								<span>Edit Business Info</span>
+							</div>
+						) : (
+							<></>
+						)}
 
 						<div
 							onClick={logout}
