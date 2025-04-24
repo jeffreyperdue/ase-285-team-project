@@ -90,7 +90,7 @@ router.post('/signup', async (req, res) => {
 });
 
 // @route   POST /api/auth/logout
-// @desc    Create a new user
+// @desc    Log out
 // @access  Public (no auth yet)
 router.post('/logout', async (req, res) => {
 	try {
@@ -115,6 +115,41 @@ router.post('/logout', async (req, res) => {
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error logging out: ' + err.message,
+		});
+	}
+});
+
+// @route   POST /api/auth/edit-login
+// @desc    Change login info
+// @access  Public (no auth yet)
+router.post('/edit-login', async (req, res) => {
+	try {
+		const credType = req.body.credential;
+		const currentEmail = req.cookies.email;
+		const newCred = req.body.newCredential;
+		const foundUser = await User.findOne({
+			email: currentEmail,
+		});
+
+		if (foundUser) {
+			const user = foundUser.json();
+
+			if (credType === 'email') {
+				foundUser.email = newCred;
+			} else if (credType === 'password') {
+				foundUser.password = newCred;
+			}
+
+			const saved = await foundUser.save();
+
+			// Send response
+			res.status(200).json({
+				message: `${credType} changed successfully`,
+			});
+		}
+	} catch (err) {
+		res.status(400).json({
+			error: 'Error saving email: ' + err.message,
 		});
 	}
 });
