@@ -7,24 +7,29 @@ import logoutIcon from '../icons/logout.png';
 import '../css/ProfileIcon.css';
 
 export default function ProfileIcon() {
+	const navigate = useNavigate();
+
+	// Define states
 	const [isOpen, setIsOpen] = useState(false);
 	const [confirmation, setConfirmation] = useState(false);
 
 	const toggleDropdown = () => setIsOpen(!isOpen);
 
-	const navigate = useNavigate();
-
-	const toEditLoginInfo = () => {
+	const toEditLoginInfo = (event) => {
+		event.preventDefault();
 		setIsOpen(false);
 		navigate('/edit-login-info');
 	};
 
-	const toEditBusinessInfo = () => {
+	const toEditBusinessInfo = (event) => {
+		event.preventDefault();
 		setIsOpen(false);
 		navigate('/edit-business-info');
 	};
 
-	const logout = async () => {
+	const logout = async (event) => {
+		event.preventDefault();
+
 		try {
 			const response = await fetch(
 				'http://localhost:5000/api/auth/logout',
