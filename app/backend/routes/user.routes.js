@@ -116,6 +116,10 @@ router.post('/logout', async (req, res) => {
 			secure: true,
 			sameSite: 'None',
 		});
+		res.clearCookie('hasBusiness', {
+			secure: true,
+			sameSite: 'None',
+		});
 
 		// Send response
 		res
