@@ -22,11 +22,6 @@ router.post('/signin', async (req, res) => {
 		if (foundUser) {
 			console.log('Found user in db');
 
-			// Set 'cookies' to 'express'
-			res.cookie('cookies', 'express', {
-				secure: true,
-				sameSite: 'None',
-			});
 			// Add email cookie
 			res.cookie('email', req.body.email, {
 				secure: true,
@@ -94,10 +89,6 @@ router.post('/signup', async (req, res) => {
 router.post('/logout', async (req, res) => {
 	try {
 		// Clear cookies
-		res.clearCookie('cookies', {
-			secure: true,
-			sameSite: 'None',
-		});
 		res.clearCookie('email', {
 			secure: true,
 			sameSite: 'None',
