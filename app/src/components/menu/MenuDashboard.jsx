@@ -63,11 +63,26 @@ function MenuDashboard() {
         setShowConfirm(true);
     };
 
-    const handleConfirmDelete = () => {
-        setMenus(menus.filter((_, i) => i !== menuToDelete));
-        setMenuToDelete(null);
-        setShowConfirm(false);
-    };
+	const handleConfirmDelete = async () => {
+		const menuToRemove = menus[menuToDelete];
+	
+		if (!menuToRemove?._id) {
+			console.error('Menu ID missing — cannot delete');
+			return;
+		}
+	
+		try {
+			await axios.delete(`/api/menus/${menuToRemove._id}`); // Make DELETE request
+	
+			// Remove menu from local state
+			setMenus((prevMenus) => prevMenus.filter((_, i) => i !== menuToDelete));
+			setMenuToDelete(null);
+			setShowConfirm(false);
+		} catch (err) {
+			console.error('Error deleting menu:', err);
+		}
+	};
+	
 
     const handleCancelDelete = () => {
         setShowConfirm(false);
@@ -120,24 +135,32 @@ function MenuDashboard() {
                 ))}
             </div>
 
-            {showConfirm && (
-                <div className='confirm-delete-box'>
-                    <div className='confirm-content'>
-                        <p className='confirm-title'>Confirm Deletion?</p>
-                        <p className='confirm-message'>
-                            You are deleting <strong>{menus[menuToDelete]?.title}</strong>.
-                        </p>
-                    </div>
-                    <div className='delete-buttons-box'>
-                        <button className='delete-cancel' onClick={handleCancelDelete}>
-                            No, do not Delete
-                        </button>
-                        <button className='delete-confirm' onClick={handleConfirmDelete}>
-                            Yes, Delete
-                        </button>
-                    </div>
-                </div>
-            )}
+					{showConfirm && (
+			<div className='confirm-delete-box'>
+				<div className='confirm-content'>
+					<p className='confirm-title'>Confirm Deletion?</p>
+					<p className='confirm-message'>
+						You are deleting <strong>{menus[menuToDelete]?.title}</strong>.
+					</p>
+				</div>
+				<div className='delete-buttons-box'>
+					<button
+						type="button"
+						className='delete-cancel'
+						onClick={handleCancelDelete}
+					>
+						No, do not Delete
+					</button>
+					<button
+						type="button"
+						className='delete-confirm'
+						onClick={handleConfirmDelete}
+					>
+						Yes, Delete
+					</button>
+				</div>
+			</div>
+		)}
         </div>
     );
 }

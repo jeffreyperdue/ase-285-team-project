@@ -60,4 +60,17 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  try {
+    const deleted = await Menu.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ error: 'Menu not found' });
+    }
+    res.json({ message: 'Menu deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Could not delete menu' });
+  }
+});
+
+
 module.exports = router;
