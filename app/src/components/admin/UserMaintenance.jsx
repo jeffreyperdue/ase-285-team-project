@@ -2,7 +2,7 @@ import '../../css/admin.scss';
 import AdminTable from './AdminTable';
 import { useNavigate } from 'react-router-dom';
 
-function Admin() {
+function UserMaintenance() {
 	const navigate = useNavigate();
 
 	const handleAddUser = (event) => {
@@ -50,4 +50,4 @@ function Admin() {
 	);
 }
 
-export default Admin;
+export default UserMaintenance;
