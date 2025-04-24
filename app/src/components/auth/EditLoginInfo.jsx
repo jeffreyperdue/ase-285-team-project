@@ -23,21 +23,24 @@ function EditLoginInfo() {
 	const save = async (event) => {
 		event.preventDefault();
 		const form = event.target;
-		const newCred = (option) => {
-			switch (option) {
-				case 'email':
-					return form.newEmail.value;
-				case 'password':
-					return form.newPassword.value;
-				default:
-					return null;
-			}
-		};
+		var newCred;
+
+		if (option === 'email') {
+			newCred = form.newEmail.value;
+		} else if (option === 'password') {
+			newCred = form.newPassword.value;
+		}
+
+		console.log('credType:', option);
+		console.log('newCred:', newCred);
+
 		const formData = {
 			credType: option,
 			email: getCookie('email'),
 			newCred: newCred,
 		};
+
+		console.log('formData:', formData);
 
 		try {
 			const response = await fetch(
@@ -79,6 +82,8 @@ function EditLoginInfo() {
 			<div className='edit-login-info-form-container'>
 				<form
 					name='editLoginInfoForm'
+					method='POST'
+					onSubmit={save}
 					className='edit-login-info-form'
 				>
 					<div>
@@ -121,7 +126,6 @@ function EditLoginInfo() {
 						{option ? (
 							<button
 								type='submit'
-								onClick={save}
 								className='save-btn button'
 							>
 								Save

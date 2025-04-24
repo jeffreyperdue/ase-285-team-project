@@ -129,45 +129,71 @@ router.post('/logout', async (req, res) => {
 });
 
 // @route   POST /api/auth/edit-login
-// @desc    Change login info
+// @desc    Change email or password
 // @access  Public (no auth yet)
 router.post('/edit-login', async (req, res) => {
 	try {
-		const credType = req.body.credential;
+		console.log('req.body.credential:', req.body.credType);
+		console.log('req.cookies.email:', req.cookies.email);
+		console.log('req.body.newCred', req.body.newCred);
+
+		const credType = req.body.credType;
 		const currentEmail = req.cookies.email;
-		const newCred = req.body.newCredential;
-		const foundUser = await User.findOne({
-			email: currentEmail,
-		});
+		const newCred = req.body.newCred;
+		var updatedUser;
 
-		if (foundUser) {
-			const user = foundUser.json();
+		if (credType === 'email') {
+			console.log('credType is email');
 
-			if (credType === 'email') {
-				foundUser.email = newCred;
-			} else if (credType === 'password') {
-				foundUser.password = newCred;
-			}
+			updatedUser = await User.findOneAndUpdate(
+				{ email: currentEmail },
+				{ $set: { email: newCred } },
+				{ new: true }
+			);
 
-			// Save change to DB
-			const saved = await foundUser.save();
-
-			// Reset email cookie
-			if (credType === 'email') {
-				res.cookie('email', encodeURIComponent(newCred), {
+			if (updatedUser.email === newCred) {
+				// Update the email cookie
+				res.cookie('email', newCred, {
 					secure: true,
 					sameSite: 'None',
 				});
-			}
 
-			// Send response
-			res.status(200).json({
-				message: `${credType} changed successfully`,
-			});
+				// Send response
+				res.status(200).json({
+					message: 'Email changed successfully',
+				});
+			} else {
+				res
+					.status(400)
+					.json({ error: 'Error saving email' });
+			}
+		} else if (credType === 'password') {
+			console.log('credType is password');
+
+			updatedUser = await User.findOneAndUpdate(
+				{ email: currentEmail },
+				{ $set: { password: newCred } },
+				{ new: true }
+			);
+
+			if (updatedUser.password === newCred) {
+				// Send response
+				res.status(200).json({
+					message: 'Password changed successfully',
+				});
+			} else {
+				res
+					.status(400)
+					.json({ error: 'Error saving password' });
+			}
+		} else {
+			res
+				.status(400)
+				.json({ error: 'Credential cannot be changed' });
 		}
 	} catch (err) {
 		res.status(400).json({
-			error: 'Error saving email: ' + err.message,
+			error: 'Error changing login info: ' + err.message,
 		});
 	}
 });
