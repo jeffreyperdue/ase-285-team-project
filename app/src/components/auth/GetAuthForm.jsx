@@ -35,8 +35,8 @@ function GetAuthForm({ formName }) {
 			);
 
 			if (response.ok) {
-				const result = await response;
-				console.log(result.message);
+				const user = await response.json();
+				localStorage.setItem('business_id', user.business_id);
 				navigate('/step1'); // Redirect on success
 			} else {
 				console.log('sign up response: ' + response.body);
@@ -76,6 +76,7 @@ function GetAuthForm({ formName }) {
 			if (response.ok) {
 				const result = await response.json();
 				console.log(result.message);
+				localStorage.setItem('business_id', result.business_id); 
 				navigate('/dashboard');
 			} else {
 				console.log('sign in response: ' + response.body);

@@ -12,9 +12,14 @@ function MenuDashboard() {
     // Fetch menus from backend on initial render
 	useEffect(() => {
 		const fetchMenus = async () => {
+			const businessId = localStorage.getItem('business_id');
+			if (!businessId) {
+				console.warn("No business_id in localStorage");
+				return;
+			}
 			try {
-				const businessId = localStorage.getItem('business_id'); // or from auth
 				const res = await axios.get(`/api/businesses/${businessId}`);
+				console.log('Business with menus:', res.data);
 				const fetchedMenus = res.data.menus.map(menu => ({
 					...menu,
 					isEditable: menu.title !== 'Master Menu',
@@ -26,6 +31,7 @@ function MenuDashboard() {
 		};
 		fetchMenus();
 	}, []);
+	
 	
 
     // Add a new menu to backend and update state
