@@ -112,6 +112,10 @@ router.post('/signup', async (req, res) => {
 router.post('/logout', async (req, res) => {
 	try {
 		// Clear cookies
+		res.clearCookie('fullName', {
+			secure: true,
+			sameSite: 'None',
+		});
 		res.clearCookie('email', {
 			secure: true,
 			sameSite: 'None',
@@ -157,7 +161,16 @@ router.post('/edit-login', async (req, res) => {
 				foundUser.password = newCred;
 			}
 
+			// Save change to DB
 			const saved = await foundUser.save();
+
+			// Reset email cookie
+			if (credType === 'email') {
+				res.cookie('email', encodeURIComponent(newCred), {
+					secure: true,
+					sameSite: 'None',
+				});
+			}
 
 			// Send response
 			res.status(200).json({

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import ChangeEmail from './ChangeEmail';
 import ChangePassword from './ChangePassword';
 import GetConfirmationMessage from '../ConfirmationMessage';
+import getCookie from '../../assets/cookies';
 import '../../css/auth.scss';
 
 function EditLoginInfo() {
@@ -19,9 +20,50 @@ function EditLoginInfo() {
 		}
 	};
 
-	const save = (event) => {
+	const save = async (event) => {
 		event.preventDefault();
-		setConfirmation(true);
+		const form = event.target;
+		const newCred = (option) => {
+			switch (option) {
+				case 'email':
+					return form.newEmail.value;
+				case 'password':
+					return form.newPassword.value;
+				default:
+					return null;
+			}
+		};
+		const formData = {
+			credType: option,
+			email: getCookie('email'),
+			newCred: newCred,
+		};
+
+		try {
+			const response = await fetch(
+				'http://localhost:5000/api/auth/edit-login',
+				{
+					method: 'POST',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(formData),
+				}
+			);
+
+			if (response.ok) {
+				const result = await response.json();
+				console.log(result.email);
+				setConfirmation(true);
+			} else {
+				console.log(response.body);
+				const error = await response;
+				console.error('Error:', error);
+			}
+		} catch (err) {
+			console.error('Error: ', err.message);
+		}
 	};
 
 	return (
