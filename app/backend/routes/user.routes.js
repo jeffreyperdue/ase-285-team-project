@@ -22,6 +22,7 @@ router.post('/signin', async (req, res) => {
 
 		if (foundUser) {
 			console.log('Found user in db');
+			const hasBusiness = foundUser.business_id !== '';
 
 			// Set name cookie
 			res.cookie('fullName', foundUser.getFullName(), {
@@ -40,6 +41,11 @@ router.post('/signin', async (req, res) => {
 			});
 			// Set authorized status cookie
 			res.cookie('isAuthorized', true, {
+				secure: true,
+				sameSite: 'None',
+			});
+			// Set hasBusiness cookie
+			res.cookie('hasBusiness', hasBusiness, {
 				secure: true,
 				sameSite: 'None',
 			});
@@ -113,10 +119,6 @@ router.post('/logout', async (req, res) => {
 			sameSite: 'None',
 		});
 		res.clearCookie('isAuthorized', {
-			secure: true,
-			sameSite: 'None',
-		});
-		res.clearCookie('hasBusiness', {
 			secure: true,
 			sameSite: 'None',
 		});
