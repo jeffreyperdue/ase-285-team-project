@@ -66,6 +66,7 @@ function GetAuthForm({ formName }) {
 				'http://localhost:5000/api/auth/signin',
 				{
 					method: 'POST',
+					credentials: 'include',
 					headers: {
 						'Content-Type': 'application/json',
 					},
@@ -73,9 +74,11 @@ function GetAuthForm({ formName }) {
 				}
 			);
 
+			// LEFT OFF
 			if (response.ok) {
 				const result = await response.json();
-				console.log(result.message);
+				console.log(result.email);
+				console.log('result.cookies:', document.cookie);
 				navigate('/dashboard');
 			} else {
 				console.log('sign in response: ' + response.body);

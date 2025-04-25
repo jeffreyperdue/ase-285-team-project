@@ -8,15 +8,16 @@ import EditLoginInfo from './components/auth/EditLoginInfo';
 import AddMenuItem from './components/menuitems/AddMenuItem.jsx';
 import MenuItemSwap from './components/menuitems/MenuItemSwap.jsx';
 import MenuItemsPage from './components/menuitems/MenuItemsPage.jsx';
-import MenuItemPicklist from './components/menuitems/MenuItemPicklist.jsx'
+import MenuItemPicklist from './components/menuitems/MenuItemPicklist.jsx';
 
 import {
 	BrowserRouter as Router,
 	Route,
 	Routes,
 } from 'react-router-dom';
-import Admin from './components/admin/Admin';
+import UserMaintenance from './components/admin/UserMaintenance';
 
+// TODO: check authorized status for routes
 function App() {
 	return (
 		<>
@@ -49,8 +50,8 @@ function App() {
 						/>
 
 						<Route
-							path='/admin'
-							element={<Admin />}
+							path='/user-maintenance'
+							element={<UserMaintenance />}
 						/>
 						<Route
 							path='/dashboard'
