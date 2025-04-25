@@ -43,6 +43,7 @@ function SetUp({ step }) {
 		  url: formData.url,
 		  address: formData.address,
 		  allergens: formData.allergens,
+		  diets: formData.diets,
 		  menuLayout: formData.menuLayout
 		};
   

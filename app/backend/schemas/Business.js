@@ -7,6 +7,7 @@ class Business {
     this.url = url;
     this.address = address;
     this.allergens = allergens;
+    this.diets = diets;
     this.menus = menus;
   }
 }
@@ -19,6 +20,7 @@ const BusinessSchema = new Schema({
     type: [String],
     default: []
   },
+  diets: { type: [String]},
   menus: [{ type: Schema.Types.ObjectId, ref: 'Menu' }]
 });
 
