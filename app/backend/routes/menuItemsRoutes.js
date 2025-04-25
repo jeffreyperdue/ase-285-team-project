@@ -10,7 +10,7 @@ router.get('/menuitems', async (req, res) => {
     try {
       let menuitems = await MenuItem.find();
   
-      // If ther eare no menuItiems pulled from mongodb
+      // If there are no menuItiems pulled from mongodb
       if (menuitems.length === 0) {
         // Create Menu Item
         const menuItem = new MenuItem({
@@ -23,7 +23,7 @@ router.get('/menuitems', async (req, res) => {
         const saved = await menuItem.save();
         menuitems = [saved]; // start list with Master Menu
       } else {
-       
+       // DO SOMETHING if not saved because oops.
       }
   
       res.json(menuitems || []);
