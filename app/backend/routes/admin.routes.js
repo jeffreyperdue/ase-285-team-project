@@ -1,7 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../schemas/User');
-import getBusinessId from '../assets/getBusinessId';
+
+const getBusinessId = async (email) => {
+	const user = await User.findOne(
+		{ email: email },
+		{ business_id: 1 }
+	);
+
+	if (user) {
+		const businessId = user.business_id;
+		console.log('Business id found');
+		return businessId;
+	}
+
+	return null;
+};
 
 // @route   POST /api/admin/get-user-list
 // @desc    Get a list of users w/ the same business_id
@@ -9,13 +23,7 @@ import getBusinessId from '../assets/getBusinessId';
 router.post('/get-user-list', async (req, res) => {
 	try {
 		const email = req.cookies.email;
-		const user = await User.findOne(
-			{ email: email },
-			{ business_id: 1 }
-		);
-
-		const business_id = user.business_id;
-
+		const business_id = await getBusinessId(email);
 		const users = await User.aggregate([
 			{ $match: { business_id: business_id } },
 			{
