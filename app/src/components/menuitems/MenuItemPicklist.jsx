@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FaChevronLeft, FaRegTrashAlt } from 'react-icons/fa'; 
+import { FaChevronRight, FaChevronLeft, FaRegTrashAlt } from 'react-icons/fa'; 
 import Checkbox from './assets/Checkbox';
 // import '../../css/styles.css';
 import '../../css/picklist.scss';
@@ -96,11 +96,8 @@ const MenuItemPicklist = () => {
         );
       };
 
-    // When a checkbox is clicked, ONLY select that item.
-    // It remembers the itemID so we can visually highlight the other items later.
+    // When a checkbox is clicked, select that item and get its parent menuIDs too
     const handleCheckboxChange = (itemID) => {
-        setSelectedItemID(itemID); // Set the focused itemID
-      
         setMenuItems((prevItems) =>
           prevItems.map(item =>
             item.itemID === itemID
@@ -140,16 +137,15 @@ const MenuItemPicklist = () => {
                 <ul className="ml-4 mt-2">
                     {itemsForThisMenu.length > 0? (
                         itemsForThisMenu.map(item => (
-                            <li
-                            key={item.itemID}
-                            className={`text-sm ${item.itemID === selectedItemID ? "bg-yellow-100" : "text-gray-500"}`}
-                            >
+                            <li key={item.itemID} className="text-sm text-gray-500">
                             <Checkbox
                                 label={item.name}
                                 isSelected={item.isSelected}
-                                onCheckboxChange={() => handleCheckboxChange(item.itemID)}
+                                onCheckboxChange={() =>
+                                    handleCheckboxChange(item.itemID)
+                                }
                             />
-                            </li>
+                        </li>
                     )))
                     : (
                         <li className="text-sm text-gray-400 italic">No items found</li>
@@ -164,27 +160,28 @@ const MenuItemPicklist = () => {
         const targetMenu = menus.find((menu) => menu.isSelected && menu.menuID !== "0");
 
         if (!targetMenu) {
-            alert("No target menu selected.");
+        alert("No target menu selected.");
+        return prevItems;
         }
 
         setMenuItems((prevItems) => {
-            // Get all the previous items and loop through
-            return prevItems.map(item => {
-                if (item.isSelected) {
-                    if (!item.menuIDs.includes(targetMenu.menuID)) {
-                        return {
-                            ...item,
-                            menuIDs: [...item.menuIDs, targetMenu.menuID],
-                            isSelected: false
-                        };
-                    }
+        // Get all the previous items and loop through
+        return prevItems.map(item => {
+            if (item.isSelected) {
+                if (!item.menuIDs.includes(targetMenu.menuID)) {
                     return {
                         ...item,
+                        menuIDs: [...item.menuIDs, targetMenu.menuID],
                         isSelected: false
                     };
                 }
-                return item;
-            });
+                return {
+                    ...item,
+                    isSelected: false
+                };
+            }
+            return item;
+        });
         });
       
         // Optionally, deselect the menu after moving
