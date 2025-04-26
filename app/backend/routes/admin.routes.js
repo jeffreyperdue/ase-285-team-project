@@ -129,4 +129,41 @@ router.post('/remove-user-access', async (req, res) => {
 	}
 });
 
+// @route   POST /api/admin/add-user-access
+// @desc    Add a user's access to a specific business
+// @access  Public (no auth yet)
+router.post('/add-user-access', async (req, res) => {
+	try {
+		const userEmail = req.cookies.email;
+		const targetEmail = req.body.email;
+		const business_id = getBusinessId(userEmail);
+
+		if (business_id !== null) {
+			const updatedUser = await User.findOneAndUpdate(
+				{ email: targetEmail },
+				{ $set: { business_id: business_id } },
+				{ new: true }
+			);
+
+			if (updatedUser.business_id === business_id) {
+				res.status(200).json({
+					message: 'User access added successfully',
+				});
+			} else {
+				res.status(400).json({
+					error: 'Error adding user access',
+				});
+			}
+		} else {
+			res.status(400).json({
+				error: `Business id not found. Business id: ${business_id}`,
+			});
+		}
+	} catch (err) {
+		res.status(400).json({
+			error: 'Error changing business id: ' + err.message,
+		});
+	}
+});
+
 module.exports = router;
