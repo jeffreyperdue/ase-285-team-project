@@ -54,7 +54,7 @@ const columns = [
 		},
 	},
 	{
-		accessorKey: 'admin',
+		accessorKey: 'status',
 		header: 'Status',
 	},
 ];

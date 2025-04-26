@@ -20,16 +20,24 @@ router.post('/get-user-list', async (req, res) => {
 
 		console.log('businessId:', business_id);
 
-		const users = await User.find(
-			{ business_id: business_id },
+		const users = await User.aggregate([
+			{ $match: { business_id: business_id } },
 			{
-				_id: 0,
-				first_name: 1,
-				last_name: 1,
-				email: 1,
-				admin: 1,
-			}
-		);
+				$project: {
+					_id: 0,
+					first_name: 1,
+					last_name: 1,
+					email: 1,
+					status: {
+						$cond: {
+							if: '$admin',
+							then: 'admin',
+							else: 'user',
+						},
+					},
+				},
+			},
+		]);
 
 		console.log('users:', users);
 		res.status(200).json(users);
