@@ -63,6 +63,7 @@ const columns = [
 ];
 
 const AdminTable = () => {
+	const navigate = useNavigate();
 	const [data, setData] = React.useState([]);
 
 	// Get a list of users associated w/ the user's business
@@ -82,7 +83,6 @@ const AdminTable = () => {
 
 				if (response.ok) {
 					const users = await response.json();
-					console.log('response is ok. users:', users);
 					setData(users);
 				} else {
 					console.error(
@@ -98,31 +98,48 @@ const AdminTable = () => {
 		getUsers();
 	}, []);
 
-	const navigate = useNavigate();
+	const changeAdminStatus = async (action, targetEmail) => {
+		const data = {
+			action: action,
+			targetEmail: targetEmail,
+		};
 
-	const handlePromote = (event) => {
+		try {
+			const response = await fetch(
+				'http://localhost:5000/api/admin/change-admin-status',
+				{
+					method: 'POST',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(data),
+				}
+			);
+
+			if (response.ok) {
+				navigate(0); // Reloads the page to show changes
+			}
+		} catch (err) {
+			console.error('Error:', err.message);
+		}
+	};
+
+	const removeUserAccess = async (event) => {
 		event.preventDefault();
 		navigate('/user-maintenance');
 	};
 
-	const handleDemote = (event) => {
-		event.preventDefault();
-		navigate('/user-maintenance');
-	};
-
-	const handleRemoveAccess = (event) => {
-		event.preventDefault();
-		navigate('/user-maintenance');
-	};
-
-	const getBtn = (status) => {
+	const getBtn = (status, email) => {
 		switch (status) {
 			case 'user':
 				return (
 					<i title='Promote user to admin'>
 						<img
 							src={promoteAdminIcon}
-							onClick={handlePromote}
+							onClick={() =>
+								changeAdminStatus('promote', email)
+							}
 							alt='Promote user icon'
 							className='admin-table-icon'
 						/>
@@ -133,7 +150,9 @@ const AdminTable = () => {
 					<i title='Demote admin to user'>
 						<img
 							src={demoteAdminIcon}
-							onClick={handleDemote}
+							onClick={() =>
+								changeAdminStatus('demote', email)
+							}
 							alt='Demote admin icon'
 							className='admin-table-icon'
 						/>
@@ -158,13 +177,13 @@ const AdminTable = () => {
 					gap: '15px',
 				}}
 			>
-				{getBtn(row.original.status)}
+				{getBtn(row.original.status, row.original.email)}
 
 				<i title='Remove user access'>
 					<img
 						src={removeUserIcon}
 						alt='Remove user access icon'
-						onClick={handleRemoveAccess}
+						onClick={() => removeUserAccess}
 						className='admin-table-icon'
 					/>
 				</i>

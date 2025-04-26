@@ -13,12 +13,7 @@ router.post('/get-user-list', async (req, res) => {
 			{ business_id: 1 }
 		);
 
-		if (user) {
-			console.log('user found');
-		}
 		const business_id = user.business_id;
-
-		console.log('businessId:', business_id);
 
 		const users = await User.aggregate([
 			{ $match: { business_id: business_id } },
@@ -39,7 +34,6 @@ router.post('/get-user-list', async (req, res) => {
 			},
 		]);
 
-		console.log('users:', users);
 		res.status(200).json(users);
 	} catch (err) {
 		res.status(400).json({
@@ -55,14 +49,13 @@ router.post('/change-admin-status', async (req, res) => {
 	try {
 		const action = req.body.action;
 		const targetEmail = req.body.targetEmail;
+		var admin = false;
 
 		if (action !== 'promote' && action !== 'demote') {
 			res
 				.status(400)
 				.json({ error: `Unknown action: ${action}` });
 		}
-
-		var admin = false;
 
 		if (action === 'promote') {
 			admin = true;
@@ -78,11 +71,11 @@ router.post('/change-admin-status', async (req, res) => {
 			res
 				.status(200)
 				.json({ message: `User ${action}d successfully` });
+		} else {
+			res
+				.status(400)
+				.json({ error: 'Error saving admin status' });
 		}
-
-		res
-			.status(400)
-			.json({ error: 'Error saving admin status' });
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error changing admin status: ' + err.message,
