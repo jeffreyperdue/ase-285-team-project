@@ -31,6 +31,14 @@ import {
  */
 const columns = [
 	{
+		accessorKey: 'first_name',
+		header: 'First Name',
+	},
+	{
+		accessorKey: 'last_name',
+		header: 'Last Name',
+	},
+	{
 		accessorKey: 'email',
 		header: 'User Email',
 		muiTableHeadCellProps: {
@@ -46,25 +54,47 @@ const columns = [
 		},
 	},
 	{
-		accessorKey: 'status',
+		accessorKey: 'admin',
 		header: 'Status',
 	},
 ];
 
-// dummy data for testing UI:
-const data = [
-	{ email: 'johndoe@cafebritt.com', status: 'admin' },
-	{
-		email: 'peterparker@cafebritt.com',
-		status: 'user',
-	},
-	{
-		email: 'jeremyrenner@cafebritt.com',
-		status: 'user',
-	},
-];
-
 const AdminTable = () => {
+	const [data, setData] = React.useState([]);
+
+	// Get a list of users associated w/ the user's business
+	React.useEffect(() => {
+		const getUsers = async () => {
+			try {
+				const response = await fetch(
+					'http://localhost:5000/api/admin/get-user-list',
+					{
+						method: 'POST',
+						credentials: 'include',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+					}
+				);
+
+				if (response.ok) {
+					const users = await response.json();
+					console.log('response is ok. users:', users);
+					setData(users);
+				} else {
+					console.error(
+						'Error: response not ok:',
+						response.error
+					);
+				}
+			} catch (err) {
+				console.error('Error: ', err.message);
+			}
+		};
+
+		getUsers();
+	}, []);
+
 	const navigate = useNavigate();
 
 	const handlePromote = (event) => {
