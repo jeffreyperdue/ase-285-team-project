@@ -7,7 +7,7 @@ import EditLoginInfo from './components/auth/EditLoginInfo';
 // import FilterPanel from './components/menu/FilterPanel';
 import AddMenuItem from './components/menuitems/AddMenuItem.jsx';
 import MenuItemsPage from './components/menuitems/MenuItemsPage.jsx';
-import MenuItemPicklist from './components/menuitems/MenuItemPicklist.jsx';
+import MenuItemPicklist from './components/menuitems/MenuItemSwap.jsx';
 
 import {
 	BrowserRouter as Router,
@@ -61,7 +61,7 @@ function App() {
 							element={<EditBusinessInfo />}
 						/>
 						<Route
-							path='/addmenuitem'
+							path='/add-menu-item'
 							element={<AddMenuItem />}
 						/>
 						<Route

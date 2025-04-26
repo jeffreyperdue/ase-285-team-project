@@ -109,7 +109,7 @@ const MenuItemPicklist = () => {
       });
     };
     
-
+    // Menu checkbox changes
     const handleMenuCheckboxChange = (menuID) => {
         setMenus((prevMenus) =>
             prevMenus.map((menu) =>
@@ -238,6 +238,15 @@ const MenuItemPicklist = () => {
     
 
     return (
+      <div className="center">
+        {/* Top section: buttons + menu name */}
+        <div className="picklist-header-row">
+          <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>Add Item to Menu</div>
+          <div style={{ flex: 1, textAlign: 'right' }}>
+            <button className="button">Save</button>
+          </div>
+        </div>
+
         <div className="flex-container menu-items-container">
           {/* Left Tree for Other Menus */}
           <div className="menu-wrapper">
@@ -283,6 +292,7 @@ const MenuItemPicklist = () => {
             </div>
           </div>
         </div>
+      </div>
     );
 };
 
