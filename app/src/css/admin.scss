@@ -53,14 +53,12 @@ input[type='email'].user-email {
 	justify-content: center;
 }
 
-.promote-btn {
-	background-color: var(--mint-green);
-}
-
-.demote-btn {
-	background-color: var(--salmon);
-}
-
-.remove-access-btn {
-	background-color: var(--delete-red);
+.admin {
+	&-table {
+		&-icon {
+			height: 30px;
+			width: 30px;
+			cursor: pointer;
+		}
+	}
 }

@@ -16,6 +16,9 @@ import {
 	TableHead,
 	TableRow,
 } from '@mui/material';
+import removeUserIcon from '../../icons/remove-user.png';
+import demoteAdminIcon from '../../icons/demote-admin.png';
+import promoteAdminIcon from '../../icons/promote-admin.png';
 
 //define TData type with JSDoc
 /**
@@ -116,23 +119,21 @@ const AdminTable = () => {
 		switch (status) {
 			case 'user':
 				return (
-					<button
-						type='submit'
-						className='button promote-btn'
+					<img
+						src={promoteAdminIcon}
 						onClick={handlePromote}
-					>
-						Promote to Admin
-					</button>
+						alt='Promote user icon'
+						className='admin-table-icon'
+					/>
 				);
 			case 'admin':
 				return (
-					<button
-						type='submit'
-						className='button demote-btn'
+					<img
+						src={demoteAdminIcon}
 						onClick={handleDemote}
-					>
-						Demote to User
-					</button>
+						alt='Demote admin icon'
+						className='admin-table-icon'
+					/>
 				);
 			default:
 				return <></>;
@@ -150,13 +151,12 @@ const AdminTable = () => {
 			<Box>
 				{getBtn(row.original.status)}
 
-				<button
-					type='submit'
-					className='button remove-access-btn'
+				<img
+					src={removeUserIcon}
+					alt='Remove user access icon'
 					onClick={handleRemoveAccess}
-				>
-					Remove User Access
-				</button>
+					className='admin-table-icon'
+				/>
 			</Box>
 		),
 	});
