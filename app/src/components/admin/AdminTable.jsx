@@ -119,21 +119,25 @@ const AdminTable = () => {
 		switch (status) {
 			case 'user':
 				return (
-					<img
-						src={promoteAdminIcon}
-						onClick={handlePromote}
-						alt='Promote user icon'
-						className='admin-table-icon'
-					/>
+					<i title='Promote user to admin'>
+						<img
+							src={promoteAdminIcon}
+							onClick={handlePromote}
+							alt='Promote user icon'
+							className='admin-table-icon'
+						/>
+					</i>
 				);
 			case 'admin':
 				return (
-					<img
-						src={demoteAdminIcon}
-						onClick={handleDemote}
-						alt='Demote admin icon'
-						className='admin-table-icon'
-					/>
+					<i title='Demote admin to user'>
+						<img
+							src={demoteAdminIcon}
+							onClick={handleDemote}
+							alt='Demote admin icon'
+							className='admin-table-icon'
+						/>
+					</i>
 				);
 			default:
 				return <></>;
@@ -156,12 +160,14 @@ const AdminTable = () => {
 			>
 				{getBtn(row.original.status)}
 
-				<img
-					src={removeUserIcon}
-					alt='Remove user access icon'
-					onClick={handleRemoveAccess}
-					className='admin-table-icon'
-				/>
+				<i title='Remove user access'>
+					<img
+						src={removeUserIcon}
+						alt='Remove user access icon'
+						onClick={handleRemoveAccess}
+						className='admin-table-icon'
+					/>
+				</i>
 			</Box>
 		),
 	});
