@@ -102,17 +102,17 @@ const AdminTable = () => {
 
 	const handlePromote = (event) => {
 		event.preventDefault();
-		navigate('/admin');
+		navigate('/user-maintenance');
 	};
 
 	const handleDemote = (event) => {
 		event.preventDefault();
-		navigate('/admin');
+		navigate('/user-maintenance');
 	};
 
 	const handleRemoveAccess = (event) => {
 		event.preventDefault();
-		navigate('/admin');
+		navigate('/user-maintenance');
 	};
 
 	const getBtn = (status) => {
