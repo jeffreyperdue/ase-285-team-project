@@ -10,12 +10,12 @@ function ErrorMessage({ message, destination }) {
 	};
 
 	return (
-		<div className='confirmation-container'>
+		<div className='error-container'>
 			{message}
 			<button
 				type='button'
 				onClick={nav}
-				className='button'
+				className='button error-btn'
 			>
 				Ok
 			</button>
