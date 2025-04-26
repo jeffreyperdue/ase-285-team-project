@@ -5,14 +5,34 @@ import { useNavigate } from 'react-router-dom';
 function UserMaintenance() {
 	const navigate = useNavigate();
 
-	const addUserAccess = (event) => {
+	const addUserAccess = async (event) => {
 		event.preventDefault();
+
 		const form = event.target;
 		const data = {
-			email: form.userEmail,
-			admin: form.status,
+			email: form.userEmail.value,
+			status: form.status.value,
 		};
-		navigate('/admin');
+
+		try {
+			const response = await fetch(
+				'http://localhost:5000/api/admin/add-user-access',
+				{
+					method: 'POST',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(data),
+				}
+			);
+
+			if (response.ok) {
+				navigate(0);
+			}
+		} catch (err) {
+			console.error('Error:', err.message);
+		}
 	};
 
 	return (
@@ -20,7 +40,6 @@ function UserMaintenance() {
 			<h1>User Maintenance</h1>
 
 			<div className='user-maintenance-container'>
-				{/* TO DO: add radio btns for choosing Admin/User status */}
 				<form
 					name='addUserForm'
 					method='POST'
@@ -55,6 +74,7 @@ function UserMaintenance() {
 								type='radio'
 								name='status'
 								value='user'
+								required
 							/>
 							User
 						</label>

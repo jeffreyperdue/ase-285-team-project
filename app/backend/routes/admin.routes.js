@@ -97,9 +97,8 @@ router.post('/change-admin-status', async (req, res) => {
 // @access  Public (no auth yet)
 router.post('/remove-user-access', async (req, res) => {
 	try {
-		const userEmail = req.cookies.email;
+		const business_id = getBusinessId(req.cookies.email);
 		const targetEmail = req.body.email;
-		const business_id = getBusinessId(userEmail);
 
 		if (business_id !== null) {
 			const updatedUser = await User.findOneAndUpdate(
@@ -134,8 +133,9 @@ router.post('/remove-user-access', async (req, res) => {
 // @access  Public (no auth yet)
 router.post('/add-user-access', async (req, res) => {
 	try {
-		const userEmail = req.cookies.email;
-		const business_id = getBusinessId(userEmail);
+		const business_id = await getBusinessId(
+			req.cookies.email
+		);
 		const targetEmail = req.body.email;
 		const status = req.body.status;
 		const isAdmin = status === 'admin' ? true : false;
@@ -158,7 +158,7 @@ router.post('/add-user-access', async (req, res) => {
 				});
 			} else {
 				res.status(400).json({
-					error: 'Error adding user access',
+					error: 'Error saving user access',
 				});
 			}
 		} else {
@@ -168,7 +168,7 @@ router.post('/add-user-access', async (req, res) => {
 		}
 	} catch (err) {
 		res.status(400).json({
-			error: 'Error changing business id: ' + err.message,
+			error: 'Error adding user access: ' + err.message,
 		});
 	}
 });
