@@ -135,13 +135,20 @@ router.post('/remove-user-access', async (req, res) => {
 router.post('/add-user-access', async (req, res) => {
 	try {
 		const userEmail = req.cookies.email;
-		const targetEmail = req.body.email;
 		const business_id = getBusinessId(userEmail);
+		const targetEmail = req.body.email;
+		const status = req.body.status;
+		const isAdmin = status === 'admin' ? true : false;
 
 		if (business_id !== null) {
 			const updatedUser = await User.findOneAndUpdate(
 				{ email: targetEmail },
-				{ $set: { business_id: business_id } },
+				{
+					$set: {
+						business_id: business_id,
+						admin: isAdmin,
+					},
+				},
 				{ new: true }
 			);
 
