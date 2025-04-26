@@ -1,7 +1,9 @@
 import { useState, changeState } from 'react';
-import '../../css/styles.css'
 import AllergenList from '../auth/AllergenList';
 import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import getCookie from '../../assets/cookies';
+import '../../css/styles.css'
 
 // Collapsible Panel Component
 const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
@@ -52,8 +54,9 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
         setSelectedIds(prev => prev.filter(existingId => existingId !== id));
       };
   
+
+
     return (
-      <div className="center">
         <div className="collapsible-panel-add">
           <div className="panel-header" onClick={togglePanel}>
             <span
@@ -121,7 +124,6 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
             </button>
           </div>
         </div>
-      </div>
     );
   };
 
@@ -136,9 +138,34 @@ const AddMenuItemForm = () => {
       setPanels([...panels, {}]); // Adds a new panel to the array
     };
 
+    const navigate = useNavigate();
+	  const isAuthorized = getCookie('isAuthorized');
+
+    const toMenu = (event) => {
+      event.preventDefault();
+  
+      if (isAuthorized === 'true') {
+        navigate('/menuitems');
+      } else {
+        navigate('/');
+      }
+    };
+
     return (
-        <div>
+      <div>
+        <div className='center add-center-flex'>
+          <div className='add-header-row'>
+            <div style={{ flex: 1 }}>
+              <button className="button" onClick={toMenu}>Menu</button>
+            </div>
+            <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>Add Menu Items</div>
+            <div style={{ flex: 1, textAlign: 'right' }}>
+              <button className="button">Save All</button>
+            </div>
+          </div>
+        </div>
             {/* Render Collapsible Panels */}
+            <div className='center add-center-flex'>
             {panels.map((panel, index) => (
                 <CollapsiblePanel
                 key={index}
@@ -147,7 +174,9 @@ const AddMenuItemForm = () => {
                 onAddPanel={handleAddPanel}  // Pass the add panel function as a prop
                 />
             ))}
-        </div>
+            </div>
+        
+      </div>
     )
 }
 
