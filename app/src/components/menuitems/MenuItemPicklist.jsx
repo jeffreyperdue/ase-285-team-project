@@ -78,9 +78,6 @@ const MenuItemPicklist = () => {
 
     const [searchTerms, setSearchTerms] = useState({ masterMenu: '', otherMenus: '' });
 
-    const [selectedItemID, setSelectedItemID] = useState(null);
-
-
     // Initialize masterMenu and otherMenus directly from the menus array
     const masterMenu = menus.find(menu => menu.menuID === "0");
     const otherMenus = menus.filter(menu => menu.menuID !== "0");
@@ -156,43 +153,43 @@ const MenuItemPicklist = () => {
     };
 
     const handleMoveToMenu = () => {
-        // Find the selected menu (excluding Master Menu "0")
-        const targetMenu = menus.find((menu) => menu.isSelected && menu.menuID !== "0");
-
-        if (!targetMenu) {
-        alert("No target menu selected.");
-        return prevItems;
-        }
-
         setMenuItems((prevItems) => {
-        // Get all the previous items and loop through
-        return prevItems.map(item => {
+          // Find the selected menu (excluding Master Menu "0")
+          const targetMenu = menus.find((menu) => menu.isSelected && menu.menuID !== "0");
+
+          if (!targetMenu) {
+            alert("No target menu selected.");
+            return prevItems;
+          }
+          return prevItems.map(item => {
             if (item.isSelected) {
-                if (!item.menuIDs.includes(targetMenu.menuID)) {
-                    return {
-                        ...item,
-                        menuIDs: [...item.menuIDs, targetMenu.menuID],
-                        isSelected: false
-                    };
-                }
-                return {
-                    ...item,
-                    isSelected: false
+              // Check if the item already belongs to the target menu
+              if (!item.menuIDs.includes(targetMenu.menuID)) {
+                return { 
+                  ...item, 
+                  menuIDs: [...item.menuIDs, targetMenu.menuID], 
+                  isSelected: false // Deselect after move
                 };
+              }
+              // Already belongs — just deselect
+              return { 
+                ...item, 
+                isSelected: false 
+              };
             }
             return item;
-        });
+          });
         });
       
-        // Optionally, deselect the menu after moving
-        setMenus(prevMenus =>
-            prevMenus.map(menu =>
-            menu.menuID === targetMenu.menuID
-                ? { ...menu, isSelected: false }
-                : menu
-            )
-        )
-    };
+        // Deselect the target menu after moving
+        // setMenus(prevMenus =>
+        //  prevMenus.map(menu =>
+        //    menu.menuID === "0" || menu.menuID !== targetMenu.menuID
+        //      ? menu
+        //      : { ...menu, isSelected: false }
+        //  )
+        // );
+      };
 
     const handleDeleteItem = () => {
         setMenuItems((prevItems) => {
