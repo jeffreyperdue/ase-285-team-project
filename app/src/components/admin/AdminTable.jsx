@@ -148,7 +148,12 @@ const AdminTable = () => {
 		positionActionsColumn: 'last',
 		layoutMode: 'grid-no-grow',
 		renderRowActions: ({ row }) => (
-			<Box>
+			<Box
+				sx={{
+					display: 'flex',
+					gap: '15px',
+				}}
+			>
 				{getBtn(row.original.status)}
 
 				<img
