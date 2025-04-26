@@ -125,9 +125,26 @@ const AdminTable = () => {
 		}
 	};
 
-	const removeUserAccess = async (event) => {
-		event.preventDefault();
-		navigate('/user-maintenance');
+	const removeUserAccess = async (targetEmail) => {
+		try {
+			const response = await fetch(
+				'http://localhost:5000/api/admin/remove-user-access',
+				{
+					method: 'POST',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ email: targetEmail }),
+				}
+			);
+
+			if (response.ok) {
+				navigate(0);
+			}
+		} catch (err) {
+			console.error('Error:', err.message);
+		}
 	};
 
 	const getBtn = (status, email) => {
@@ -183,7 +200,9 @@ const AdminTable = () => {
 					<img
 						src={removeUserIcon}
 						alt='Remove user access icon'
-						onClick={() => removeUserAccess}
+						onClick={() =>
+							removeUserAccess(row.original.email)
+						}
 						className='admin-table-icon'
 					/>
 				</i>
