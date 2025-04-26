@@ -3,6 +3,8 @@ const router = express.Router();
 const MenuItem = require('../schemas/MenuItem');
 const mongoose = require('mongoose');
 
+
+// MENUITEMS.jsx
 // @route   GET /api/menuitems
 // @desc    Get all menu items
 // @access  Public (no auth yet)
@@ -66,37 +68,14 @@ router.put('/menuitems', async (req, res) => {
   }
 });
 
-
-// @route   POST /api/menuitems
-// @desc    Create a new menu item
-// @access  Public (no auth yet)
-router.post('/addmenuitem', async (req, res) => {
-  try {
-    const { name, description, ingredients, allergens } = req.body;
-
-    // Create new menu document from request body
-    const newMenuItem = new MenuItem({
-      name,
-      description,
-      ingredients,
-      allergens
-    });
-
-    const savedMenuItem = await newMenuItem.save();
-    res.status(201).json(savedMenuItem);
-  } catch (err) {
-    res.status(400).json({ error: 'Error creating menu: ' + err.message });
-  }
-});
-
 ///
-/// AddMenuItem
+/// ADDMENUITEM.jsx
 ///
 
-// @route   GET /api/add-menu-item
+// @route   GET /api/addmenuitem
 // @desc    Get all menu items
 // @access  Public (no auth yet)
-router.get('/menuitems', async (req, res) => {
+router.get('/addmenuitem', async (req, res) => {
   try {
     let menuitems = await MenuItem.find();
 
@@ -121,6 +100,29 @@ router.get('/menuitems', async (req, res) => {
   console.error('Error fetching menu items:', err);
   res.status(500).json({ error: 'Could not fetch menu items' });
 }
+});
+
+// @route   POST /api/menuitems
+// @desc    Create a new menu item
+// @access  Public (no auth yet)
+router.post('/addmenuitem', async (req, res) => {
+  try {
+    const { name, description, ingredients, allergens, menuIDs } = req.body;
+
+    // Create new menu document from request body
+    const newMenuItem = new MenuItem({
+      name,
+      description,
+      ingredients,
+      allergens,
+      menuIDs
+    });
+
+    const savedMenuItem = await newMenuItem.save();
+    res.status(201).json(savedMenuItem);
+  } catch (err) {
+    res.status(400).json({ error: 'Error creating menu: ' + err.message });
+  }
 });
 
 module.exports = router;
