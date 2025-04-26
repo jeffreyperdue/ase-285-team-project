@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../schemas/User');
+import getBusinessId from '../assets/getBusinessId';
 
 // @route   POST /api/admin/get-user-list
 // @desc    Get a list of users w/ the same business_id
@@ -79,6 +80,43 @@ router.post('/change-admin-status', async (req, res) => {
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error changing admin status: ' + err.message,
+		});
+	}
+});
+
+// @route   POST /api/admin/remove-user-access
+// @desc    Remove a user's access to a specific business
+// @access  Public (no auth yet)
+router.post('/remove-user-access', async (req, res) => {
+	try {
+		const userEmail = req.cookies.email;
+		const targetEmail = req.body.email;
+		const business_id = getBusinessId(userEmail);
+
+		if (business_id !== null) {
+			const updatedUser = await User.findOneAndUpdate(
+				{ email: targetEmail },
+				{ $set: { business_id: '' } },
+				{ new: true }
+			);
+
+			if (updatedUser.business_id === '') {
+				res.status(200).json({
+					message: 'User access removed successfully',
+				});
+			} else {
+				res.status(400).json({
+					error: 'Error removing user access',
+				});
+			}
+		} else {
+			res.status(400).json({
+				error: `Business id not found. Business id: ${business_id}`,
+			});
+		}
+	} catch (err) {
+		res.status(400).json({
+			error: 'Error changing business id: ' + err.message,
 		});
 	}
 });
