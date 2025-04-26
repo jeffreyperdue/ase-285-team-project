@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import '../css/auth.scss';
 
 function ErrorMessage({ message, destination }) {
@@ -22,5 +23,14 @@ function ErrorMessage({ message, destination }) {
 		</div>
 	);
 }
+
+// Prop validation
+ErrorMessage.propTypes = {
+	message: PropTypes.string.isRequired,
+	destination: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.number,
+	]).isRequired,
+};
 
 export default ErrorMessage;
