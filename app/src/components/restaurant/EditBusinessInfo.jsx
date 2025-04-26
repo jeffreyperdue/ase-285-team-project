@@ -5,7 +5,8 @@ import GetConfirmationMessage from '../ConfirmationMessage';
 import '../../css/EditBusinessInfo.css';
 
 const EditBusinessInfo = () => {
-	const [confirmation, setConfirmation] = useState(false);
+	const [showConfirmation, setShowConfirmation] =
+		useState(false);
 	const navigate = useNavigate();
 
 	const cancel = (event) => {
@@ -15,13 +16,16 @@ const EditBusinessInfo = () => {
 
 	const save = (event) => {
 		event.preventDefault();
-		setConfirmation(true);
+		setShowConfirmation(true);
 	};
 
 	return (
 		<form className='edit-business-info-container'>
-			{confirmation ? (
-				<GetConfirmationMessage type='edit-business-info' />
+			{showConfirmation ? (
+				<GetConfirmationMessage
+					message='Business information changed successfully.'
+					destination='/dashboard'
+				/>
 			) : (
 				<></>
 			)}

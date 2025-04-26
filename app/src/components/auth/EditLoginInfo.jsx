@@ -7,7 +7,8 @@ import '../../css/auth.scss';
 
 function EditLoginInfo() {
 	const [option, setOption] = useState('');
-	const [confirmation, setConfirmation] = useState(false);
+	const [showConfirmation, setShowConfirmation] =
+		useState(false);
 
 	const getEditLoginForm = (option) => {
 		switch (option) {
@@ -59,7 +60,7 @@ function EditLoginInfo() {
 			if (response.ok) {
 				const result = await response.json();
 				console.log(result.email);
-				setConfirmation(true);
+				setShowConfirmation(true);
 			} else {
 				console.log(response.body);
 				const error = await response;
@@ -72,8 +73,11 @@ function EditLoginInfo() {
 
 	return (
 		<div className='edit-login-info-page-container'>
-			{confirmation ? (
-				<GetConfirmationMessage type='edit-login-info' />
+			{showConfirmation ? (
+				<GetConfirmationMessage
+					message='Login information changed successfully.'
+					destination='/dashboard'
+				/>
 			) : (
 				<></>
 			)}
