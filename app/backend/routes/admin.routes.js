@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../schemas/User');
 
 // @route   POST /api/admin/get-user-list
-// @desc    Get a user
+// @desc    Get a list of users w/ the same business_id
 // @access  Public (no auth yet)
 router.post('/get-user-list', async (req, res) => {
 	try {
@@ -44,6 +44,48 @@ router.post('/get-user-list', async (req, res) => {
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error fetching user list: ' + err.message,
+		});
+	}
+});
+
+// @route   POST /api/admin/change-admin-status
+// @desc    Change a user's admin status
+// @access  Public (no auth yet)
+router.post('/change-admin-status', async (req, res) => {
+	try {
+		const action = req.body.action;
+		const targetEmail = req.body.targetEmail;
+
+		if (action !== 'promote' && action !== 'demote') {
+			res
+				.status(400)
+				.json({ error: `Unknown action: ${action}` });
+		}
+
+		var admin = false;
+
+		if (action === 'promote') {
+			admin = true;
+		}
+
+		const updatedUser = await User.findOneAndUpdate(
+			{ email: targetEmail },
+			{ $set: { admin: admin } },
+			{ new: true }
+		);
+
+		if (updatedUser.admin === admin) {
+			res
+				.status(200)
+				.json({ message: `User ${action}d successfully` });
+		}
+
+		res
+			.status(400)
+			.json({ error: 'Error saving admin status' });
+	} catch (err) {
+		res.status(400).json({
+			error: 'Error changing admin status: ' + err.message,
 		});
 	}
 });
