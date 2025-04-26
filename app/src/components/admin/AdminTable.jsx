@@ -19,6 +19,7 @@ import {
 import removeUserIcon from '../../icons/remove-user.png';
 import demoteAdminIcon from '../../icons/demote-admin.png';
 import promoteAdminIcon from '../../icons/promote-admin.png';
+import GetConfirmationMessage from '../ConfirmationMessage';
 
 //define TData type with JSDoc
 /**
@@ -65,6 +66,11 @@ const columns = [
 const AdminTable = () => {
 	const navigate = useNavigate();
 	const [data, setData] = React.useState([]);
+	const [message, setMessage] = React.useState(
+		'Something went wrong.'
+	);
+	const [showConfirmation, setShowConfirmation] =
+		React.useState(false);
 
 	// Get a list of users associated w/ the user's business
 	React.useEffect(() => {
@@ -119,7 +125,12 @@ const AdminTable = () => {
 			);
 
 			if (response.ok) {
-				navigate(0); // Reloads the page to show changes
+				setMessage(
+					action === 'promote'
+						? 'Promoted user to admin successfully.'
+						: 'Demoted admin to user successfully.'
+				);
+				setShowConfirmation(true);
 			}
 		} catch (err) {
 			console.error('Error:', err.message);
@@ -142,7 +153,8 @@ const AdminTable = () => {
 			);
 
 			if (response.ok) {
-				navigate(0); // Reloads the page to show changes
+				setMessage(`Removed user access successfully.`);
+				setShowConfirmation(true);
 			}
 		} catch (err) {
 			console.error('Error:', err.message);
@@ -215,6 +227,15 @@ const AdminTable = () => {
 
 	return (
 		<Stack>
+			{showConfirmation ? (
+				<GetConfirmationMessage
+					message={message}
+					destination={0}
+				/>
+			) : (
+				<></>
+			)}
+
 			<Box
 				sx={{
 					display: 'flex',

@@ -1,9 +1,16 @@
 import '../../css/admin.scss';
 import AdminTable from './AdminTable';
+import GetConfirmationMessage from '../ConfirmationMessage';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 function UserMaintenance() {
 	const navigate = useNavigate();
+	const [message, setMessage] = useState(
+		'Something went wrong'
+	);
+	const [showConfirmation, setShowConfirmation] =
+		useState(false);
 
 	const addUserAccess = async (event) => {
 		event.preventDefault();
@@ -28,7 +35,8 @@ function UserMaintenance() {
 			);
 
 			if (response.ok) {
-				navigate(0);
+				setMessage('Added user access successfully.');
+				setShowConfirmation(true);
 			}
 		} catch (err) {
 			console.error('Error:', err.message);
@@ -37,6 +45,15 @@ function UserMaintenance() {
 
 	return (
 		<div className='admin-container'>
+			{showConfirmation ? (
+				<GetConfirmationMessage
+					message={message}
+					destination={0}
+				/>
+			) : (
+				<></>
+			)}
+
 			<h1>User Maintenance</h1>
 
 			<div className='user-maintenance-container'>
