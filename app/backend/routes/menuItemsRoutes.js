@@ -17,7 +17,8 @@ router.get('/menuitems', async (req, res) => {
           title: 'Example Menu Item',
           description: 'This is shown to customers',
           ingredients: 'Cheese, bread, broccoli',
-          allergens: ['Dairy, Wheat']
+          allergens: ['Dairy, Wheat'],
+          menuID: ['680a79fa3b98428dcf348668']
         });
   
         const saved = await menuItem.save();
@@ -34,7 +35,7 @@ router.get('/menuitems', async (req, res) => {
   });
   
 
-// @route   POST /api/menuitems
+// @route   PUT /api/menuitems
 // @desc    Edit an existing menu item
 // @access  Public (no auth yet)
 router.put('/menuitems', async (req, res) => {
@@ -49,7 +50,7 @@ router.put('/menuitems', async (req, res) => {
     const updatedMenuItem = await MenuItem.findByIdAndUpdate(
       id,
       // updated fields
-      { name, description, ingredients, allergens },
+      { name, description, ingredients, allergens, menuIDs },
        // Return the updated document and validate the data
       { new: true, runValidators: true}
     );
@@ -86,6 +87,40 @@ router.post('/addmenuitem', async (req, res) => {
   } catch (err) {
     res.status(400).json({ error: 'Error creating menu: ' + err.message });
   }
+});
+
+///
+/// AddMenuItem
+///
+
+// @route   GET /api/add-menu-item
+// @desc    Get all menu items
+// @access  Public (no auth yet)
+router.get('/menuitems', async (req, res) => {
+  try {
+    let menuitems = await MenuItem.find();
+
+    // If there are no menuItiems pulled from mongodb
+    if (menuitems.length === 0) {
+      // Create Menu Item
+      const menuItem = new MenuItem({
+        title: 'Example Menu Item',
+        description: 'This is shown to customers',
+        ingredients: 'Cheese, bread, broccoli',
+        allergens: ['Dairy, Wheat']
+      });
+
+      const saved = await menuItem.save();
+      menuitems = [saved]; // start list with Master Menu
+    } else {
+     // DO SOMETHING if not saved because oops.
+    }
+
+    res.json(menuitems || []);
+  } catch (err) {
+  console.error('Error fetching menu items:', err);
+  res.status(500).json({ error: 'Could not fetch menu items' });
+}
 });
 
 module.exports = router;

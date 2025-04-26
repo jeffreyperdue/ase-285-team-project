@@ -35,6 +35,7 @@ const handleAddItem = () => {
     name: '[Menu Item]',
     description: '',
     ingredients: '',
+    menuIDs: ''
   };
   setMenuItems((prev) => [...prev, newItem]);
   // TODO: Send new item to backend
