@@ -95,7 +95,7 @@ function EditLoginInfo() {
 						<div>
 							<label
 								key='email'
-								className='edit-login-info-label'
+								className='radio-label'
 							>
 								<input
 									type='radio'
@@ -108,7 +108,7 @@ function EditLoginInfo() {
 
 							<label
 								key='password'
-								className='edit-login-info-label'
+								className='radio-label'
 							>
 								<input
 									type='radio'

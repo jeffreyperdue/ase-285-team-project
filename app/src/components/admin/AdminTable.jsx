@@ -98,6 +98,7 @@ const AdminTable = () => {
 		getUsers();
 	}, []);
 
+	// Change a user's admin status
 	const changeAdminStatus = async (action, targetEmail) => {
 		const data = {
 			action: action,
@@ -125,6 +126,7 @@ const AdminTable = () => {
 		}
 	};
 
+	// Remove a user's access to a business
 	const removeUserAccess = async (targetEmail) => {
 		try {
 			const response = await fetch(
@@ -140,13 +142,14 @@ const AdminTable = () => {
 			);
 
 			if (response.ok) {
-				navigate(0);
+				navigate(0); // Reloads the page to show changes
 			}
 		} catch (err) {
 			console.error('Error:', err.message);
 		}
 	};
 
+	// Get admin table Actions btns
 	const getBtn = (status, email) => {
 		switch (status) {
 			case 'user':

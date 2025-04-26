@@ -31,11 +31,27 @@ input[type='email'].user-email {
 	}
 }
 
-.add-user-container {
-	width: 340px;
-	height: fit-content;
-	display: grid;
-	gap: 10px;
+.add-user {
+	&-form {
+		width: 340px;
+		height: fit-content;
+		display: grid;
+		gap: 20px;
+	}
+
+	&-container {
+		display: grid;
+		row-gap: 10px;
+	}
+
+	&-status-container {
+		display: grid;
+		row-gap: 10px;
+
+		input {
+			height: auto;
+		}
+	}
 }
 
 .email {
