@@ -61,7 +61,7 @@ function App() {
 							element={<EditBusinessInfo />}
 						/>
 						<Route
-							path='/add-menu-item'
+							path='/addmenuitem'
 							element={<AddMenuItem />}
 						/>
 						<Route

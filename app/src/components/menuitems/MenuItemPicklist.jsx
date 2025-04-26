@@ -75,7 +75,8 @@ const MenuItemPicklist = () => {
             menuIDs: ["0", "2"]
         },
     ]);
-
+    const [selectedItemID, setSelectedItemID] = useState(null);
+    const [selectedKeys, setSelectedKeys] = useState(new Set());
     const [searchTerms, setSearchTerms] = useState({ masterMenu: '', otherMenus: '' });
 
     // Initialize masterMenu and otherMenus directly from the menus array
@@ -94,15 +95,20 @@ const MenuItemPicklist = () => {
       };
 
     // When a checkbox is clicked, select that item and get its parent menuIDs too
-    const handleCheckboxChange = (itemID) => {
-        setMenuItems((prevItems) =>
-          prevItems.map(item =>
-            item.itemID === itemID
-              ? { ...item, isSelected: !item.isSelected }
-              : item
-          )
-        );
-      };
+    const handleCheckboxChange = (uniqueKey) => {
+      setSelectedItemID(uniqueKey.split('_')[0]); // still for highlighting by itemID
+    
+      setSelectedKeys((prevKeys) => {
+        const updated = new Set(prevKeys);
+        if (updated.has(uniqueKey)) {
+          updated.delete(uniqueKey);
+        } else {
+          updated.add(uniqueKey);
+        }
+        return updated;
+      });
+    };
+    
 
     const handleMenuCheckboxChange = (menuID) => {
         setMenus((prevMenus) =>
@@ -123,108 +129,113 @@ const MenuItemPicklist = () => {
             item.name.toLowerCase().includes(searchTerm.toLowerCase())
           );
 
+        let localCounter = 0; 
+
         return (
-            <div key={menu.menuID} className="menu-tree">
-                {/* Checkbox for the menu itself */}
-                <Checkbox
-                    label={menu.name}
-                    isSelected={menu.isSelected || false} // Add isSelected for the menu
-                    onCheckboxChange={() => handleMenuCheckboxChange(menu.menuID)}
-                />
-                <ul className="ml-4 mt-2">
-                    {itemsForThisMenu.length > 0? (
-                        itemsForThisMenu.map(item => (
-                            <li key={item.itemID} className="text-sm text-gray-500">
-                            <Checkbox
-                                label={item.name}
-                                isSelected={item.isSelected}
-                                onCheckboxChange={() =>
-                                    handleCheckboxChange(item.itemID)
-                                }
-                            />
-                        </li>
-                    )))
-                    : (
-                        <li className="text-sm text-gray-400 italic">No items found</li>
-                    )}
-                </ul>
-            </div>
+          <div key={menu.menuID} className="menu-tree">
+            <Checkbox
+              label={menu.name}
+              isSelected={menu.isSelected || false}
+              onCheckboxChange={() => handleMenuCheckboxChange(menu.menuID)}
+            />
+            <ul className="ml-4 mt-2">
+              {itemsForThisMenu.length > 0 ? (
+                itemsForThisMenu.map((item, localCounter) => {
+                  localCounter++; // Increment counter for each item
+                  return (
+                    <li
+                      key={`${item.itemID}_${localCounter}`}
+                      className={`text-sm ${item.itemID === selectedItemID ? "bg-yellow-100" : "text-gray-500"}`}
+                    >
+                      <Checkbox
+                        label={item.name}
+                        isSelected={selectedKeys.has(`${item.itemID}_${localCounter}`)}
+                        onCheckboxChange={() => handleCheckboxChange(`${item.itemID}_${localCounter}`)}
+                      />
+                    </li>
+                  );
+                })
+              ) : (
+                <li className="text-sm text-gray-400 italic">No items found</li>
+              )}
+            </ul>
+          </div>
         );
     };
 
     const handleMoveToMenu = () => {
-        setMenuItems((prevItems) => {
-          // Find the selected menu (excluding Master Menu "0")
-          const targetMenu = menus.find((menu) => menu.isSelected && menu.menuID !== "0");
-
-          if (!targetMenu) {
-            alert("No target menu selected.");
-            return prevItems;
-          }
-          return prevItems.map(item => {
-            if (item.isSelected) {
-              // Check if the item already belongs to the target menu
-              if (!item.menuIDs.includes(targetMenu.menuID)) {
-                return { 
-                  ...item, 
-                  menuIDs: [...item.menuIDs, targetMenu.menuID], 
-                  isSelected: false // Deselect after move
-                };
-              }
-              // Already belongs — just deselect
+      const targetMenu = menus.find((menu) => menu.isSelected && menu.menuID !== "0");
+    
+      if (!targetMenu) {
+        alert("No target menu selected.");
+        return;
+      }
+    
+      setMenuItems((prevItems) => {
+        return prevItems.map(item => {
+          const itemSelected = [...selectedKeys].some(key => key.startsWith(item.itemID));
+          if (itemSelected) {
+            if (!item.menuIDs.includes(targetMenu.menuID)) {
               return { 
                 ...item, 
-                isSelected: false 
+                menuIDs: [...item.menuIDs, targetMenu.menuID]
               };
             }
-            return item;
-          });
+          }
+          return item;
         });
-      
-        // Deselect the target menu after moving
-        // setMenus(prevMenus =>
-        //  prevMenus.map(menu =>
-        //    menu.menuID === "0" || menu.menuID !== targetMenu.menuID
-        //      ? menu
-        //      : { ...menu, isSelected: false }
-        //  )
-        // );
-      };
+      });
+    
+      // Clear selection after move
+      setSelectedKeys(new Set());
+      // Clear menus
+      setMenus(prevMenus =>
+        prevMenus.map(menu => ({
+          ...menu,
+          isSelected: false
+        }))
+      );
+    };
 
+    // Removing an item from a menu.
     const handleDeleteItem = () => {
-        setMenuItems((prevItems) => {
-          return prevItems.map(item => {
-            if (item.isSelected) {
-              const parentMenu = menus.find(menu => menu.isSelected);
-      
-              if (!parentMenu) {
-                alert("Please select parent menu to delete from first.");
-                return item;
-              }
-      
-              // If selected parent menu is Master Menu ("0"), do nothing
-              if (parentMenu.menuID === "0") {
-                alert("Cannot remove from Master Menu.");
-                return { ...item, isSelected: false }; // Just deselect
-              }
-            
-              if (!item) {
-                alert("Select an item on the Other Menus side.")
-              }
-
-              // Remove the parent menuID from this item's menuIDs
-              const updatedMenuIDs = item.menuIDs.filter(id => id !== parentMenu.menuID);
-      
-              return { 
-                ...item,
-                menuIDs: updatedMenuIDs,
-                isSelected: false // Deselect after operation
-              };
-            }
-            return item;
-          });
+      const parentMenu = menus.find(menu => menu.isSelected);
+    
+      if (!parentMenu) {
+        alert("Please select parent menu to delete from first.");
+        return;
+      }
+    
+      if (parentMenu.menuID === "0") {
+        alert("Cannot remove from Master Menu.");
+        return;
+      }
+    
+      setMenuItems((prevItems) => {
+        return prevItems.map(item => {
+          const itemSelected = [...selectedKeys].some(key => key.startsWith(item.itemID));
+          if (itemSelected) {
+            const updatedMenuIDs = item.menuIDs.filter(id => id !== parentMenu.menuID);
+            return { 
+              ...item,
+              menuIDs: updatedMenuIDs
+            };
+          }
+          return item;
         });
-      };
+      });
+    
+      // Clear selection after delete
+      setSelectedKeys(new Set());
+      // Clear Menus
+      setMenus(prevMenus =>
+        prevMenus.map(menu => ({
+          ...menu,
+          isSelected: false
+        }))
+      );
+    };
+    
 
     return (
         <div className="flex-container menu-items-container">
@@ -247,11 +258,11 @@ const MenuItemPicklist = () => {
       
           {/* Buttons in the middle */}
           <div className="menu-buttons-container">
+            <button className="menu-button">
+              <FaChevronRight size={20} onClick={handleDeleteItem} />
+            </button>
             <button className="menu-button" onClick={handleMoveToMenu}>
               <FaChevronLeft size={20} />
-            </button>
-            <button className="menu-button" onClick={handleDeleteItem}>
-                <FaRegTrashAlt size={20}/>
             </button>
           </div>
       
