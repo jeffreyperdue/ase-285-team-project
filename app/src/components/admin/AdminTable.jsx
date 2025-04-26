@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
 	MRT_TableBodyCellValue,
@@ -20,6 +21,7 @@ import removeUserIcon from '../../icons/remove-user.png';
 import demoteAdminIcon from '../../icons/demote-admin.png';
 import promoteAdminIcon from '../../icons/promote-admin.png';
 import GetConfirmationMessage from '../ConfirmationMessage';
+import ErrorMessage from '../ErrorMessage';
 
 //define TData type with JSDoc
 /**
@@ -65,12 +67,13 @@ const columns = [
 
 const AdminTable = () => {
 	const navigate = useNavigate();
-	const [data, setData] = React.useState([]);
-	const [message, setMessage] = React.useState(
+	const [data, setData] = useState([]);
+	const [message, setMessage] = useState(
 		'Something went wrong.'
 	);
+	const [showError, setShowError] = useState(false);
 	const [showConfirmation, setShowConfirmation] =
-		React.useState(false);
+		useState(false);
 
 	// Get a list of users associated w/ the user's business
 	React.useEffect(() => {
@@ -131,6 +134,13 @@ const AdminTable = () => {
 						: 'Demoted admin to user successfully.'
 				);
 				setShowConfirmation(true);
+			} else {
+				setMessage(
+					action === 'promote'
+						? `There was an error promoting user to admin.`
+						: `There was an error demoting admin to user.`
+				);
+				setShowError(true);
 			}
 		} catch (err) {
 			console.error('Error:', err.message);
@@ -155,6 +165,11 @@ const AdminTable = () => {
 			if (response.ok) {
 				setMessage(`Removed user access successfully.`);
 				setShowConfirmation(true);
+			} else {
+				setMessage(
+					`There was an error removing user access.`
+				);
+				setShowError(true);
 			}
 		} catch (err) {
 			console.error('Error:', err.message);
@@ -229,6 +244,15 @@ const AdminTable = () => {
 		<Stack>
 			{showConfirmation ? (
 				<GetConfirmationMessage
+					message={message}
+					destination={0}
+				/>
+			) : (
+				<></>
+			)}
+
+			{showError ? (
+				<ErrorMessage
 					message={message}
 					destination={0}
 				/>

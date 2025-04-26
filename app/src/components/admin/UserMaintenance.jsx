@@ -1,6 +1,7 @@
 import '../../css/admin.scss';
 import AdminTable from './AdminTable';
 import GetConfirmationMessage from '../ConfirmationMessage';
+import ErrorMessage from '../ErrorMessage';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -9,6 +10,7 @@ function UserMaintenance() {
 	const [message, setMessage] = useState(
 		'Something went wrong'
 	);
+	const [showError, setShowError] = useState(false);
 	const [showConfirmation, setShowConfirmation] =
 		useState(false);
 
@@ -37,6 +39,11 @@ function UserMaintenance() {
 			if (response.ok) {
 				setMessage('Added user access successfully.');
 				setShowConfirmation(true);
+			} else {
+				setMessage(
+					`There was an error adding user access.`
+				);
+				setShowError(true);
 			}
 		} catch (err) {
 			console.error('Error:', err.message);
@@ -47,6 +54,15 @@ function UserMaintenance() {
 		<div className='admin-container'>
 			{showConfirmation ? (
 				<GetConfirmationMessage
+					message={message}
+					destination={0}
+				/>
+			) : (
+				<></>
+			)}
+
+			{showError ? (
+				<ErrorMessage
 					message={message}
 					destination={0}
 				/>
