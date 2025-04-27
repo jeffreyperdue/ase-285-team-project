@@ -28,7 +28,6 @@ const setCookies = (res, user, extraFields = {}) => {
 
 // Updates a single cookie
 const updateCookie = (res, name, value) => {
-	console.log('reached updateCookie method');
 	res.cookie(name, value, options);
 };
 
