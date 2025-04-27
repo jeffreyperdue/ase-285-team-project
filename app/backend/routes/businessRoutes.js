@@ -21,13 +21,14 @@ router.get('/:id', async (req, res) => {
 // @access  Public (no auth yet)
 router.post('/', async (req, res) => {
   try {
-    const { name, url, address, allergens = [] } = req.body;
+    const { name, url, address, allergens = [], diets = [] } = req.body;
 
     const newBusiness = new Business({
       name: name?.trim(),
       url: url?.trim().toLowerCase(),
       address: address?.trim(),
       allergens,
+      diets,
       menus: []
     });
 
@@ -43,7 +44,7 @@ router.post('/', async (req, res) => {
 // @access  Public (no auth yet)
 router.put('/:id', async (req, res) => {
   try {
-    const { name, url, address, allergens, menus } = req.body;
+    const { name, url, address, allergens, diets, menus } = req.body;
 
     const updatedBusiness = await Business.findByIdAndUpdate(
       req.params.id,
@@ -52,6 +53,7 @@ router.put('/:id', async (req, res) => {
         url: url?.trim().toLowerCase(),
         address: address?.trim(),
         allergens,
+        diets,
         menus
       },
       { new: true }
