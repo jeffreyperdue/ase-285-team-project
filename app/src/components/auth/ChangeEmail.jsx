@@ -32,6 +32,22 @@ function ChangeEmail() {
 					className='new-email'
 				/>
 			</div>
+
+			<div className='form-field-container'>
+				<label htmlFor='confirmNewEmail'>
+					Confirm New Email{' '}
+					<span className='required'>*</span>
+				</label>
+
+				<input
+					type='email'
+					name='confirmNewEmail'
+					required
+					maxLength={50}
+					placeholder='Confirm New Email'
+					className='new-email'
+				/>
+			</div>
 		</>
 	);
 }
