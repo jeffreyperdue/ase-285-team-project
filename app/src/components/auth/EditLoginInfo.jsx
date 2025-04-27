@@ -29,25 +29,39 @@ function EditLoginInfo() {
 	const save = async (event) => {
 		event.preventDefault();
 		const form = event.target;
+		const email = getCookie('email');
 		var newCred;
 		var confirmNewCred;
+		var currentCred;
+		var wrongEmail = false;
 
 		if (option === 'email') {
 			newCred = form.newEmail.value;
 			confirmNewCred = form.confirmNewEmail.value;
+			currentCred = form.currentEmail.value;
 			setMessage('Emails do not match.');
+
+			if (email !== currentCred) {
+				wrongEmail = true;
+				setMessage('Current email is invalid');
+			}
 		} else if (option === 'password') {
 			newCred = form.newPassword.value;
 			confirmNewCred = form.confirmNewPassword.value;
+			currentCred = form.currentPassword.value;
 			setMessage('Passwords do not match.');
 		}
 
-		if (newCred !== confirmNewCred) {
+		const match = newCred === confirmNewCred;
+		const newMatchesCurrent =
+			match && newCred === currentCred;
+
+		if (!match || wrongEmail) {
 			setShowError(true);
 		} else {
 			const formData = {
 				credType: option,
-				email: getCookie('email'),
+				currentCred: currentCred,
 				newCred: newCred,
 			};
 
@@ -64,14 +78,21 @@ function EditLoginInfo() {
 					}
 				);
 
+				const result = await response.json();
+
 				if (response.ok) {
-					const result = await response.json();
-					console.log(result.email);
 					setShowConfirmation(true);
 				} else {
-					console.log(response.body);
-					const error = await response;
-					console.error('Error:', error);
+					if (result.message) {
+						setMessage(result.message);
+						setShowError(true);
+					} else if (newMatchesCurrent) {
+						setMessage(
+							`New ${option} must be different from current ${option}.`
+						);
+					} else {
+						console.error('Error changing password');
+					}
 				}
 			} catch (err) {
 				console.error('Error: ', err.message);
@@ -83,7 +104,7 @@ function EditLoginInfo() {
 		<div className='edit-login-info-page-container'>
 			{showConfirmation ? (
 				<GetConfirmationMessage
-					message='Login information changed successfully.'
+					message={`Login ${option} changed successfully.`}
 					destination='/dashboard'
 				/>
 			) : (

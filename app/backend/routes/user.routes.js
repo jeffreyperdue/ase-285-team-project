@@ -182,18 +182,29 @@ router.post('/logout', async (req, res) => {
 // @access  Public (no auth yet)
 router.post('/edit-login', async (req, res) => {
 	try {
-		const { credType, newCred } = req.body;
+		const { credType, newCred, currentCred } = req.body;
 		const { email: currentEmail } = req.cookies;
 		var updatedUser;
 
 		// Check if any data is missing
-		if (!credType || !newCred || !currentEmail) {
+		if (!credType || !newCred || !currentCred) {
 			return res.status(401).json({
 				error: 'All fields are required.',
 			});
 		}
 
 		if (credType === 'email') {
+			const emailExists = await User.findOne({
+				email: newCred,
+			});
+
+			if (emailExists) {
+				return res.status(400).json({
+					error: 'Email already exists',
+					message: 'Email already exists.',
+				});
+			}
+
 			updatedUser = await User.findOneAndUpdate(
 				{ email: currentEmail },
 				{ $set: { email: newCred } },
@@ -214,26 +225,45 @@ router.post('/edit-login', async (req, res) => {
 
 			// Send response
 			return res.status(200).json({
-				message: 'Email changed successfully',
+				message: 'Email changed successfully.',
 			});
 		}
 
 		if (credType === 'password') {
-			updatedUser = await User.findOneAndUpdate(
-				{ email: currentEmail },
-				{ $set: { password: newCred } },
-				{ new: true }
-			);
+			const user = await User.findOne({
+				email: currentEmail,
+			});
 
-			if (updatedUser.password !== newCred) {
-				return res
-					.status(400)
-					.json({ error: 'Error saving password' });
+			if (user) {
+				const currentMatchesDb = await user.comparePassword(
+					currentCred
+				);
+
+				if (!currentMatchesDb) {
+					return res.status(400).json({
+						error: 'Current password is incorrect',
+						message: 'Current password is incorrect.',
+					});
+				}
+
+				if (newCred === currentCred) {
+					return res.status(400).json({
+						error: `New ${credType} must be different from current ${credType}`,
+						message: `New ${credType} must be different from current ${credType}.`,
+					});
+				}
+
+				user.password = newCred;
+				await user.save();
+
+				// Send response
+				return res.status(200).json({
+					message: 'Password changed successfully.',
+				});
 			}
 
-			// Send response
 			return res.status(200).json({
-				message: 'Password changed successfully',
+				message: 'User not found.',
 			});
 		}
 
