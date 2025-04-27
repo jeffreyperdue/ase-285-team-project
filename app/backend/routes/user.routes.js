@@ -17,10 +17,8 @@ router.post('/signin', async (req, res) => {
 			});
 		}
 
-		const filters = {
-			email: email,
-		};
-		const foundUser = await User.findOne(filters);
+		// Get User document from the DB
+		const foundUser = await User.findOne({ email: email });
 
 		if (!foundUser) {
 			// Email is wrong or doesn't exist
@@ -29,17 +27,17 @@ router.post('/signin', async (req, res) => {
 			});
 		}
 
-		console.log('Found email in db');
-
-		const validPassword = await foundUser.comparePassword(
+		// Check that the password is correct
+		const passwordMatches = await foundUser.comparePassword(
 			password
 		);
 
-		if (!validPassword) {
+		if (!passwordMatches) {
 			// Password is wrong
-			return res
-				.status(401)
-				.json({ error: 'Invalid password' });
+			return res.status(401).json({
+				error: 'Invalid password',
+				message: 'Invalid password.',
+			});
 		}
 
 		// Set cookies
@@ -79,9 +77,12 @@ router.post('/signup', async (req, res) => {
 			menu_item_layout: 0,
 			admin: true,
 		});
+
+		// Save new user to DB
 		const savedUser = await newUser.save();
 
 		if (!savedUser) {
+			// User was not saved
 			return res.status(400).json({
 				error: 'Error saving user: ' + err.message,
 			});
@@ -110,7 +111,7 @@ router.post('/logout', async (req, res) => {
 		// Send response
 		return res
 			.status(200)
-			.json({ message: 'Logged out successfully' });
+			.json({ message: 'Logged out successfully.' });
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error logging out: ' + err.message,
@@ -133,18 +134,22 @@ router.post('/edit-login', async (req, res) => {
 			});
 		}
 
+		// Handle email change
 		if (credType === 'email') {
+			// Check that the new email does not already exist in the DB
 			const emailExists = await User.findOne({
 				email: newCred,
 			});
 
 			if (emailExists) {
+				// Email already exists in the DB
 				return res.status(400).json({
 					error: 'Email already exists',
 					message: 'Email already exists.',
 				});
 			}
 
+			// Update the user's email in the DB
 			const updatedUser = await User.findOneAndUpdate(
 				{ email: currentEmail },
 				{ $set: { email: newCred } },
@@ -152,6 +157,7 @@ router.post('/edit-login', async (req, res) => {
 			);
 
 			if (updatedUser && updatedUser.email !== newCred) {
+				// Email was not saved to the DB
 				return res
 					.status(400)
 					.json({ message: 'Error saving email' });
@@ -166,44 +172,52 @@ router.post('/edit-login', async (req, res) => {
 			});
 		}
 
+		// Handle password change
 		if (credType === 'password') {
+			// Get User document from the DB
 			const user = await User.findOne({
 				email: currentEmail,
 			});
 
-			if (user) {
-				const currentMatchesDb = await user.comparePassword(
-					currentCred
-				);
-
-				if (!currentMatchesDb) {
-					return res.status(400).json({
-						error: 'Current password is incorrect',
-						message: 'Current password is incorrect.',
-					});
-				}
-
-				if (newCred === currentCred) {
-					return res.status(400).json({
-						error: `New ${credType} must be different from current ${credType}`,
-						message: `New ${credType} must be different from current ${credType}.`,
-					});
-				}
-
-				user.password = newCred;
-				await user.save();
-
-				// Send response
+			if (!user) {
+				// Email does not exist in the DB
 				return res.status(200).json({
-					message: 'Password changed successfully.',
+					message: 'User not found.',
 				});
 			}
 
+			// Check that the current password is correct
+			const currentMatchesDb = await user.comparePassword(
+				currentCred
+			);
+
+			if (!currentMatchesDb) {
+				// Current password is incorrect
+				return res.status(400).json({
+					error: 'Current password is incorrect',
+					message: 'Current password is incorrect.',
+				});
+			}
+
+			// Check that the new password is not the same as the current password
+			if (newCred === currentCred) {
+				return res.status(400).json({
+					error: `New ${credType} must be different from current ${credType}`,
+					message: `New ${credType} must be different from current ${credType}.`,
+				});
+			}
+
+			// Change and save user password (save() is required for hashing)
+			user.password = newCred;
+			await user.save();
+
+			// Send response
 			return res.status(200).json({
-				message: 'User not found.',
+				message: 'Password changed successfully.',
 			});
 		}
 
+		// Invalid credential was given
 		return res
 			.status(400)
 			.json({ error: 'Credential cannot be changed' });

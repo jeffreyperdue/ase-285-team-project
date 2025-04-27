@@ -2,19 +2,21 @@ const express = require('express');
 const router = express.Router();
 const User = require('../schemas/User');
 
+// Returns the business_id of a user
 const getBusinessId = async (email) => {
+	// Get User document from the DB
 	const user = await User.findOne(
 		{ email: email },
 		{ business_id: 1 }
 	);
 
-	if (user) {
-		const businessId = user.business_id;
-		console.log('Business id found');
-		return businessId;
+	if (!user) {
+		// User not found in the DB
+		return null;
 	}
 
-	return null;
+	const businessId = user.business_id;
+	return businessId;
 };
 
 // @route   POST /api/admin/get-user-list
@@ -26,6 +28,7 @@ router.post('/get-user-list', async (req, res) => {
 		const business_id = await getBusinessId(email);
 
 		if (business_id === null || !business_id) {
+			// business_id or user does not exist
 			return res.status(401).json({
 				error: 'Business ID not found.',
 			});
@@ -52,13 +55,14 @@ router.post('/get-user-list', async (req, res) => {
 		]);
 
 		if (users.length === 0) {
+			// No users are associated with the business_id
 			return res.status(401).json({
 				error:
 					'No users found with the specified business ID.',
 			});
 		}
 
-		// Send response
+		// Send success response
 		return res.status(200).json(users);
 	} catch (err) {
 		res.status(400).json({
@@ -76,15 +80,19 @@ router.post('/change-admin-status', async (req, res) => {
 		var admin = false;
 
 		if (action !== 'promote' && action !== 'demote') {
-			res
-				.status(400)
-				.json({ error: `Unknown action: ${action}` });
+			// The provided action is not allowed
+			return res.status(400).json({
+				error: `Unknown action: ${action}`,
+				message: `Unknown action: ${action}.`,
+			});
 		}
 
 		if (action === 'promote') {
+			// User is being promoted to admin
 			admin = true;
 		}
 
+		// Update the user's admin status in the DB
 		const updatedUser = await User.findOneAndUpdate(
 			{ email: targetEmail },
 			{ $set: { admin: admin } },
@@ -92,12 +100,14 @@ router.post('/change-admin-status', async (req, res) => {
 		);
 
 		if (updatedUser.admin !== admin) {
-			return res
-				.status(400)
-				.json({ error: 'Error saving admin status' });
+			// Admin status was not updated in the DB
+			return res.status(400).json({
+				error: 'Error saving admin status',
+				message: 'Error saving admin status.',
+			});
 		}
 
-		// Send response
+		// Send success response
 		return res
 			.status(200)
 			.json({ message: `User ${action}d successfully` });
@@ -117,11 +127,14 @@ router.post('/remove-user-access', async (req, res) => {
 		const { email: targetEmail } = req.body;
 
 		if (business_id === null || !business_id) {
+			// business_id or user does not exist
 			return res.status(400).json({
 				error: `Business id not found. Business id: ${business_id}`,
+				message: `Business id not found.`,
 			});
 		}
 
+		// Remove user's business_id from the DB
 		const updatedUser = await User.findOneAndUpdate(
 			{ email: targetEmail },
 			{ $set: { business_id: '' } },
@@ -129,14 +142,16 @@ router.post('/remove-user-access', async (req, res) => {
 		);
 
 		if (updatedUser.business_id !== '') {
+			// User's business_id was not removed from the DB
 			return res.status(400).json({
 				error: 'Error removing user access',
+				message: 'Error removing user access.',
 			});
 		}
 
-		// Send response
+		// Send success response
 		return res.status(200).json({
-			message: 'User access removed successfully',
+			message: 'User access removed successfully.',
 		});
 	} catch (err) {
 		res.status(400).json({
@@ -154,14 +169,26 @@ router.post('/add-user-access', async (req, res) => {
 			req.cookies.email
 		);
 		const { email: targetEmail, status } = req.body;
-		const isAdmin = status === 'admin' ? true : false;
 
-		if (business_id === null || !business_id) {
+		if (!targetEmail || !status) {
+			// Data is missing
 			return res.status(400).json({
-				error: `Business id not found. Business id: ${business_id}`,
+				error: 'All fields are required.',
+				message: 'All fields are required.',
 			});
 		}
 
+		const isAdmin = status === 'admin' ? true : false;
+
+		if (business_id === null || !business_id) {
+			// business_id or user does not exist
+			return res.status(400).json({
+				error: `Business id not found. Business id: ${business_id}`,
+				message: `Business id not found. Business id: ${business_id}`,
+			});
+		}
+
+		// Update user's business_id & admin status in the DB
 		const updatedUser = await User.findOneAndUpdate(
 			{ email: targetEmail },
 			{
@@ -174,14 +201,16 @@ router.post('/add-user-access', async (req, res) => {
 		);
 
 		if (updatedUser.business_id !== business_id) {
+			// User's business_id and/or admin status was not changed in the DB
 			return res.status(400).json({
 				error: 'Error saving user access',
+				message: 'Error saving user access.',
 			});
 		}
 
-		// Send response
+		// Send success response
 		return res.status(200).json({
-			message: 'User access added successfully',
+			message: 'User access added successfully.',
 		});
 	} catch (err) {
 		res.status(400).json({
