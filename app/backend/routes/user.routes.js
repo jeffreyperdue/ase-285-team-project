@@ -20,42 +20,52 @@ router.post('/signin', async (req, res) => {
 
 		const filters = {
 			email: email,
-			password: password,
 		};
 		const foundUser = await User.findOne(filters);
 
-		if (foundUser) {
-			console.log('Found user in db');
-
-			// Set name cookie
-			res.cookie('fullName', foundUser.getFullName(), {
-				secure: true,
-				sameSite: 'None',
-			});
-			// Set email cookie
-			res.cookie('email', email, {
-				secure: true,
-				sameSite: 'None',
-			});
-			// Set admin status cookie
-			res.cookie('isAdmin', foundUser.admin, {
-				secure: true,
-				sameSite: 'None',
-			});
-			// Set authorized status cookie
-			res.cookie('isAuthorized', true, {
-				secure: true,
-				sameSite: 'None',
-			});
-
-			// Return the user's data
-			res.status(200).json(foundUser);
-		} else {
-			// Email and/or password is wrong or doesn't exist
-			res.status(401).json({
-				error: "Email or password doesn't match.",
+		if (!foundUser) {
+			// Email is wrong or doesn't exist
+			return res.status(401).json({
+				error: 'Invalid email',
 			});
 		}
+
+		console.log('Found email in db');
+
+		const validPassword = await foundUser.comparePassword(
+			password
+		);
+
+		if (!validPassword) {
+			// Password is wrong
+			return res
+				.status(401)
+				.json({ error: 'Invalid password' });
+		}
+
+		// Set name cookie
+		res.cookie('fullName', foundUser.getFullName(), {
+			secure: true,
+			sameSite: 'None',
+		});
+		// Set email cookie
+		res.cookie('email', email, {
+			secure: true,
+			sameSite: 'None',
+		});
+		// Set admin status cookie
+		res.cookie('isAdmin', foundUser.admin, {
+			secure: true,
+			sameSite: 'None',
+		});
+		// Set authorized status cookie
+		res.cookie('isAuthorized', true, {
+			secure: true,
+			sameSite: 'None',
+		});
+
+		// Return the user's data
+		res.status(200).json(foundUser);
 	} catch (err) {
 		res.status(500).json({
 			error: 'Could not fetch user' + err.message,
