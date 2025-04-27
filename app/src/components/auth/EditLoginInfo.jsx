@@ -2,11 +2,16 @@ import { useState } from 'react';
 import ChangeEmail from './ChangeEmail';
 import ChangePassword from './ChangePassword';
 import GetConfirmationMessage from '../ConfirmationMessage';
+import ErrorMessage from '../ErrorMessage';
 import getCookie from '../../assets/cookies';
 import '../../css/auth.scss';
 
 function EditLoginInfo() {
 	const [option, setOption] = useState('');
+	const [message, setMessage] = useState(
+		'Something went wrong'
+	);
+	const [showError, setShowError] = useState(false);
 	const [showConfirmation, setShowConfirmation] =
 		useState(false);
 
@@ -25,49 +30,52 @@ function EditLoginInfo() {
 		event.preventDefault();
 		const form = event.target;
 		var newCred;
+		var confirmNewCred;
 
 		if (option === 'email') {
 			newCred = form.newEmail.value;
+			confirmNewCred = form.confirmNewEmail.value;
+			setMessage('Emails do not match.');
 		} else if (option === 'password') {
-			// TODO: add password validation (check newPassword against confirmNewPassword)
 			newCred = form.newPassword.value;
+			confirmNewCred = form.confirmNewPassword.value;
+			setMessage('Passwords do not match.');
 		}
 
-		console.log('credType:', option);
-		console.log('newCred:', newCred);
+		if (newCred !== confirmNewCred) {
+			setShowError(true);
+		} else {
+			const formData = {
+				credType: option,
+				email: getCookie('email'),
+				newCred: newCred,
+			};
 
-		const formData = {
-			credType: option,
-			email: getCookie('email'),
-			newCred: newCred,
-		};
+			try {
+				const response = await fetch(
+					'http://localhost:5000/api/auth/edit-login',
+					{
+						method: 'POST',
+						credentials: 'include',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify(formData),
+					}
+				);
 
-		console.log('formData:', formData);
-
-		try {
-			const response = await fetch(
-				'http://localhost:5000/api/auth/edit-login',
-				{
-					method: 'POST',
-					credentials: 'include',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify(formData),
+				if (response.ok) {
+					const result = await response.json();
+					console.log(result.email);
+					setShowConfirmation(true);
+				} else {
+					console.log(response.body);
+					const error = await response;
+					console.error('Error:', error);
 				}
-			);
-
-			if (response.ok) {
-				const result = await response.json();
-				console.log(result.email);
-				setShowConfirmation(true);
-			} else {
-				console.log(response.body);
-				const error = await response;
-				console.error('Error:', error);
+			} catch (err) {
+				console.error('Error: ', err.message);
 			}
-		} catch (err) {
-			console.error('Error: ', err.message);
 		}
 	};
 
@@ -77,6 +85,16 @@ function EditLoginInfo() {
 				<GetConfirmationMessage
 					message='Login information changed successfully.'
 					destination='/dashboard'
+				/>
+			) : (
+				<></>
+			)}
+
+			{showError ? (
+				<ErrorMessage
+					message={message}
+					destination={false}
+					onClose={() => setShowError(false)}
 				/>
 			) : (
 				<></>
