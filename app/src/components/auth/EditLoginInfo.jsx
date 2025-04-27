@@ -4,6 +4,7 @@ import ChangePassword from './ChangePassword';
 import GetConfirmationMessage from '../ConfirmationMessage';
 import ErrorMessage from '../ErrorMessage';
 import getCookie from '../../assets/cookies';
+import Btn from '../Btn';
 import '../../css/auth.scss';
 
 function EditLoginInfo() {
@@ -130,7 +131,10 @@ function EditLoginInfo() {
 				<></>
 			)}
 
-			<h1>Edit Login Information</h1>
+			<h1>
+				<Btn />
+				Edit Login Information
+			</h1>
 
 			<div className='edit-login-info-form-container'>
 				<form
