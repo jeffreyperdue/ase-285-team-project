@@ -7,16 +7,20 @@ const User = require('../schemas/User');
 // @access  Public (no auth yet)
 router.post('/signin', async (req, res) => {
 	try {
+		const { email, password } = req.body;
+
 		// Check if email or password is missing
-		if (!req.body.email || !req.body.password) {
+		if (!email || !password) {
 			return res.status(400).json({
 				error: 'Email and password are required.',
 			});
 		}
 
+		// TODO: Hash the password
+
 		const filters = {
-			email: req.body.email,
-			password: req.body.password,
+			email: email,
+			password: password,
 		};
 		const foundUser = await User.findOne(filters);
 
@@ -29,7 +33,7 @@ router.post('/signin', async (req, res) => {
 				sameSite: 'None',
 			});
 			// Set email cookie
-			res.cookie('email', req.body.email, {
+			res.cookie('email', email, {
 				secure: true,
 				sameSite: 'None',
 			});
@@ -137,18 +141,11 @@ router.post('/logout', async (req, res) => {
 // @access  Public (no auth yet)
 router.post('/edit-login', async (req, res) => {
 	try {
-		console.log('req.body.credential:', req.body.credType);
-		console.log('req.cookies.email:', req.cookies.email);
-		console.log('req.body.newCred', req.body.newCred);
-
-		const credType = req.body.credType;
-		const currentEmail = req.cookies.email;
-		const newCred = req.body.newCred;
+		const { credType, newCred } = req.body;
+		const { email: currentEmail } = req.cookies;
 		var updatedUser;
 
 		if (credType === 'email') {
-			console.log('credType is email');
-
 			updatedUser = await User.findOneAndUpdate(
 				{ email: currentEmail },
 				{ $set: { email: newCred } },
@@ -172,8 +169,6 @@ router.post('/edit-login', async (req, res) => {
 					.json({ error: 'Error saving email' });
 			}
 		} else if (credType === 'password') {
-			console.log('credType is password');
-
 			updatedUser = await User.findOneAndUpdate(
 				{ email: currentEmail },
 				{ $set: { password: newCred } },

@@ -22,7 +22,7 @@ const getBusinessId = async (email) => {
 // @access  Public (no auth yet)
 router.post('/get-user-list', async (req, res) => {
 	try {
-		const email = req.cookies.email;
+		const { email } = req.cookies;
 		const business_id = await getBusinessId(email);
 		const users = await User.aggregate([
 			{ $match: { business_id: business_id } },
@@ -56,8 +56,7 @@ router.post('/get-user-list', async (req, res) => {
 // @access  Public (no auth yet)
 router.post('/change-admin-status', async (req, res) => {
 	try {
-		const action = req.body.action;
-		const targetEmail = req.body.targetEmail;
+		const { action, targetEmail } = req.body;
 		var admin = false;
 
 		if (action !== 'promote' && action !== 'demote') {
@@ -98,7 +97,7 @@ router.post('/change-admin-status', async (req, res) => {
 router.post('/remove-user-access', async (req, res) => {
 	try {
 		const business_id = getBusinessId(req.cookies.email);
-		const targetEmail = req.body.email;
+		const { email: targetEmail } = req.body;
 
 		if (business_id !== null) {
 			const updatedUser = await User.findOneAndUpdate(
@@ -136,8 +135,7 @@ router.post('/add-user-access', async (req, res) => {
 		const business_id = await getBusinessId(
 			req.cookies.email
 		);
-		const targetEmail = req.body.email;
-		const status = req.body.status;
+		const { email: targetEmail, status } = req.body;
 		const isAdmin = status === 'admin' ? true : false;
 
 		if (business_id !== null) {
