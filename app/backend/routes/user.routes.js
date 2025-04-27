@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../schemas/User');
+const cookies = require('../utils/cookies');
 
 // @route   POST /api/auth/signin
 // @desc    Get a user
@@ -41,26 +42,8 @@ router.post('/signin', async (req, res) => {
 				.json({ error: 'Invalid password' });
 		}
 
-		// Set name cookie
-		res.cookie('fullName', foundUser.getFullName(), {
-			secure: true,
-			sameSite: 'None',
-		});
-		// Set email cookie
-		res.cookie('email', email, {
-			secure: true,
-			sameSite: 'None',
-		});
-		// Set admin status cookie
-		res.cookie('isAdmin', foundUser.admin, {
-			secure: true,
-			sameSite: 'None',
-		});
-		// Set authorized status cookie
-		res.cookie('isAuthorized', true, {
-			secure: true,
-			sameSite: 'None',
-		});
+		// Set cookies
+		cookies.setCookies(res, foundUser);
 
 		// Send response w/ user's data
 		res.status(200).json(foundUser);
@@ -104,33 +87,10 @@ router.post('/signup', async (req, res) => {
 			});
 		}
 
-		console.log('saved user');
-		// Set name cookie
-		res.cookie('fullName', newUser.getFullName(), {
-			secure: true,
-			sameSite: 'None',
-		});
-		// Set email cookie
-		res.cookie('email', newUser.email, {
-			secure: true,
-			sameSite: 'None',
-		});
-		// Set admin status cookie
-		res.cookie('isAdmin', newUser.admin, {
-			secure: true,
-			sameSite: 'None',
-		});
-		// Set authorized status cookie
-		res.cookie('isAuthorized', true, {
-			secure: true,
-			sameSite: 'None',
-		});
-		// Set hasBusiness cookie
-		res.cookie('hasBusiness', false, {
-			secure: true,
-			sameSite: 'None',
-		});
+		// Set cookies
+		cookies.setCookies(res, newUser);
 
+		// Send response
 		return res.status(201).json(savedUser);
 	} catch (err) {
 		res.status(400).json({
@@ -145,26 +105,7 @@ router.post('/signup', async (req, res) => {
 router.post('/logout', async (req, res) => {
 	try {
 		// Clear cookies
-		res.clearCookie('fullName', {
-			secure: true,
-			sameSite: 'None',
-		});
-		res.clearCookie('email', {
-			secure: true,
-			sameSite: 'None',
-		});
-		res.clearCookie('isAdmin', {
-			secure: true,
-			sameSite: 'None',
-		});
-		res.clearCookie('isAuthorized', {
-			secure: true,
-			sameSite: 'None',
-		});
-		res.clearCookie('hasBusiness', {
-			secure: true,
-			sameSite: 'None',
-		});
+		cookies.clearAllCookies(req, res);
 
 		// Send response
 		return res
@@ -182,14 +123,13 @@ router.post('/logout', async (req, res) => {
 // @access  Public (no auth yet)
 router.post('/edit-login', async (req, res) => {
 	try {
-		const { credType, newCred, currentCred } = req.body;
+		const { credType, currentCred, newCred } = req.body;
 		const { email: currentEmail } = req.cookies;
-		var updatedUser;
 
 		// Check if any data is missing
 		if (!credType || !newCred || !currentCred) {
 			return res.status(401).json({
-				error: 'All fields are required.',
+				message: 'All fields are required.',
 			});
 		}
 
@@ -205,23 +145,20 @@ router.post('/edit-login', async (req, res) => {
 				});
 			}
 
-			updatedUser = await User.findOneAndUpdate(
+			const updatedUser = await User.findOneAndUpdate(
 				{ email: currentEmail },
 				{ $set: { email: newCred } },
 				{ new: true }
 			);
 
-			if (updatedUser.email !== newCred) {
+			if (updatedUser && updatedUser.email !== newCred) {
 				return res
 					.status(400)
-					.json({ error: 'Error saving email' });
+					.json({ message: 'Error saving email' });
 			}
 
 			// Update the email cookie
-			res.cookie('email', newCred, {
-				secure: true,
-				sameSite: 'None',
-			});
+			cookies.updateCookie(res, 'email', newCred);
 
 			// Send response
 			return res.status(200).json({

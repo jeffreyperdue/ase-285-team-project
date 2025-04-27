@@ -81,17 +81,26 @@ function EditLoginInfo() {
 				const result = await response.json();
 
 				if (response.ok) {
+					if (result.message) {
+						setMessage(result.message);
+					}
+					if (response.message) {
+						setMessage(response.message);
+					}
 					setShowConfirmation(true);
 				} else {
-					if (result.message) {
+					if (option === 'password' && result.message) {
 						setMessage(result.message);
 						setShowError(true);
 					} else if (newMatchesCurrent) {
 						setMessage(
 							`New ${option} must be different from current ${option}.`
 						);
+					} else if (option === 'email' && result.message) {
+						setMessage(result.message);
+						setShowError(true);
 					} else {
-						console.error('Error changing password');
+						console.error('Error changing login info.');
 					}
 				}
 			} catch (err) {
