@@ -24,6 +24,14 @@ router.post('/get-user-list', async (req, res) => {
 	try {
 		const { email } = req.cookies;
 		const business_id = await getBusinessId(email);
+
+		if (business_id === null || !business_id) {
+			return res.status(401).json({
+				error: 'Business ID not found.',
+			});
+		}
+
+		// Get array of users that have access to the business
 		const users = await User.aggregate([
 			{ $match: { business_id: business_id } },
 			{
@@ -43,7 +51,15 @@ router.post('/get-user-list', async (req, res) => {
 			},
 		]);
 
-		res.status(200).json(users);
+		if (users.length === 0) {
+			return res.status(401).json({
+				error:
+					'No users found with the specified business ID.',
+			});
+		}
+
+		// Send response
+		return res.status(200).json(users);
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error fetching user list: ' + err.message,
@@ -75,15 +91,16 @@ router.post('/change-admin-status', async (req, res) => {
 			{ new: true }
 		);
 
-		if (updatedUser.admin === admin) {
-			res
-				.status(200)
-				.json({ message: `User ${action}d successfully` });
-		} else {
-			res
+		if (updatedUser.admin !== admin) {
+			return res
 				.status(400)
 				.json({ error: 'Error saving admin status' });
 		}
+
+		// Send response
+		return res
+			.status(200)
+			.json({ message: `User ${action}d successfully` });
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error changing admin status: ' + err.message,
@@ -99,27 +116,28 @@ router.post('/remove-user-access', async (req, res) => {
 		const business_id = getBusinessId(req.cookies.email);
 		const { email: targetEmail } = req.body;
 
-		if (business_id !== null) {
-			const updatedUser = await User.findOneAndUpdate(
-				{ email: targetEmail },
-				{ $set: { business_id: '' } },
-				{ new: true }
-			);
-
-			if (updatedUser.business_id === '') {
-				res.status(200).json({
-					message: 'User access removed successfully',
-				});
-			} else {
-				res.status(400).json({
-					error: 'Error removing user access',
-				});
-			}
-		} else {
-			res.status(400).json({
+		if (business_id === null || !business_id) {
+			return res.status(400).json({
 				error: `Business id not found. Business id: ${business_id}`,
 			});
 		}
+
+		const updatedUser = await User.findOneAndUpdate(
+			{ email: targetEmail },
+			{ $set: { business_id: '' } },
+			{ new: true }
+		);
+
+		if (updatedUser.business_id !== '') {
+			return res.status(400).json({
+				error: 'Error removing user access',
+			});
+		}
+
+		// Send response
+		return res.status(200).json({
+			message: 'User access removed successfully',
+		});
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error changing business id: ' + err.message,
@@ -138,32 +156,33 @@ router.post('/add-user-access', async (req, res) => {
 		const { email: targetEmail, status } = req.body;
 		const isAdmin = status === 'admin' ? true : false;
 
-		if (business_id !== null) {
-			const updatedUser = await User.findOneAndUpdate(
-				{ email: targetEmail },
-				{
-					$set: {
-						business_id: business_id,
-						admin: isAdmin,
-					},
-				},
-				{ new: true }
-			);
-
-			if (updatedUser.business_id === business_id) {
-				res.status(200).json({
-					message: 'User access added successfully',
-				});
-			} else {
-				res.status(400).json({
-					error: 'Error saving user access',
-				});
-			}
-		} else {
-			res.status(400).json({
+		if (business_id === null || !business_id) {
+			return res.status(400).json({
 				error: `Business id not found. Business id: ${business_id}`,
 			});
 		}
+
+		const updatedUser = await User.findOneAndUpdate(
+			{ email: targetEmail },
+			{
+				$set: {
+					business_id: business_id,
+					admin: isAdmin,
+				},
+			},
+			{ new: true }
+		);
+
+		if (updatedUser.business_id !== business_id) {
+			return res.status(400).json({
+				error: 'Error saving user access',
+			});
+		}
+
+		// Send response
+		return res.status(200).json({
+			message: 'User access added successfully',
+		});
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error adding user access: ' + err.message,

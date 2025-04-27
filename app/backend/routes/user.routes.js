@@ -16,8 +16,6 @@ router.post('/signin', async (req, res) => {
 			});
 		}
 
-		// TODO: Hash the password
-
 		const filters = {
 			email: email,
 		};
@@ -64,7 +62,7 @@ router.post('/signin', async (req, res) => {
 			sameSite: 'None',
 		});
 
-		// Return the user's data
+		// Send response w/ user's data
 		res.status(200).json(foundUser);
 	} catch (err) {
 		res.status(500).json({
@@ -81,14 +79,14 @@ router.post('/signup', async (req, res) => {
 		const { first_name, last_name, email, password } =
 			req.body;
 
-		// Check if first_name, last_name, email or password is missing
+		// Check if any fields are missing
 		if (!first_name || !last_name || !email || !password) {
 			return res
 				.status(400)
 				.json({ error: 'All fields are required.' });
 		}
 
-		// Create new user document from request body
+		// Create new User document from request body
 		const newUser = new User({
 			first_name,
 			last_name,
@@ -100,7 +98,14 @@ router.post('/signup', async (req, res) => {
 		});
 		const savedUser = await newUser.save();
 
-		res.status(201).json(savedUser);
+		if (!savedUser) {
+			return res.status(401).json({
+				error: 'Error saving user',
+			});
+		}
+
+		// Send response
+		return res.status(201).json(savedUser);
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error creating user: ' + err.message,
@@ -136,7 +141,7 @@ router.post('/logout', async (req, res) => {
 		});
 
 		// Send response
-		res
+		return res
 			.status(200)
 			.json({ message: 'Logged out successfully' });
 	} catch (err) {
@@ -155,6 +160,13 @@ router.post('/edit-login', async (req, res) => {
 		const { email: currentEmail } = req.cookies;
 		var updatedUser;
 
+		// Check if any data is missing
+		if (!credType || !newCred || !currentEmail) {
+			return res.status(401).json({
+				error: 'All fields are required.',
+			});
+		}
+
 		if (credType === 'email') {
 			updatedUser = await User.findOneAndUpdate(
 				{ email: currentEmail },
@@ -162,44 +174,46 @@ router.post('/edit-login', async (req, res) => {
 				{ new: true }
 			);
 
-			if (updatedUser.email === newCred) {
-				// Update the email cookie
-				res.cookie('email', newCred, {
-					secure: true,
-					sameSite: 'None',
-				});
-
-				// Send response
-				res.status(200).json({
-					message: 'Email changed successfully',
-				});
-			} else {
-				res
+			if (updatedUser.email !== newCred) {
+				return res
 					.status(400)
 					.json({ error: 'Error saving email' });
 			}
-		} else if (credType === 'password') {
+
+			// Update the email cookie
+			res.cookie('email', newCred, {
+				secure: true,
+				sameSite: 'None',
+			});
+
+			// Send response
+			return res.status(200).json({
+				message: 'Email changed successfully',
+			});
+		}
+
+		if (credType === 'password') {
 			updatedUser = await User.findOneAndUpdate(
 				{ email: currentEmail },
 				{ $set: { password: newCred } },
 				{ new: true }
 			);
 
-			if (updatedUser.password === newCred) {
-				// Send response
-				res.status(200).json({
-					message: 'Password changed successfully',
-				});
-			} else {
-				res
+			if (updatedUser.password !== newCred) {
+				return res
 					.status(400)
 					.json({ error: 'Error saving password' });
 			}
-		} else {
-			res
-				.status(400)
-				.json({ error: 'Credential cannot be changed' });
+
+			// Send response
+			return res.status(200).json({
+				message: 'Password changed successfully',
+			});
 		}
+
+		return res
+			.status(400)
+			.json({ error: 'Credential cannot be changed' });
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error changing login info: ' + err.message,
