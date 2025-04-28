@@ -27,6 +27,7 @@ function GetAuthForm({ formName }) {
 				'http://localhost:5000/api/auth/signup',
 				{
 					method: 'POST',
+					credentials: 'include',
 					headers: {
 						'Content-Type': 'application/json',
 					},
@@ -35,8 +36,8 @@ function GetAuthForm({ formName }) {
 			);
 
 			if (response.ok) {
-				const result = await response;
-				console.log(result.message);
+				const user = await response.json();
+				localStorage.setItem('business_id', user.business_id);
 				navigate('/step1'); // Redirect on success
 			} else {
 				console.log('sign up response: ' + response.body);
@@ -77,6 +78,8 @@ function GetAuthForm({ formName }) {
 			// LEFT OFF
 			if (response.ok) {
 				const result = await response.json();
+				console.log(result.message);
+				localStorage.setItem('business_id', result.business_id); 
 				console.log(result.email);
 				console.log('result.cookies:', document.cookie);
 				navigate('/dashboard');

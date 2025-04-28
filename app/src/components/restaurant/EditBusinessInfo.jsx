@@ -1,127 +1,198 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GetConfirmationMessage from '../ConfirmationMessage';
 import '../../css/EditBusinessInfo.css';
 
 const EditBusinessInfo = () => {
-	const [confirmation, setConfirmation] = useState(false);
-	const navigate = useNavigate();
+  const [businessInfo, setBusinessInfo] = useState({
+    name: '',
+    url: '',
+    address: '',
+    allergens: '',
+    diets: ''
+  });
 
-	const cancel = (event) => {
-		event.preventDefault();
-		navigate('/dashboard');
-	};
+  const [confirmation, setConfirmation] = useState(false);
+  const navigate = useNavigate();
 
-	const save = (event) => {
-		event.preventDefault();
-		setConfirmation(true);
-	};
+  const businessId = localStorage.getItem('business_id'); // Get from localStorage
 
-	return (
-		<form className='edit-business-info-container'>
-			{confirmation ? (
-				<GetConfirmationMessage type='edit-business-info' />
-			) : (
-				<></>
-			)}
+  useEffect(() => {
+    const fetchBusinessInfo = async () => {
+      if (!businessId) {
+        console.error('No Business ID found.');
+        return;
+      }
 
-			<h1>Edit Business Information</h1>
+      try {
+        const response = await fetch(`/api/businesses/${businessId}`);
+        if (!response.ok) throw new Error('Failed to fetch business info');
 
-			<div className='edit-business-info-form-fields'>
-				<div className='logo-upload'>
-					<div className='upload-box'>
-						↑<br />
-						Upload
-						<br />
-						Business
-						<br />
-						Logo
-					</div>
-				</div>
+        const data = await response.json();
 
-				<div className='form-column'>
-					<div className='form-field-container'>
-						<label>Business Name</label>
-						<input type='text' />
-					</div>
+        setBusinessInfo({
+          name: data.name || '',
+          url: data.url || '',
+          address: data.address || '',
+          allergens: data.allergens ? data.allergens.join(', ') : '',
+          diets: data.diets ? data.diets.join(', ') : ''
+        });
+      } catch (error) {
+        console.error('Error fetching business info:', error);
+      }
+    };
 
-					<div className='form-field-container'>
-						<label>Website URL</label>
-						<input type='text' />
-					</div>
+    fetchBusinessInfo();
+  }, [businessId]);
 
-					<div className='form-field-container'>
-						<label>Address(es)</label>
-						<input
-							type='text'
-							placeholder='Separate Multiple locations by a comma'
-						/>
-					</div>
+  const handleChange = (field, value) => {
+    setBusinessInfo(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
 
-					<div className='form-field-container'>
-						<label>Phone Number</label>
-						<input type='text' />
-					</div>
-				</div>
+  const cancel = (event) => {
+    event.preventDefault();
+    navigate('/dashboard');
+  };
 
-				<div className='form-column'>
-					<div className='form-field-container'>
-						<label>Business Disclaimer</label>
-						<input type='text' />
-					</div>
+  const save = async (event) => {
+    event.preventDefault();
 
-					<div className='form-field-container'>
-						<label>Cuisine</label>
-						<input
-							type='text'
-							placeholder='example: Mexican'
-						/>
-					</div>
+    try {
+      const updatedData = {
+        name: businessInfo.name,
+        url: businessInfo.url,
+        address: businessInfo.address,
+        allergens: businessInfo.allergens.split(',').map(item => item.trim()), // convert back to array
+        diets: businessInfo.diets.split(',').map(item => item.trim()) // convert back to array
+      };
 
-					<div className='form-field-container'>
-						<label>Special Preparations</label>
-						<input
-							type='text'
-							placeholder='example: Kosher'
-						/>
-					</div>
+      const response = await fetch(`/api/businesses/${businessId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData)
+      });
 
-					<div className='form-field-container'>
-						<label>Hours</label>
-						<input type='text' />
-					</div>
-				</div>
-			</div>
+      if (!response.ok) throw new Error('Failed to update business');
 
-			<div className='buttons edit-business-info'>
-				<div>
-					<button
-						type='button'
-						onClick={cancel}
-						className='button gray-btn cancel-btn'
-					>
-						Cancel
-					</button>
-				</div>
+      setConfirmation(true);
+    } catch (error) {
+      console.error('Error updating business:', error);
+    }
+  };
 
-				<div className='save-section'>
-					<span className='save-note'>
-						* This information will be displayed to users of
-						the app
-					</span>
+  return (
+    <form className='edit-business-info-container'>
+      {confirmation ? (
+        <GetConfirmationMessage type='edit-business-info' />
+      ) : (
+        <>
+          <h1>Edit Business Information</h1>
 
-					<button
-						type='submit'
-						onClick={save}
-						className='button'
-					>
-						Save
-					</button>
-				</div>
-			</div>
-		</form>
-	);
+          <div className='edit-business-info-form-fields'>
+            <div className='logo-upload'>
+              <div className='upload-box'>
+                ↑<br />
+                Upload
+                <br />
+                Business
+                <br />
+                Logo
+              </div>
+            </div>
+
+            <div className='form-column'>
+              <div className='form-field-container'>
+                <label>Business Name</label>
+                <input
+                  type='text'
+                  value={businessInfo.name}
+                  onChange={(e) => handleChange('name', e.target.value)}
+                />
+              </div>
+
+              <div className='form-field-container'>
+                <label>Website URL</label>
+                <input
+                  type='text'
+                  value={businessInfo.url}
+                  onChange={(e) => handleChange('url', e.target.value)}
+                />
+              </div>
+
+              <div className='form-field-container'>
+                <label>Address</label>
+                <input
+                  type='text'
+                  value={businessInfo.address}
+                  onChange={(e) => handleChange('address', e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className='form-column'>
+              <div className='form-field-container'>
+                <label>Business Disclaimer</label>
+                <input
+                  type='text'
+                  placeholder='(Ignored for now)'
+                  disabled
+                />
+              </div>
+
+              <div className='form-field-container'>
+                <label>Unavoidable Allergies</label>
+                <input
+                  type='text'
+                  placeholder='example: Tree Nuts'
+                  value={businessInfo.allergens}
+                  onChange={(e) => handleChange('allergens', e.target.value)}
+                />
+              </div>
+
+              <div className='form-field-container'>
+                <label>Special Preparations</label>
+                <input
+                  type='text'
+                  placeholder='example: Kosher'
+                  value={businessInfo.diets}
+                  onChange={(e) => handleChange('diets', e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className='buttons edit-business-info'>
+            <div>
+              <button
+                type='button'
+                onClick={cancel}
+                className='button gray-btn cancel-btn'
+              >
+                Cancel
+              </button>
+            </div>
+
+            <div className='save-section'>
+              <span className='save-note'>
+                * This information will be displayed to users of the app
+              </span>
+
+              <button
+                type='submit'
+                onClick={save}
+                className='button'
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+    </form>
+  );
 };
 
 export default EditBusinessInfo;

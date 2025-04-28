@@ -5,12 +5,10 @@ class Menu {
 	constructor(
 		title,
 		restaurantId,
-		menuItems = [],
 		description = ''
 	) {
 		this.title = title;
 		this.restaurant = restaurantId;
-		this.menuItems = menuItems;
 		this.description = description;
 	}
 }
@@ -22,9 +20,6 @@ const MenuSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Business',
 	},
-	menuItems: [
-		{ type: Schema.Types.ObjectId, ref: 'MenuItem' },
-	],
 });
 
 MenuSchema.loadClass(Menu);

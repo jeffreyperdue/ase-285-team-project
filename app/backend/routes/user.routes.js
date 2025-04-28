@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../schemas/User');
+const Business = require('../schemas/Business');
+const Menu = require('../schemas/Menu');
 
 // @route   POST /api/auth/signin
 // @desc    Get a user
@@ -80,19 +82,75 @@ router.post('/signup', async (req, res) => {
 				.json({ error: 'All fields are required.' });
 		}
 
+		// Creates a new business tied to user
+		const newBusiness = new Business({
+			name: `${first_name}'s Restaurant`,
+			url: '',
+			address: '',
+			allergens: [],
+			menus: [],
+		});
+		const savedBusiness = await newBusiness.save();
+
+		// Creates master menu
+		const masterMenu = new Menu({
+			title: 'Master Menu',
+			description: 'This menu will be shown to customers',
+			restaurant: savedBusiness._id,
+			menuItems: [],
+		});
+		const savedMenu = await masterMenu.save();
+
+		// That menu is added to business's menus array
+		savedBusiness.menus.push(savedMenu._id);
+		await savedBusiness.save();
+
 		// Create new user document from request body
 		const newUser = new User({
 			first_name,
 			last_name,
 			email,
 			password,
-			business_id: '',
+			business_id: savedBusiness._id.toString(),
 			menu_item_layout: 0,
 			admin: true,
 		});
 		const savedUser = await newUser.save();
 
-		res.status(201).json(savedUser);
+		if (!savedUser) {
+			return res.status(400).json({
+				error: 'Error saving user: ' + err.message,
+			});
+		}
+
+		console.log('saved user');
+		// Set name cookie
+		res.cookie('fullName', newUser.getFullName(), {
+			secure: true,
+			sameSite: 'None',
+		});
+		// Set email cookie
+		res.cookie('email', newUser.email, {
+			secure: true,
+			sameSite: 'None',
+		});
+		// Set admin status cookie
+		res.cookie('isAdmin', newUser.admin, {
+			secure: true,
+			sameSite: 'None',
+		});
+		// Set authorized status cookie
+		res.cookie('isAuthorized', true, {
+			secure: true,
+			sameSite: 'None',
+		});
+		// Set hasBusiness cookie
+		res.cookie('hasBusiness', false, {
+			secure: true,
+			sameSite: 'None',
+		});
+
+		return res.status(201).json(savedUser);
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error creating user: ' + err.message,

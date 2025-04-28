@@ -4,6 +4,7 @@ import MenuItemPanel from './assets/MenuItemPanel.jsx';
 import { useNavigate } from 'react-router-dom';
 import getCookie from '../../assets/cookies';
 import '../../css/styles.css';
+import { Link } from 'react-router-dom';
 
 const mockMenuItems = [
   {
@@ -64,19 +65,20 @@ const MenuItemsPage = () => {
     }
   };
 
-  return (
-    <div className='center'>
-      <div className="menu-items-container">
-        {/* Top section: buttons + menu name */}
-        <div className="menu-header-row">
-      <div style={{ flex: 1 }}>
-        <button className="button" onClick={toAddItem}>+ Add Item</button>
-      </div>
-      <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>{menuTitle}</div>
-      <div style={{ flex: 1, textAlign: 'right' }}>
-        <button className="button">Integrate Menus</button>
-      </div>
-    </div>
+return (
+  <div className="menu-items-container">
+    {/* Top section: buttons + menu name */}
+    <div className="menu-header-row">
+  <div style={{ flex: 1 }}>
+    <button className="button" onClick={toAddItem}>+ Add Item</button>
+  </div>
+  <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>{menuTitle}</div>
+  <div style={{ flex: 1, textAlign: 'right' }}>
+  <Link to="/swap-menu">
+    <button className="button">Integrate Menus</button>
+  </Link>
+  </div>
+</div>
 
 
         {/* Search bar */}
