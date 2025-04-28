@@ -2,6 +2,9 @@ import { useState, changeState } from 'react';
 import '../../css/styles.css'
 import AllergenList from '../auth/AllergenList';
 import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import getCookie from '../../assets/cookies';
+import axios from 'axios';
 
 // Collapsible Panel Component
 const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
@@ -18,9 +21,22 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSave = () => {
-        onSave(formData);
-    };
+    const handleSave = async () => {
+        try {
+          const response = await axios.post('/api/addmenuitem', {
+            name: formData.name,
+            description: formData.description,
+            ingredients: formData.ingredients,
+            allergens: formData.selectedAllergens || [],
+            menuIDs: ['680a79fa3b98428dcf348668'] // Assign to Master Menu or wherever you want
+          });
+          console.log('Saved menu item:', response.data);
+          alert('Item saved successfully!');
+        } catch (err) {
+          console.error('Error saving menu item:', err);
+          alert('Failed to save item.');
+        }
+      };
 
     const [selectedIds, setSelectedIds] = useState([]);
 
