@@ -3,6 +3,7 @@ import AllergenList from '../auth/AllergenList';
 import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import getCookie from '../../assets/cookies';
+import axios from 'axios';
 import '../../css/styles.css'
 
 // Collapsible Panel Component
@@ -19,8 +20,21 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
       setFormData({ ...formData, [name]: value });
     };
   
-    const handleSave = () => {
-      onSave(formData);
+    const handleSave = async () => {
+      try {
+        const response = await axios.post('/api/addmenuitem', {
+          name: formData.name,
+          description: formData.description,
+          ingredients: formData.ingredients,
+          allergens: formData.selectedAllergens || [],
+          menuIDs: ['680a79fa3b98428dcf348668'] // Assign to Master Menu or wherever you want
+        });
+        console.log('Saved menu item:', response.data);
+        alert('Item saved successfully!');
+      } catch (err) {
+        console.error('Error saving menu item:', err);
+        alert('Failed to save item.');
+      }
     };
 
     const [selectedIds, setSelectedIds] = useState([]);
@@ -54,8 +68,6 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
         setSelectedIds(prev => prev.filter(existingId => existingId !== id));
       };
   
-
-
     return (
         <div className="collapsible-panel-add">
           <div className="panel-header" onClick={togglePanel}>
@@ -134,6 +146,28 @@ const AddMenuItemForm = () => {
       console.log('Form data saved:', data);
     };
   
+    const handleSaveAll = async () => {
+      try {
+        const saveRequests = panels.map(panel =>
+          axios.post('/api/addmenuitem', {
+            name: panel.name,
+            description: panel.description,
+            ingredients: panel.ingredients,
+            allergens: panel.selectedAllergens || [],
+            menuIDs: ['680a79fa3b98428dcf348668']
+          })
+        );
+    
+        await Promise.all(saveRequests);
+    
+        console.log('All items saved!');
+        alert('All items saved successfully!');
+      } catch (err) {
+        console.error('Error saving items:', err);
+        alert('Failed to save all items.');
+      }
+    };
+
     const handleAddPanel = () => {
       setPanels([...panels, {}]); // Adds a new panel to the array
     };
