@@ -10,7 +10,7 @@ import axios from 'axios';
 const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedAllergens, setSelectedAllergens] = useState([]);
-    const [formData, setFormData] = useState({ name: '', ingredients: '', description: '' });
+    const [formData, setFormData] = useState({ name: '', ingredients: '', description: '', allergens: [], menuIDs: [] });
 
     const togglePanel = () => {
         setIsOpen(!isOpen);
@@ -103,14 +103,14 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
                                         <textarea id="ingredients" name="ingredients"
                                             value={formData.Ingredients}
                                             onChange={handleInputChange}
-                                            rows="4" cols="50">List Ingredients Here</textarea>
+                                            rows="4" cols="50"></textarea>
                                     </div>
                                     <div className="descriptionInput">
                                         <h3>Description</h3>
                                         <textarea id="description" name="description"
                                             value={formData.description}
                                             onChange={handleInputChange}
-                                            rows="4" cols="50">Enter Description</textarea>
+                                            rows="4" cols="50"></textarea>
                                     </div>
                                 </div>
                                 <div className="right-side">
