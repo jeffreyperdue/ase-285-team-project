@@ -331,8 +331,8 @@ input[type='checkbox'].checkbox:checked {
 }
 .picklist-header-row {
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
+	justify-content: center;
 	margin-bottom: 20px;
 }
 
@@ -400,5 +400,4 @@ ul {
 .add-center-flex {
 	flex-direction: column;
 	align-items: center;
-	margin: auto;
 }

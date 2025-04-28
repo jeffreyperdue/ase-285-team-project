@@ -240,13 +240,13 @@ const MenuItemPicklist = () => {
     
 
     return (
-      <div className="center">
+      <div className='center add-center-flex'>
         {/* Top section: buttons + menu name */}
         <div className="picklist-header-row">
-          <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>Add Item to Menu</div>
-          <div style={{ flex: 1, textAlign: 'right' }}>
+          <div style={{ flex: 1, textAlign: 'left' }}>
             <button className="button">Save</button>
           </div>
+          <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>Add Item to Menu</div>
         </div>
 
         <div className="flex-container menu-items-container">
