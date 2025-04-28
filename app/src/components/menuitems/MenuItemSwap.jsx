@@ -238,7 +238,6 @@ const MenuItemPicklist = () => {
       );
     };
     
-
     return (
       <div className='center add-center-flex'>
         {/* Top section: buttons + menu name */}
