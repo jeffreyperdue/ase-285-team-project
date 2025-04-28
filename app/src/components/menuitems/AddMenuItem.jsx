@@ -21,18 +21,7 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const navigate = useNavigate();
-	const isAuthorized = getCookie('isAuthorized');
 
-    const toMenu = (event) => {
-      event.preventDefault();
-  
-      if (isAuthorized === 'true') {
-        navigate('/menuitems');
-      } else {
-        navigate('/');
-      }
-    };
 
     const handleSave = async () => {
         try {
@@ -168,7 +157,20 @@ const AddMenuItemForm = () => {
         setPanels([...panels, {}]); // Adds a new panel to the array
     };
 
-        return (
+    const navigate = useNavigate();
+	const isAuthorized = getCookie('isAuthorized');
+
+    const toMenu = (event) => {
+      event.preventDefault();
+  
+      if (isAuthorized === 'true') {
+        navigate('/menuitems');
+      } else {
+        navigate('/');
+      }
+    };
+
+    return (
         <div>
             <div className="center add-center-flex">
                 <div className="add-header-row">
