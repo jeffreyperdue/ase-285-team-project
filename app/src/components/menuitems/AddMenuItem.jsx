@@ -21,6 +21,19 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
         setFormData({ ...formData, [name]: value });
     };
 
+    const navigate = useNavigate();
+	const isAuthorized = getCookie('isAuthorized');
+
+    const toMenu = (event) => {
+      event.preventDefault();
+  
+      if (isAuthorized === 'true') {
+        navigate('/menuitems');
+      } else {
+        navigate('/');
+      }
+    };
+
     const handleSave = async () => {
         try {
           const response = await axios.post('/api/addmenuitem', {
@@ -157,7 +170,20 @@ const AddMenuItemForm = () => {
 
     return (
         <div>
-            {/* Render Collapsible Panels */}
+            <div className='center add-center-flex'>
+              <div className='add-header-row'>
+                <div style={{ flex: 1 }}>
+                  <button className="button" onClick={toMenu}>Menu</button>
+                </div>
+                <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>Add Menu Items</div>
+                <div style={{ flex: 1, textAlign: 'right' }}>
+                  <button className="button">Save All</button>
+                </div>
+              </div>
+            </div>
+        <div className='center add-center-flex'>
+        {/* Render Collapsible Panels */}
+        <div className='center add-center-flex'>
             {panels.map((panel, index) => (
                 <CollapsiblePanel
                     key={index}
@@ -167,6 +193,7 @@ const AddMenuItemForm = () => {
                 />
             ))}
         </div>
+    </div>
     )
 }
 
