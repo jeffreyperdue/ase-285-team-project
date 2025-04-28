@@ -168,23 +168,18 @@ const AddMenuItemForm = () => {
         setPanels([...panels, {}]); // Adds a new panel to the array
     };
 
-    return (
+        return (
         <div>
-            <div className='center add-center-flex'>
-              <div className='add-header-row'>
-                <div style={{ flex: 1 }}>
-                  <button className="button" onClick={toMenu}>Menu</button>
+            <div className="center add-center-flex">
+                <div className="add-header-row">
+                    <div style={{ flex: 1}}><button className="button" onClick={toMenu}>Menu</button></div>
+                    <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>Add Menu Items</div>
+                    <div style={{ flex: 1, textAlign: 'right'}}><button className="button">Save All</button></div>
                 </div>
-                <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>Add Menu Items</div>
-                <div style={{ flex: 1, textAlign: 'right' }}>
-                  <button className="button">Save All</button>
-                </div>
-              </div>
             </div>
-        <div className='center add-center-flex'>
-        {/* Render Collapsible Panels */}
-        <div className='center add-center-flex'>
-            {panels.map((panel, index) => (
+            <div className="center add-center-flex">
+                {/* Render Collapsible Panels */}
+                {panels.map((panel, index) => (
                 <CollapsiblePanel
                     key={index}
                     header={`New Menu Item ${index + 1}`}
@@ -192,8 +187,8 @@ const AddMenuItemForm = () => {
                     onAddPanel={handleAddPanel}  // Pass the add panel function as a prop
                 />
             ))}
+            </div>
         </div>
-    </div>
     )
 }
 
