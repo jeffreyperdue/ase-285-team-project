@@ -40,20 +40,20 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
     const [selectedIds, setSelectedIds] = useState([]);
 
 
-	const selectedAllergens = [];
+	  const selectedAllergens = [];
 
-	const handleCheckboxChange = (event) => {
-		const checkedId = event.target.value;
-		if (event.target.selected) {
-			setSelectedIds([...selectedIds, checkedId]);
-			selectedAllergens.push(selectedIds);
-			console.log(selectedAllergens);
-		} else {
-			setSelectedIds(
-				selectedIds.filter((id) => id !== checkedId)
-			);
-		}
-	};
+    const handleCheckboxChange = (event) => {
+      const checkedId = event.target.value;
+      if (event.target.selected) {
+        setSelectedIds([...selectedIds, checkedId]);
+        selectedAllergens.push(selectedIds);
+        console.log(selectedAllergens);
+      } else {
+        setSelectedIds(
+          selectedIds.filter((id) => id !== checkedId)
+        );
+      }
+    };
 
     // For testing the dynamically created check list.
     const [allergens] = useState([
@@ -96,15 +96,15 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
                               <h3>Ingredients</h3>
                               <textarea id="ingredients" name="ingredients" 
                               value={formData.Ingredients}
-                              onChange={handleInputChange} 
-                              rows="4" cols="50">List Ingredients Here</textarea>
+                              onChange={handleInputChange}
+                              rows="4" cols="50"></textarea>
                           </div>
                           <div className="descriptionInput">
                               <h3>Description</h3>
                               <textarea id="description" name="description" 
                               value={formData.description}
                               onChange={handleInputChange} 
-                              rows="4" cols="50">Enter Description</textarea>
+                              rows="4" cols="50"></textarea>
                           </div>
                       </div>
                       <div className="right-side">

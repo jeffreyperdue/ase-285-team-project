@@ -75,7 +75,7 @@ router.put('/menuitems', async (req, res) => {
 // @route   GET /api/addmenuitem
 // @desc    Get all menu items
 // @access  Public (no auth yet)
-router.get('/addmenuitem', async (req, res) => {
+router.get('/add-menu-item', async (req, res) => {
   try {
     let menuitems = await MenuItem.find();
 
@@ -106,7 +106,7 @@ router.get('/addmenuitem', async (req, res) => {
 // @route   POST /api/menuitems
 // @desc    Create a new menu item
 // @access  Public (no auth yet)
-router.post('/addmenuitem', async (req, res) => {
+router.post('/add-menu-item', async (req, res) => {
   try {
     const { name, description, ingredients, allergens, menuIDs } = req.body;
 
