@@ -33,35 +33,41 @@ function SetUp({ step }) {
 		}
 	  };
   
-	const completeSetUp = async (event) => {
-	  event.preventDefault();
+	  const completeSetUp = async (event) => {
+		event.preventDefault();
 	  
-	  try {
-		// Combine all form data
-		const businessData = {
-		  name: formData.name,
-		  url: formData.url,
-		  address: formData.address,
-		  allergens: formData.allergens,
-		  menuLayout: formData.menuLayout
-		};
-  
-		const response = await fetch('/api/businesses', {
-			method: 'POST',
-			headers: {
-			  'Content-Type': 'application/json',
-			},
+		try {
+		  const businessId = localStorage.getItem('business_id');
+	  
+		  if (!businessId) {
+			throw new Error('No Business ID found. Cannot complete setup.');
+		  }
+	  
+		  const businessData = {
+			name: formData.name,
+			url: formData.url,
+			address: formData.address,
+			allergens: formData.allergens,
+			diets: formData.diets,
+			menuLayout: formData.menuLayout
+		  };
+	  
+		  const response = await fetch(`/api/businesses/${businessId}`, {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(businessData)
 		  });
 	  
-		  if (!response.ok) throw new Error('Network response was not ok');
-		  
-		  const data = await response.json();
-		  navigate('/dashboard', { state: { business: data } });
+		  if (!response.ok) throw new Error('Failed to update business');
+	  
+		  const updatedBusiness = await response.json();
+	  
+		  navigate('/dashboard', { state: { business: updatedBusiness } });
 		} catch (error) {
-		  console.error('Error:', error);
-	  }
-	};
+		  console.error('Error completing setup:', error);
+		}
+	  };
+	  
   
 	const updateFormData = (stepData) => {
 	  setFormData(prev => ({ ...prev, ...stepData }));

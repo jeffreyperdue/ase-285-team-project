@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 class Business {
-  constructor(name, url, address, allergens = [], restaurantId, menus = []) {
+  constructor(name, url, address, allergens = [], menus = []) {
     this.name = name;
     this.url = url;
     this.address = address;
     this.allergens = allergens;
-    this.restaurant = restaurantId;
+    this.diets = diets;
     this.menus = menus;
   }
 }
@@ -15,15 +15,15 @@ class Business {
 const BusinessSchema = new Schema({
   name: { type: String, required: true },
   url: { type: String },
-  address: { type: String, required: true },
-  allergens: { 
-    type: [String],  // Array of strings
-    default: [],     // Default to empty array
-    required: true   // Ensures field exists (but can be empty)
+  address: { type: String },
+  allergens: {
+    type: [String],
+    default: []
   },
-  restaurant: { type: Schema.Types.ObjectId, ref: 'Business', required: true },
-  menus: [{ type: Schema.Types.ObjectId, ref: 'Menu' }],
+  diets: { type: [String]},
+  menus: [{ type: Schema.Types.ObjectId, ref: 'Menu' }]
 });
 
 BusinessSchema.loadClass(Business);
+
 module.exports = mongoose.model('Business', BusinessSchema);

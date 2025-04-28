@@ -2,17 +2,22 @@ import Header from './components/Header';
 import SignInUp from './components/auth/SignInUp';
 import SetUp from './components/setup/SetUp';
 import MenuDashboard from './components/menu/MenuDashboard';
-import CreateRestaurant from './components/restaurant/CreateRestaurant';
-import ChangeLoginInfo from './components/auth/ChangeLoginInfo';
-import FilterPanel from './components/menu/FilterPanel';
-import AddMenuItemForm from './components/menuitems/AddMenuItem';
+import EditBusinessInfo from './components/restaurant/EditBusinessInfo';
+import EditLoginInfo from './components/auth/EditLoginInfo';
+// import FilterPanel from './components/menu/FilterPanel';
+import AddMenuItem from './components/menuitems/AddMenuItem.jsx';
+import MenuItemsPage from './components/menuitems/MenuItemsPage.jsx';
+import MenuItemPicklist from './components/menuitems/MenuItemSwap.jsx';
+
+
 import {
 	BrowserRouter as Router,
 	Route,
 	Routes,
 } from 'react-router-dom';
-import Admin from './components/admin/Admin';
+import UserMaintenance from './components/admin/UserMaintenance';
 
+// TODO: check authorized status for routes
 function App() {
 	return (
 		<>
@@ -40,25 +45,33 @@ function App() {
 						/>
 
 						<Route
-							path='/changeLogin'
-							element={<ChangeLoginInfo />}
+							path='/edit-login-info'
+							element={<EditLoginInfo />}
 						/>
 
 						<Route
-							path='/admin'
-							element={<Admin />}
+							path='/user-maintenance'
+							element={<UserMaintenance />}
 						/>
 						<Route
 							path='/dashboard'
 							element={<MenuDashboard />}
 						/>
 						<Route
-							path='/create-restaurant'
-							element={<CreateRestaurant />}
+							path='/edit-business-info'
+							element={<EditBusinessInfo />}
 						/>
 						<Route
 							path='/add-menu-item'
-							element={<AddMenuItemForm />}
+							element={<AddMenuItem />}
+						/>
+						<Route
+							path='/swap-menu'
+							element={<MenuItemPicklist />}
+						/>
+						<Route
+							path='/menuitems'
+							element={<MenuItemsPage />}
 						/>
 					</Routes>
 				</div>

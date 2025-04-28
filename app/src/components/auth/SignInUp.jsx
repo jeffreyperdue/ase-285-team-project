@@ -6,14 +6,14 @@ function SignInUp() {
 	const [formType, setFormType] = useState('signUpForm');
 	let signUpForm = formType === 'signUpForm';
 
+	// logic to switch to Sign In form
 	function toSignIn(event) {
-		// logic to switch to Sign In form
 		event.preventDefault();
 		setFormType('signInForm');
 	}
 
+	// logic to switch to Sign Up form
 	function toSignUp(event) {
-		// logic to switch to Sign Up form
 		event.preventDefault();
 		setFormType('signUpForm');
 	}
@@ -30,7 +30,7 @@ function SignInUp() {
 				<GetAuthForm formName={formType} />
 
 				{signUpForm ? (
-					<div className='change-form'>
+					<div className='swap-form'>
 						Already have an account?&nbsp;
 						<a
 							href='#'
@@ -40,7 +40,7 @@ function SignInUp() {
 						</a>
 					</div>
 				) : (
-					<div className='change-form'>
+					<div className='swap-form'>
 						Don't have an account?&nbsp;
 						<a
 							href='#'

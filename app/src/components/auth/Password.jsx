@@ -12,25 +12,31 @@ function GetPasswordField({ name, placeholder }) {
 	};
 
 	return (
-		<div className='password-container'>
-			{/* dynamically changes input type to hide or show password
-          based on state */}
-			<input
-				type={passwordVisible ? 'text' : 'password'}
-				name={name}
-				placeholder={placeholder}
-				className='password'
-				required
-			/>
+		<div className='form-field-container'>
+			<label for={name}>
+				{placeholder} <span className='required'>*</span>
+			</label>
 
-			{/* dynamically changes eye icon appearance (slash or no slash)
+			<div className='password-container'>
+				{/* dynamically changes input type to hide or show password
           based on state */}
-			<span
-				className='eye-icon'
-				onClick={togglePasswordVisibility}
-			>
-				{passwordVisible ? <FaEye /> : <FaEyeSlash />}
-			</span>
+				<input
+					type={passwordVisible ? 'text' : 'password'}
+					name={name}
+					placeholder={placeholder}
+					className='password'
+					required
+				/>
+
+				{/* dynamically changes eye icon appearance (slash or no slash)
+          based on state */}
+				<span
+					className='eye-icon'
+					onClick={togglePasswordVisibility}
+				>
+					{passwordVisible ? <FaEye /> : <FaEyeSlash />}
+				</span>
+			</div>
 		</div>
 	);
 }

@@ -1,6 +1,7 @@
 /* Elements -------------------------------------------*/
 h1 {
 	color: var(--dark-turq);
+	margin-top: 5px;
 }
 
 ul {
@@ -56,7 +57,6 @@ ul {
 	background: var(--mint-green);
 }
 
-.change-login-info-page-container,
 .step1,
 .step2,
 .step3 {
@@ -70,7 +70,7 @@ ul {
 	}
 }
 
-.change-login-info,
+.edit-login-info,
 .step1,
 .step2,
 .step3 {
@@ -92,7 +92,7 @@ ul {
 	}
 }
 
-.change-login-info,
+.edit-login-info,
 .step3 {
 	&-form {
 		display: flex;
@@ -177,7 +177,7 @@ ul {
 
 .allergen,
 .diet,
-.change-login-info {
+.edit-login-info {
 	&-label {
 		display: flex;
 		width: fit-content;
@@ -268,7 +268,7 @@ ul {
 	justify-content: space-between;
 	margin: 0px 30px;
 
-	&:not(:has(.back-btn)) {
+	&:not(:has(.back-btn, .cancel-btn)) {
 		justify-content: right;
 	}
 }

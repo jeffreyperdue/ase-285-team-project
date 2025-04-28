@@ -1,6 +1,31 @@
+import { useState, useEffect } from 'react';
 import '../../css/setup.scss';
 
-function Step1() {
+function Step1({ updateFormData }) {
+	const [localData, setLocalData] = useState({
+		name: '',
+		url: '',
+		streetAddress1: '',
+		streetAddress2: '',
+		city: '',
+		state: '',
+		zipCode: ''
+	});
+
+	useEffect(() => {
+		const formattedAddress = `${localData.streetAddress1 || ''} ${localData.streetAddress2 || ''}, ${localData.city || ''}, ${localData.state || ''} ${localData.zipCode || ''}`;
+		updateFormData({
+			name: localData.name,
+			url: localData.url,
+			address: formattedAddress.trim()
+		});
+	}, [localData]);
+
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setLocalData(prev => ({ ...prev, [name]: value }));
+	};
+
 	return (
 		<>
 			<h1>Basic Business Information</h1>
@@ -19,20 +44,22 @@ function Step1() {
 						<div>
 							<input
 								type='text'
-								name='businessName'
+								name='name'
 								placeholder='Business Name*'
 								maxLength={30}
 								required
 								className='business-name'
+								onChange={handleChange}
 							/>
 						</div>
 
 						<div>
 							<input
 								type='text'
-								name='website'
+								name='url'
 								placeholder='Web Profile URL'
 								className='website'
+								onChange={handleChange}
 							/>
 						</div>
 					</div>
@@ -48,6 +75,7 @@ function Step1() {
 								name='streetAddress1'
 								placeholder='Street Address*'
 								className='street-address'
+								onChange={handleChange}
 							/>
 						</div>
 
@@ -57,6 +85,7 @@ function Step1() {
 								name='streetAddress2'
 								placeholder='Street Address 2'
 								className='street-address'
+								onChange={handleChange}
 							/>
 						</div>
 
@@ -67,6 +96,7 @@ function Step1() {
 								placeholder='City*'
 								maxLength={50}
 								className='city'
+								onChange={handleChange}
 							/>
 
 							<input
@@ -75,6 +105,7 @@ function Step1() {
 								placeholder='State*'
 								maxLength={2}
 								className='state'
+								onChange={handleChange}
 							/>
 
 							<input
@@ -85,6 +116,7 @@ function Step1() {
 								max='99999'
 								defaultValue=''
 								className='zip'
+								onChange={handleChange}
 							/>
 						</div>
 					</div>
