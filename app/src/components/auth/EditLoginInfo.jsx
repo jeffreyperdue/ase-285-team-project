@@ -56,7 +56,12 @@ function EditLoginInfo() {
 		const newMatchesCurrent =
 			match && newCred === currentCred;
 
-		if (!match || wrongEmail) {
+		if (option === 'email' && newMatchesCurrent) {
+			setMessage(
+				`New email must be different from current email.`
+			);
+			setShowError(true);
+		} else if (!match || wrongEmail) {
 			setShowError(true);
 		} else {
 			const formData = {
