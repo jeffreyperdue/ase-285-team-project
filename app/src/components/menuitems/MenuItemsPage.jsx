@@ -66,19 +66,18 @@ const MenuItemsPage = () => {
   };
 
 return (
-  <div className="menu-items-container">
-    {/* Top section: buttons + menu name */}
-    <div className="menu-header-row">
-  <div style={{ flex: 1 }}>
-    <button className="button" onClick={toAddItem}>+ Add Item</button>
-  </div>
-  <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>{menuTitle}</div>
-  <div style={{ flex: 1, textAlign: 'right' }}>
-  <Link to="/swap-menu">
-    <button className="button">Integrate Menus</button>
-  </Link>
-  </div>
-</div>
+    <div className='center'>
+      <div className="menu-items-container">
+        {/* Top section: buttons + menu name */}
+        <div className="menu-header-row">
+      <div style={{ flex: 1 }}>
+        <button className="button" onClick={toAddItem}>+ Add Item</button>
+      </div>
+      <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>{menuTitle}</div>
+      <div style={{ flex: 1, textAlign: 'right' }}>
+        <button className="button">Integrate Menus</button>
+      </div>
+    </div>
 
 
         {/* Search bar */}
