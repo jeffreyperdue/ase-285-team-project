@@ -51,23 +51,6 @@ input[type='email'] {
 	display: flex;
 	width: 100%;
 }
-.flex-container-picklist {
-	width: 100%;
-	justify-content: center;
-}
-
-#root {
-	width: 100vw;
-	height: 100vh;
-	display: flex;
-	flex-direction: column;
-}
-
-.flex-container {
-	display: flex;
-	width: 100%;
-}
-
 .content {
 	background-color: var(--hard-white);
 	padding: 20px 25px;
@@ -104,7 +87,7 @@ input[type='email'] {
 	border: none;
 	border-radius: var(--corners-round);
 	padding: 10px 32px;
-	/* margin: 5px; */
+	margin: 5px;
 	color: var(--hard-white);
 	font-family: var(--font-family);
 	text-align: center;
@@ -295,13 +278,6 @@ input[type='checkbox'].checkbox:checked {
 	display: flex;
 	justify-content: space-between;
 }
-
-.p-tree {
-	margin-top: 10px;
-	max-height: 12rem;
-	overflow-y: auto;
-}
-
 .menu-item-panel {
 	width: 100%;
 }
@@ -336,41 +312,6 @@ input[type='checkbox'].checkbox:checked {
 	justify-content: center;
 	box-sizing: border-box;
 }
-
-/* ATTEMPTING PICK LIST */
-/* Add a light grey border to the PickList */
-.p-picklist {
-	border: 1px solid #d3d3d3;
-	border-radius: var(--corners-round);
-	padding: 10px;
-}
-
-/* Indent child menu items under their parent */
-.picklist-item .menu-item {
-	margin-left: 20px;
-}
-
-.flex-container-picklist {
-	width: 100%;
-	justify-content: center;
-}
-
-.picklist-card {
-	flex: 1;
-	width: 50%;
-}
-
-/* Overriding some default PrimeReact styles */
-.p-picklist {
-	width: 100% !important;
-}
-
-.p-picklist-filter-input p-inputtext p-component {
-	width: 50% !important;
-	margin: 0 auto;
-	display: block;
-}
-
 .menu-items-container {
 	padding: 30px;
 }
@@ -381,6 +322,18 @@ input[type='checkbox'].checkbox:checked {
 	align-items: center;
 	margin-bottom: 20px;
 	gap: 100px;
+}
+.add-header-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+.picklist-header-row {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 20px;
 }
 
 .menu-name {
@@ -422,6 +375,11 @@ input[type='checkbox'].checkbox:checked {
 	margin-bottom: 20px;
 }
 
+.menu-item-card {
+	display: flex;
+	flex-direction: column;
+}
+
 ul {
 	list-style-type: none; /* Removes the bullet points */
 	padding: 0; /* Removes default padding */
@@ -438,6 +396,7 @@ ul {
 .form-check-input {
 	margin: 0; /* Remove default margin from the checkbox */
 }
+
 .allergen-tag {
     padding: 6px 12px;
     background-color: var(--salmon);
@@ -463,4 +422,9 @@ ul {
     border-radius: var(--corners-round);
     font-size: 14px;
     transition: all 0.2s;
+}
+
+.add-center-flex {
+	flex-direction: column;
+	align-items: center;
 }

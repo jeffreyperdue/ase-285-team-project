@@ -6,9 +6,8 @@ import EditBusinessInfo from './components/restaurant/EditBusinessInfo';
 import EditLoginInfo from './components/auth/EditLoginInfo';
 // import FilterPanel from './components/menu/FilterPanel';
 import AddMenuItem from './components/menuitems/AddMenuItem.jsx';
-import MenuItemSwap from './components/menuitems/MenuItemSwap.jsx';
 import MenuItemsPage from './components/menuitems/MenuItemsPage.jsx';
-import MenuItemPicklist from './components/menuitems/MenuItemPicklist.jsx';
+import MenuItemPicklist from './components/menuitems/MenuItemSwap.jsx';
 
 
 import {

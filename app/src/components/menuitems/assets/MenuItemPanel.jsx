@@ -8,7 +8,7 @@ const MenuItemPanel = ({ item, onSave, onDelete }) => {
     const [formData, setFormData] = useState({ ...item });
   
     const toggleOpen = () => setIsOpen(!isOpen);
-    const toggleEdit = () => setIsEditing(true);
+    const toggleEdit = () => setIsEditing(!isEditing);
   
     const handleChange = (e) => {
       const { name, value } = e.target;
