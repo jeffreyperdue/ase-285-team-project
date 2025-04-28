@@ -4,7 +4,6 @@ require('dotenv').config();
 // Import Express framework and MongoDB connection logic
 const express = require('express');
 const connectDB = require('./config/db');
-const cors = require('cors');
 const mongoose = require('mongoose');
 
 mongoose
@@ -26,7 +25,18 @@ connectDB();
 // Tells Express to automatically parse incoming JSON in requests
 app.use(express.json());
 
-app.use(cors({ origin: 'http://localhost:3000' })); // Allow requests from the frontend
+// Allow requests from the frontend
+const cors = require('cors');
+app.use(
+	cors({
+		origin: 'http://localhost:3000',
+		credentials: true,
+	})
+);
+
+// Middleware for parsing cookies
+const cookieparser = require('cookie-parser');
+app.use(cookieparser());
 
 // ROUTES
 // All endpoints related to menus will be handled in menuRoutes.js
