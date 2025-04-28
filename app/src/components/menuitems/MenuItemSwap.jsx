@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { FaChevronRight, FaChevronLeft, FaRegTrashAlt } from 'react-icons/fa'; 
-import Checkbox from './assets/Checkbox';
+import { FaChevronRight, FaChevronLeft } from 'react-icons/fa'; 
+import Checkbox from './assets/Checkbox'
+import { useNavigate } from 'react-router-dom';
+import getCookie from '../../assets/cookies';
 // import '../../css/styles.css';
 import '../../css/picklist.scss';
 

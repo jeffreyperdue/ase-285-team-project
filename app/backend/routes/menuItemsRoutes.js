@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const MenuItem = require('../schemas/MenuItem');
-const Menu = require('.../schemas/Menu')
+const Menu = require('../schemas/Menu')
 const mongoose = require('mongoose');
 // const { Menu } = require('@mui/material');
 

@@ -137,7 +137,7 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
           </div>
         </div>
     );
-  };
+};
 
 const AddMenuItemForm = () => {
     const [panels, setPanels] = useState([{}]);
@@ -177,7 +177,6 @@ const AddMenuItemForm = () => {
 
     const toMenu = (event) => {
       event.preventDefault();
-  
       if (isAuthorized === 'true') {
         navigate('/menuitems');
       } else {
@@ -194,7 +193,7 @@ const AddMenuItemForm = () => {
             </div>
             <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>Add Menu Items</div>
             <div style={{ flex: 1, textAlign: 'right' }}>
-              <button className="button">Save All</button>
+              <button className="button" onClick={handleSaveAll}>Save All</button>
             </div>
           </div>
         </div>
