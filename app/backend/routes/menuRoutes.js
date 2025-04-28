@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Menu = require('../schemas/Menu');
+const Business = require('../schemas/Business');
 const mongoose = require('mongoose');
 
 // @route   GET /api/menus
@@ -38,6 +39,14 @@ router.post('/', async (req, res) => {
     });
 
     const savedMenu = await newMenu.save();
+
+    // After saving menu, update the corresponding Business document
+    await Business.findByIdAndUpdate(
+      restaurant,
+      { $push: { menus: savedMenu._id } },
+      { new: true }
+    );
+
     res.status(201).json(savedMenu);
   } catch (err) {
     res.status(400).json({ error: 'Error creating menu: ' + err.message });
