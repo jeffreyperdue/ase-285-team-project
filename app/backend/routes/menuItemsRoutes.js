@@ -35,7 +35,8 @@ router.get('/', async (req, res) => {
 // @access  Public (no auth yet)
 router.put('/:id', async (req, res) => {
   try {
-    const { name, description, ingredients, allergens } = req.body;
+    const { id } = req.params;
+    const { name, description, ingredients, allergens, menuIDs } = req.body;
 
     // Ensure the ID is provided
     if (!id) {

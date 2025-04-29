@@ -40,6 +40,7 @@ const MenuItemPanel = ({ item, onSave, onDelete }) => {
       if (onDelete) {
         onDelete(menuItemToDelete);
       }
+      alert('Menu item deleted successfully!');
   
       setMenuItemToDelete(null);
       setShowConfirm(false);

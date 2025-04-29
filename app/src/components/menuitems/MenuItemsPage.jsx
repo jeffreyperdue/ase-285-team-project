@@ -29,30 +29,36 @@ const MenuItemsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
  // fetch menuItems on initial renders
- useEffect(() => {
-  const fetchMenuItems = async () => {
-    try {
-      const menuID = "680a79fa3b98428dcf348668";
-      const res = await axios.get(`http://localhost:5000/api/menuitems?menuID=${menuID}`); 
-      const fetchedMenuItems = res.data.map(menuItem => ({
-        ...menuItem,
-      }));
-      setMenuItems(fetchedMenuItems);
-    } catch (err) {
-      console.error('Error fetching menu items:', err);
-    }
-  };
+ const fetchMenuItems = async () => {
+  try {
+    // const menuID = "680a79fa3b98428dcf348668";
+    const res = await axios.get(`http://localhost:5000/api/menuitems?menuID=${menuID}`); 
+    const fetchedMenuItems = res.data.map(menuItem => ({
+      ...menuItem,
+    }));
+    setMenuItems(fetchedMenuItems);
+  } catch (err) {
+    console.error('Error fetching menu items:', err);
+  }
+};
 
+ useEffect(() => {
   fetchMenuItems();
 }, []);
 
   const handleSave = async (updatedItem) => {
-    await axios.put(`http://localhost:5000/api/menuitems/${updatedItem._id}`, updatedItem);
-    // Refresh list if you want
+    try {
+      await axios.put(`http://localhost:5000/api/menuitems/${updatedItem._id}`, updatedItem);
+      alert('Menu item updated successfully!');
+      fetchMenuItems();
+    } catch (err) {
+      console.error('Error saving item:', err);
+      alert('Failed to update item.');
+    }
   };
 
   const handleDelete = (deletedId) => {
-    setMenuItems((prevItems) => prevItems.filter(item => item._id !== deletedId));
+    fetchMenuItems();
   };
 
   const filteredItems = menuItems.filter((item) =>
