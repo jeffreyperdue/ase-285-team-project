@@ -213,7 +213,7 @@ const AdminTable = () => {
 	const table = useMaterialReactTable({
 		columns,
 		data,
-		enableRowSelection: true,
+		enableRowSelection: false,
 		enableRowActions: true,
 		positionActionsColumn: 'last',
 		layoutMode: 'grid-no-grow',

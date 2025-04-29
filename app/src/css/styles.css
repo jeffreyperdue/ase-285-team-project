@@ -104,12 +104,43 @@ textarea {
 	cursor: pointer;
 }
 
+.btn {
+	background-color: var(--mint-green);
+	border: none;
+	border-radius: var(--corners-round);
+	padding: 10px 20px;
+	/* margin: 5px; */
+	color: var(--hard-white);
+	font-family: var(--font-family);
+	text-align: center;
+	text-decoration: none;
+	display: flex;
+	gap: 5px;
+	align-items: center;
+	font-size: 16px;
+	cursor: pointer;
+	position: absolute;
+	left: 25px;
+
+	img {
+		width: 20px;
+		height: 20px;
+	}
+}
+
 .gray-btn {
 	background-color: var(--gray);
 }
 
 .gray-btn:hover {
 	background-color: var(--gray-hover);
+}
+
+.back-arrow {
+	height: 40px;
+	cursor: pointer;
+	position: absolute;
+	left: 25px;
 }
 
 /* This section tentatively for Confirm Deletion and its parts. */

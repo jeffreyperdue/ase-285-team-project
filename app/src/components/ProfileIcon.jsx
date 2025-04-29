@@ -6,6 +6,7 @@ import editBusinessIcon from '../icons/edit_business.png';
 import logoutIcon from '../icons/logout.png';
 import userMaintenanceIcon from '../icons/user-maintenance.png';
 import getCookie from '../assets/cookies';
+import deleteIcon from '../icons/delete.png';
 import '../css/ProfileIcon.css';
 
 export default function ProfileIcon() {
@@ -60,6 +61,10 @@ export default function ProfileIcon() {
 		} catch (err) {
 			console.error(err);
 		}
+	};
+
+	const deleteAccount = (event) => {
+		event.preventDefault();
 	};
 
 	const toLogin = (event) => {
@@ -135,6 +140,17 @@ export default function ProfileIcon() {
 								alt='Edit Business'
 							/>
 							<span>Edit Business Info</span>
+						</div>
+
+						<div
+							onClick={deleteAccount}
+							className='dropdown-item'
+						>
+							<img
+								src={deleteIcon}
+								alt='Delete Account'
+							/>
+							<span>Delete Account</span>
 						</div>
 
 						<div
