@@ -141,15 +141,13 @@ const CollapsiblePanel = ({ header, formData, onFormChange, onAddPanel }) => {
     );
 };
 
+// The main form
 const AddMenuItemForm = () => {
     const [panels, setPanels] = useState([
         { name: '', ingredients: '', description: '', selectedAllergens: [] }
-      ]);
+    ]);
 
-    const handleSave = (data) => {
-        console.log('Form data saved:', data);
-    };
-
+    
     const handleSaveAll = async () => {
         try {
           const saveRequests = panels.map(panel =>
