@@ -16,6 +16,7 @@ import {
 	Routes,
 } from 'react-router-dom';
 import UserMaintenance from './components/admin/UserMaintenance';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 // TODO: check authorized status for routes
 function App() {
@@ -26,52 +27,110 @@ function App() {
 
 				<div className='content'>
 					<Routes>
+						{/* Public Route */}
 						<Route
 							path='/'
-							element={SignInUp()}
+							element={
+								<ProtectedRoute
+									route={'signInUp'}
+									component={SignInUp()}
+								/>
+							}
+						/>
+
+						{/* Protected Routes */}
+						<Route
+							path='/step1'
+							element={
+								<ProtectedRoute
+									route={'setup'}
+									component={<SetUp step={1} />}
+								/>
+							}
 						/>
 
 						<Route
-							path='/step1'
-							element={<SetUp step={1} />}
-						/>
-						<Route
 							path='/step2'
-							element={<SetUp step={2} />}
+							element={
+								<ProtectedRoute
+									route={'setup'}
+									component={<SetUp step={2} />}
+								/>
+							}
 						/>
+
 						<Route
 							path='/step3'
-							element={<SetUp step={3} />}
+							element={
+								<ProtectedRoute
+									route={'setup'}
+									component={<SetUp step={3} />}
+								/>
+							}
 						/>
 
 						<Route
 							path='/edit-login-info'
-							element={<EditLoginInfo />}
+							element={
+								<ProtectedRoute
+									component={<EditLoginInfo />}
+								/>
+							}
 						/>
 
 						<Route
 							path='/user-maintenance'
-							element={<UserMaintenance />}
+							element={
+								<ProtectedRoute
+									admin={true}
+									component={<UserMaintenance />}
+								/>
+							}
 						/>
+
 						<Route
 							path='/dashboard'
-							element={<MenuDashboard />}
+							element={
+								<ProtectedRoute
+									component={<MenuDashboard />}
+								/>
+							}
 						/>
+
 						<Route
 							path='/edit-business-info'
-							element={<EditBusinessInfo />}
+							element={
+								<ProtectedRoute
+									component={<EditBusinessInfo />}
+								/>
+							}
 						/>
+
 						<Route
 							path='/add-menu-item'
-							element={<AddMenuItem />}
+							element={
+								<ProtectedRoute
+									component={<AddMenuItem />}
+								/>
+							}
 						/>
+
 						<Route
 							path='/swap-menu'
-							element={<MenuItemPicklist />}
+							element={
+								<ProtectedRoute
+									component={<MenuItemPicklist />}
+								/>
+							}
 						/>
+
 						<Route
 							path='/menuitems'
-							element={<MenuItemsPage />}
+							element={
+								<ProtectedRoute
+									component={<MenuItemsPage />}
+								/>
+							}
 						/>
 					</Routes>
 				</div>
