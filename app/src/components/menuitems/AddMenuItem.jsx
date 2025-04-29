@@ -22,10 +22,9 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
     };
 
 
-
     const handleSave = async () => {
         try {
-          const response = await axios.post('/api/addmenuitem', {
+          const response = await axios.post('http://localhost:5000/api/add-menu-item', {
             name: formData.name,
             description: formData.description,
             ingredients: formData.ingredients,
@@ -94,14 +93,14 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
                                         <h3>Name:</h3>
                                         <input type="text" id="name"
                                             name="name"
-                                            value={formData.itemName}
+                                            value={formData.name}
                                             onChange={handleInputChange}
                                             style={{ width: '100%' }} />
                                     </div>
                                     <div name="ingredientsInput">
                                         <h3>Ingredients</h3>
                                         <textarea id="ingredients" name="ingredients"
-                                            value={formData.Ingredients}
+                                            value={formData.ingredients}
                                             onChange={handleInputChange}
                                             rows="4" cols="50"></textarea>
                                     </div>
