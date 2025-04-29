@@ -3,20 +3,16 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import '../../css/auth.scss';
 import GetPasswordField from './Password';
-import GetConfirmationMessage from '../ConfirmationMessage';
 import ErrorMessage from '../ErrorMessage';
 import format from '../../assets/formValidation.js';
 
 function GetAuthForm({ formName }) {
 	const navigate = useNavigate();
-	const [invalidEmail, setInvalidEmail] = useState(false);
 	const [message, setMessage] = useState(
 		'Something went wrong'
 	);
 	const [showError, setShowError] = useState(false);
-	const [showConfirmation, setShowConfirmation] =
-		useState(false);
-	const [destination, setDestination] = useState('/');
+	useState(false);
 
 	const checkCredentials = async (event) => {
 		event.preventDefault();
@@ -135,15 +131,6 @@ function GetAuthForm({ formName }) {
 			method='POST'
 			className='auth-form'
 		>
-			{showConfirmation ? (
-				<GetConfirmationMessage
-					message={message}
-					destination={destination}
-				/>
-			) : (
-				<></>
-			)}
-
 			{showError ? (
 				<ErrorMessage
 					message={message}
