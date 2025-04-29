@@ -186,7 +186,7 @@ const AddMenuItemForm = () => {
     const toMenu = (event) => {
       event.preventDefault();
       if (isAuthorized === 'true') {
-        navigate('/menuitems');
+        navigate(`/menuitems{menuID}`);
       } else {
         navigate('/');
       }
@@ -196,7 +196,7 @@ const AddMenuItemForm = () => {
         <div>
             <div className="center add-center-flex">
                 <div className="add-header-row">
-                    <div style={{ flex: 1}}><button className="button" onClick={toMenu}>Menu</button></div>
+                    <div style={{ flex: 1}}><button className="button" onClick={toMenu}>Return to Menu</button></div>
                     <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>Add Menu Items</div>
                     <div style={{ flex: 1, textAlign: 'right'}}><button className="button" onClick={handleSaveAll}>Save All</button></div>
                 </div>

@@ -28,23 +28,40 @@ const MenuItemsPage = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
+
  // fetch menuItems on initial renders
  const fetchMenuItems = async () => {
-  try {
-    // const menuID = "680a79fa3b98428dcf348668";
-    const res = await axios.get(`http://localhost:5000/api/menuitems?menuID=${menuID}`); 
-    const fetchedMenuItems = res.data.map(menuItem => ({
-      ...menuItem,
-    }));
-    setMenuItems(fetchedMenuItems);
-  } catch (err) {
-    console.error('Error fetching menu items:', err);
-  }
-};
+    try {
+      const menuID = "680a79fa3b98428dcf348668";
+      const res = await axios.get(`http://localhost:5000/api/menuitems?menuID=${menuID}`); 
+      const fetchedMenuItems = res.data.map(menuItem => ({
+        ...menuItem,
+      }));
+      setMenuItems(fetchedMenuItems);
+    } catch (err) {
+      console.error('Error fetching menu items:', err);
+    }
+  };
 
  useEffect(() => {
+  const params = new URLSearchParams(location.search);
+  let menuID = params.get('menuID');
+
+  if (menuID) {
+    // Save to localStorage if found in URL
+    localStorage.setItem('menu_ID', JSON.stringify(menuID));
+  } else {
+    // Otherwise try to pull from localStorage
+    const storedID = localStorage.getItem('menu_ID');
+    if (storedID) {
+      menuID = JSON.parse(storedID);
+      console.log('Using stored menuID:', menuID);
+    } else {
+      console.warn('No menuID found in URL or localStorage.');
+    }
+  }
   fetchMenuItems();
-}, []);
+}, [location.search]);
 
   const handleSave = async (updatedItem) => {
     try {
@@ -70,7 +87,6 @@ const MenuItemsPage = () => {
 
   const navigate = useNavigate();
   const isAuthorized = getCookie('isAuthorized');
-
   const toAddItem = (event) => {
     event.preventDefault();
     if (isAuthorized === 'true') {
@@ -79,6 +95,16 @@ const MenuItemsPage = () => {
       navigate('/');
     }
   };
+
+  const toMenuSwap = (event) => {
+    event.preventDefault();
+    if (isAuthorized === 'true') {
+      navigate('/swap-menu');
+    } else {
+      navigate('/');
+    }
+  }
+
 
 return (
     <div className='center'>
@@ -90,7 +116,7 @@ return (
       </div>
       <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>{menuTitle}</div>
       <div style={{ flex: 1, textAlign: 'right' }}>
-        <button className="button">Integrate Menus</button>
+        <button className="button" onClick={toMenuSwap}>Integrate Menus</button>
       </div>
     </div>
 
