@@ -43,7 +43,7 @@ function EditLoginInfo() {
 
 			if (email !== currentCred) {
 				wrongEmail = true;
-				setMessage('Current email is invalid');
+				setMessage('Current email is incorrect');
 			}
 		} else if (option === 'password') {
 			newCred = form.newPassword.value;

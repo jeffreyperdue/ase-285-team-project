@@ -1,15 +1,54 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import '../../css/auth.scss';
 import GetPasswordField from './Password';
+import GetConfirmationMessage from '../ConfirmationMessage';
+import ErrorMessage from '../ErrorMessage';
+import format from '../../assets/formValidation.js';
 
 function GetAuthForm({ formName }) {
 	const navigate = useNavigate();
+	const [invalidEmail, setInvalidEmail] = useState(false);
+	const [message, setMessage] = useState(
+		'Something went wrong'
+	);
+	const [showError, setShowError] = useState(false);
+	const [showConfirmation, setShowConfirmation] =
+		useState(false);
+	const [destination, setDestination] = useState('/');
 
-	const signUp = async (event) => {
+	const checkCredentials = async (event) => {
 		event.preventDefault();
 		const form = event.target;
+		if (formName === 'signUpForm') {
+			const validEmail = format.validateEmail(
+				form.email.value
+			);
 
+			if (!validEmail) {
+				setMessage('Invalid email format.');
+				setShowError(true);
+			} else {
+				const validPassword = format.validatePassword(
+					form.password.value
+				);
+
+				if (!validPassword) {
+					setMessage(
+						'Password must be at least 6 characters long.'
+					);
+					setShowError(true);
+				} else {
+					await signUp(form);
+				}
+			}
+		} else if (formName === 'signInForm') {
+			await logIn(form);
+		}
+	};
+
+	const signUp = async (form) => {
 		const formData = {
 			first_name: form.first_name.value,
 			last_name: form.last_name.value,
@@ -20,7 +59,7 @@ function GetAuthForm({ formName }) {
 			admin: true,
 		};
 
-		console.log(formData);
+		// console.log(formData);
 
 		try {
 			const response = await fetch(
@@ -37,10 +76,10 @@ function GetAuthForm({ formName }) {
 
 			if (response.ok) {
 				const result = await response;
-				console.log(result.message);
+				// console.log(result.message);
 				navigate('/step1'); // Redirect on success
 			} else {
-				console.log('sign up response: ' + response.body);
+				// console.log('sign up response: ' + response.body);
 				const error = await response;
 				console.error('Error:', error);
 			}
@@ -49,18 +88,16 @@ function GetAuthForm({ formName }) {
 		}
 	};
 
-	const logIn = async (event) => {
-		event.preventDefault();
-		const form = event.target;
-		console.log('form.email: ' + form.email.value);
-		console.log('form.password: ' + form.password.value);
+	const logIn = async (form) => {
+		// console.log('form.email: ' + form.email.value);
+		// console.log('form.password: ' + form.password.value);
 
 		const formData = {
 			email: form.email.value,
 			password: form.password.value,
 		};
 
-		console.log('formData: ' + formData);
+		// console.log('formData: ' + formData);
 
 		try {
 			const response = await fetch(
@@ -75,14 +112,14 @@ function GetAuthForm({ formName }) {
 				}
 			);
 
-			// LEFT OFF
+			// TODO: improve error handling
 			if (response.ok) {
 				const result = await response.json();
-				console.log(result.email);
-				console.log('result.cookies:', document.cookie);
+				// console.log(result.email);
+				// console.log('result.cookies:', document.cookie);
 				navigate('/dashboard');
 			} else {
-				console.log('sign in response: ' + response.body);
+				// console.log('sign in response: ' + response.body);
 				const error = await response;
 				console.error('Error:', error);
 			}
@@ -94,10 +131,29 @@ function GetAuthForm({ formName }) {
 	return (
 		<form
 			name={formName}
-			onSubmit={formName === 'signUpForm' ? signUp : logIn}
+			onSubmit={checkCredentials}
 			method='POST'
 			className='auth-form'
 		>
+			{showConfirmation ? (
+				<GetConfirmationMessage
+					message={message}
+					destination={destination}
+				/>
+			) : (
+				<></>
+			)}
+
+			{showError ? (
+				<ErrorMessage
+					message={message}
+					destination={false}
+					onClose={() => setShowError(false)}
+				/>
+			) : (
+				<></>
+			)}
+
 			<h2
 				className={
 					formName === 'signUpForm'
