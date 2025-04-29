@@ -50,6 +50,9 @@ app.use('/api/menuitems', menuItemRoutes);
 const auth = require('./routes/user.routes');
 app.use('/api/auth', auth);
 
+const admin = require('./routes/admin.routes');
+app.use('/api/admin', admin);
+
 const businessRoutes = require('./routes/businessRoutes');
 app.use('/api/businesses', businessRoutes);
 
@@ -68,4 +71,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
 });
-

@@ -31,11 +31,27 @@ input[type='email'].user-email {
 	}
 }
 
-.add-user-container {
-	width: 340px;
-	height: fit-content;
-	display: grid;
-	gap: 10px;
+.add-user {
+	&-form {
+		width: 340px;
+		height: fit-content;
+		display: grid;
+		gap: 20px;
+	}
+
+	&-container {
+		display: grid;
+		row-gap: 10px;
+	}
+
+	&-status-container {
+		display: grid;
+		row-gap: 10px;
+
+		input {
+			height: auto;
+		}
+	}
 }
 
 .email {
@@ -53,14 +69,12 @@ input[type='email'].user-email {
 	justify-content: center;
 }
 
-.promote-btn {
-	background-color: var(--mint-green);
-}
-
-.demote-btn {
-	background-color: var(--salmon);
-}
-
-.remove-access-btn {
-	background-color: var(--delete-red);
+.admin {
+	&-table {
+		&-icon {
+			height: 30px;
+			width: 30px;
+			cursor: pointer;
+		}
+	}
 }

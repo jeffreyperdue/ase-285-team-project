@@ -83,13 +83,18 @@ const EditBusinessInfo = () => {
     }
   };
 
-  return (
-    <form className='edit-business-info-container'>
-      {confirmation ? (
-        <GetConfirmationMessage type='edit-business-info' />
-      ) : (
-        <>
-          <h1>Edit Business Information</h1>
+	return (
+		<form className='edit-business-info-container'>
+			{showConfirmation ? (
+				<GetConfirmationMessage
+					message='Business information changed successfully.'
+					destination='/dashboard'
+				/>
+			) : (
+				<></>
+			)}
+
+			<h1>Edit Business Information</h1>
 
           <div className='edit-business-info-form-fields'>
             <div className='logo-upload'>
