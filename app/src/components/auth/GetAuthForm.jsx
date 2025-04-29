@@ -84,16 +84,12 @@ function GetAuthForm({ formName }) {
 		}
 	};
 
+	// Logs a user in
 	const logIn = async (form) => {
-		// console.log('form.email: ' + form.email.value);
-		// console.log('form.password: ' + form.password.value);
-
 		const formData = {
 			email: form.email.value,
 			password: form.password.value,
 		};
-
-		// console.log('formData: ' + formData);
 
 		try {
 			const response = await fetch(
@@ -107,17 +103,13 @@ function GetAuthForm({ formName }) {
 					body: JSON.stringify(formData),
 				}
 			);
+			const result = await response.json();
 
-			// TODO: improve error handling
 			if (response.ok) {
-				const result = await response.json();
-				// console.log(result.email);
-				// console.log('result.cookies:', document.cookie);
 				navigate('/dashboard');
 			} else {
-				// console.log('sign in response: ' + response.body);
-				const error = await response;
-				console.error('Error:', error);
+				setMessage(result.message);
+				setShowError(true);
 			}
 		} catch (err) {
 			console.error('Error: ', err.message);

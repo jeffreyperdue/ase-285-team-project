@@ -10,10 +10,11 @@ router.post('/signin', async (req, res) => {
 	try {
 		const { email, password } = req.body;
 
-		// Check if email or password is missing
 		if (!email || !password) {
+			// Email or password is missing
 			return res.status(400).json({
-				error: 'Email and password are required.',
+				error: 'Email and password are required',
+				message: 'Email and password are required.',
 			});
 		}
 
@@ -24,6 +25,7 @@ router.post('/signin', async (req, res) => {
 			// Email is wrong or doesn't exist
 			return res.status(401).json({
 				error: 'Invalid email',
+				message: 'Invalid email.',
 			});
 		}
 
@@ -35,19 +37,20 @@ router.post('/signin', async (req, res) => {
 		if (!passwordMatches) {
 			// Password is wrong
 			return res.status(401).json({
-				error: 'Invalid password',
-				message: 'Invalid password.',
+				error: 'Password is incorrect',
+				message: 'Password is incorrect.',
 			});
 		}
 
 		// Set cookies
 		cookies.setCookies(res, foundUser);
 
-		// Send response w/ user's data
+		// Send success response w/ user's data
 		res.status(200).json(foundUser);
 	} catch (err) {
 		res.status(500).json({
 			error: 'Could not fetch user' + err.message,
+			message: 'Could not fetch user.',
 		});
 	}
 });
