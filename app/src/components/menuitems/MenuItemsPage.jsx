@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import MenuItemPanel from './assets/MenuItemPanel.jsx';
 import { useNavigate } from 'react-router-dom';
-import getCookie from '../../assets/cookies';
 import axios from 'axios';
 import '../../css/styles.css';
 
@@ -23,24 +22,30 @@ const mockMenuItems = [
   },
 ];
 
-
 const MenuItemsPage = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-
+  const businessId = localStorage.getItem('business_id');
+  const location = useLocation();
+  const menuTitle = location.state?.menuTitle || 'Untitled Menu';
 
  // fetch menuItems on initial renders
  const fetchMenuItems = async () => {
-    try {
-      const menuID = "680a79fa3b98428dcf348668";
-      const res = await axios.get(`http://localhost:5000/api/menuitems?menuID=${menuID}`); 
-      const fetchedMenuItems = res.data.map(menuItem => ({
-        ...menuItem,
-      }));
-      setMenuItems(fetchedMenuItems);
-    } catch (err) {
-      console.error('Error fetching menu items:', err);
+  try {
+    const menuID = JSON.parse(localStorage.getItem('menu_ID')); // Get from localStorage
+    if (!menuID) {
+      console.warn('No menu ID found');
+      alert("No menu ID found!")
     }
+
+    const res = await axios.get(`http://localhost:5000/api/menuitems?menuID=${menuID}`);
+    const fetchedMenuItems = res.data.map(menuItem => ({
+      ...menuItem,
+    }));
+    setMenuItems(fetchedMenuItems);
+  } catch (err) {
+    console.error('Error fetching menu items:', err);
+  }
   };
 
  useEffect(() => {
@@ -82,27 +87,16 @@ const MenuItemsPage = () => {
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const location = useLocation();
-  const menuTitle = location.state?.menuTitle || 'Untitled Menu';
 
   const navigate = useNavigate();
-  const isAuthorized = getCookie('isAuthorized');
   const toAddItem = (event) => {
     event.preventDefault();
-    if (isAuthorized === 'true') {
-      navigate('/add-menu-item');
-    } else {
-      navigate('/');
-    }
+    navigate('/add-menu-item');
   };
 
   const toMenuSwap = (event) => {
     event.preventDefault();
-    if (isAuthorized === 'true') {
-      navigate('/swap-menu');
-    } else {
-      navigate('/');
-    }
+    navigate('/swap-menu');
   }
 
 
