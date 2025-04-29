@@ -63,11 +63,27 @@ router.post('/signup', async (req, res) => {
 		const { first_name, last_name, email, password } =
 			req.body;
 
-		// Check if any fields are missing
 		if (!first_name || !last_name || !email || !password) {
-			return res
-				.status(400)
-				.json({ error: 'All fields are required.' });
+			// One of the fields is missing
+			return res.status(401).json({
+				error: 'All fields are required',
+				message: 'All fields are required.',
+			});
+		}
+
+		// Get User document from the DB if the email already exists
+		const userExists = await User.findOne({
+			email: email,
+		});
+
+		if (userExists) {
+			// Email already exists in DB
+			return res.status(401).json({
+				error:
+					'An account with the provided email already exists',
+				message:
+					'An account with the provided email already exists.',
+			});
 		}
 
 		// Create new User document from request body
@@ -86,8 +102,9 @@ router.post('/signup', async (req, res) => {
 
 		if (!savedUser) {
 			// User was not saved
-			return res.status(400).json({
-				error: 'Error saving user: ' + err.message,
+			return res.status(401).json({
+				error: 'Error saving user',
+				message: 'Error saving user.',
 			});
 		}
 
@@ -97,7 +114,7 @@ router.post('/signup', async (req, res) => {
 		// Send response
 		return res.status(201).json(savedUser);
 	} catch (err) {
-		res.status(400).json({
+		res.status(401).json({
 			error: 'Error creating user: ' + err.message,
 		});
 	}

@@ -17,6 +17,7 @@ function GetAuthForm({ formName }) {
 	const checkCredentials = async (event) => {
 		event.preventDefault();
 		const form = event.target;
+
 		if (formName === 'signUpForm') {
 			const validEmail = format.validateEmail(
 				form.email.value
@@ -26,11 +27,18 @@ function GetAuthForm({ formName }) {
 				setMessage('Invalid email format.');
 				setShowError(true);
 			} else {
+				const passwordsMatch =
+					form.password.value ===
+					form.confirmPassword.value;
+
 				const validPassword = format.validatePassword(
 					form.password.value
 				);
 
-				if (!validPassword) {
+				if (!passwordsMatch) {
+					setMessage('Passwords do not match.');
+					setShowError(true);
+				} else if (!validPassword) {
 					setMessage(
 						'Password must be at least 6 characters long.'
 					);
@@ -55,8 +63,6 @@ function GetAuthForm({ formName }) {
 			admin: true,
 		};
 
-		// console.log(formData);
-
 		try {
 			const response = await fetch(
 				'http://localhost:5000/api/auth/signup',
@@ -69,15 +75,13 @@ function GetAuthForm({ formName }) {
 					body: JSON.stringify(formData),
 				}
 			);
+			const result = await response.json();
 
 			if (response.ok) {
-				const result = await response;
-				// console.log(result.message);
 				navigate('/step1'); // Redirect on success
 			} else {
-				// console.log('sign up response: ' + response.body);
-				const error = await response;
-				console.error('Error:', error);
+				setMessage(result.message);
+				setShowError(true);
 			}
 		} catch (err) {
 			console.error('Error: ', err.message);
