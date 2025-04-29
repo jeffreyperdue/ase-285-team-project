@@ -35,7 +35,6 @@ router.post('/signin', async (req, res) => {
 		const passwordMatches = await foundUser.comparePassword(
 			password
 		);
-		console.log('passwordMatches:', passwordMatches);
 
 		if (!passwordMatches) {
 			// Password is wrong

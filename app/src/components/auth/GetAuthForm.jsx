@@ -117,8 +117,6 @@ function GetAuthForm({ formName }) {
 					'business_id',
 					result.business_id
 				);
-				console.log(result.email);
-				console.log('result.cookies:', document.cookie);
 				navigate('/dashboard');
 			} else {
 				setMessage(result.message);
