@@ -35,7 +35,7 @@ const MenuItemPanel = ({ item, onSave, onDelete }) => {
     }
   
     try {
-      await axios.delete(`http://localhost:5000/menuitems/${menuItemToDelete}`); // Correct route
+      await axios.delete(`http://localhost:5000/api/menuitems/${menuItemToDelete}`);
   
       if (onDelete) {
         onDelete(menuItemToDelete);
@@ -53,7 +53,6 @@ const MenuItemPanel = ({ item, onSave, onDelete }) => {
       setMenuItemToDelete(null);
   };
 
-  
   return (
     <div className="menu-item-panel collapsible-panel">
       <div className="panel-header" onClick={toggleOpen}>
@@ -80,6 +79,7 @@ const MenuItemPanel = ({ item, onSave, onDelete }) => {
         <div className="panel-body add-center-flex">
           {isEditing ? (
             <>
+              <h4>Name:</h4>
               <input
                 type="text"
                 name="name"
@@ -87,18 +87,21 @@ const MenuItemPanel = ({ item, onSave, onDelete }) => {
                 onChange={handleChange}
                 placeholder="Item Name"
               />
+              <h4>Description: </h4>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Description"
               />
+              <h4>Ingredients:</h4>
               <textarea
                 name="ingredients"
                 value={formData.ingredients}
                 onChange={handleChange}
                 placeholder="Ingredients"
               />
+              <h4>Allergens:</h4>
               <textarea
                 name="allergens"
                 value={formData.allergens.join(', ')}
@@ -118,7 +121,9 @@ const MenuItemPanel = ({ item, onSave, onDelete }) => {
           ) : (
             <>
               <h4>{item.name}</h4>
+              <h4>Description: </h4>
               <p>{item.description}</p>
+              <h4>Ingredients:</h4>
               <pre>{item.ingredients}</pre>
               <h4>Allergens:</h4>
               {item.allergens && item.allergens.length > 0 ? (

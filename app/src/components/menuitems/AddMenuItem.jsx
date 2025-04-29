@@ -23,7 +23,7 @@ const CollapsiblePanel = ({ header, formData, onFormChange, onAddPanel }) => {
     const handleSave = async () => {
         try {
             const menuId = localStorage.getItem('menu_id');
-          const response = await axios.post('http://localhost:5000/api/add-menu-item', {
+          const response = await axios.post('http://localhost:5000/api/menuitems/add-menu-item', {
             name: formData.name,
             description: formData.description,
             ingredients: formData.ingredients,
@@ -153,7 +153,7 @@ const AddMenuItemForm = () => {
         try {
             const menuId = localStorage.getItem('menu_id');
           const saveRequests = panels.map(panel =>
-            axios.post('http://localhost:5000/api/add-menu-item', {
+            axios.post('http://localhost:5000/api/menuitems/add-menu-item', {
               name: panel.name,
               description: panel.description,
               ingredients: panel.ingredients,

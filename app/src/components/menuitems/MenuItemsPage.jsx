@@ -47,7 +47,7 @@ const MenuItemsPage = () => {
 }, []);
 
   const handleSave = async (updatedItem) => {
-    await axios.put(`http://localhost:5000/menuitems/${updatedItem._id}`, updatedItem);
+    await axios.put(`http://localhost:5000/api/menuitems/${updatedItem._id}`, updatedItem);
     // Refresh list if you want
   };
 

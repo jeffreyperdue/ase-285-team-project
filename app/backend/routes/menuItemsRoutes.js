@@ -11,13 +11,14 @@ const mongoose = require('mongoose');
 // @route GET /api/menuitems
 // @desc Get menu items by menuID (optional)
 // @access Public
-router.get('/menuitems', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const { menuID } = req.query;  // read menuID from URL
+    const { menuID } = req.query; 
 
     let filter = {};
+    // only get menuItems with the menuID in their menuIDs
     if (menuID) {
-      filter = { menuIDs: menuID };  // menuID exists inside menuIDs array
+      filter = { menuIDs: menuID };  
     }
 
     const menuitems = await MenuItem.find(filter);
@@ -29,10 +30,10 @@ router.get('/menuitems', async (req, res) => {
   }
 });
   
-// @route   PUT /menuitems
+// @route   PUT api/menuitems
 // @desc    Edit an existing menu item
 // @access  Public (no auth yet)
-router.put('/menuitems', async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const { name, description, ingredients, allergens } = req.body;
 
@@ -53,19 +54,20 @@ router.put('/menuitems', async (req, res) => {
     if (!updatedMenuItem) {
       return res.status(404).json({ error: 'Menu item not found' });
     }
-
     res.status(200).json(updatedMenuItem);
   } catch (err) {
     res.status(500).json({ error: 'Error editing menu item: ' + err.message });
   }
 });
 
-// @route   DELETE /menusitems/:id
+// @route   DELETE api/menuitems/:id
 // @desc    Delete a menu item by ID
 // @access  Public (no auth yet)
-router.delete('/menuitems/:id', async (req, res) => {
+// @route DELETE /api/menuitems/:id
+router.delete('/:id', async (req, res) => {
   try {
-    const deleted = await MenuItem.findByIdAndDelete(req.params.id);
+    const { id } = req.params;
+    const deleted = await MenuItem.findByIdAndDelete(id);
     if (!deleted) {
       return res.status(404).json({ error: 'Menu Item not found' });
     }
@@ -75,42 +77,12 @@ router.delete('/menuitems/:id', async (req, res) => {
   }
 });
 
+
 ///
 /// AddMenuItem.jsx
 ///
 
-// @route   GET /api/addmenuitem
-// @desc    Get all menu items
-// @access  Public (no auth yet)
-router.get('/add-menu-item', async (req, res) => {
-  try {
-    let menuitems = await MenuItem.find();
-
-    // If there are no menuItems pulled from mongodb
-    if (menuitems.length === 0) {
-      // Create Menu Item
-      const menuItem = new MenuItem({
-        title: 'Example Menu Item',
-        description: 'This is shown to customers',
-        ingredients: 'Cheese, bread, broccoli',
-        allergens: ['Dairy, Wheat'],
-        menuIDs: ['680a79fa3b98428dcf348668']
-      });
-
-      const saved = await menuItem.save();
-      menuitems = [saved]; // start list with Master Menu
-    } else {
-     // DO SOMETHING if not saved because oops.
-    }
-
-    res.json(menuitems || []);
-  } catch (err) {
-  console.error('Error fetching menu items:', err);
-  res.status(500).json({ error: 'Could not fetch menu items' });
-}
-});
-
-// @route   POST /api/menuitems
+// @route   POST /api/menuitems/add-menu-item
 // @desc    Create a new menu item
 // @access  Public (no auth yet)
 router.post('/add-menu-item', async (req, res) => {
@@ -136,7 +108,7 @@ router.post('/add-menu-item', async (req, res) => {
 ///
 /// MenuItemSwap.jsx
 ///
-// @route   GET /api/menuitems-menus
+// @route   GET /api/menuitems/menuswap-menus
 // @desc    Get all menu items
 // @access  Public (no auth yet)
 router.get('/menuswap-menus', async (req, res) => {
@@ -156,7 +128,7 @@ router.get('/menuswap-menus', async (req, res) => {
   }
 });
 
-// @route   GET /api/menuitems-items
+// @route   GET /api/menuitem/menuswap-items
 // @desc    Get all menu items
 // @access  Public (no auth yet)
 router.get('/menuswap-items', async (req, res) => {
@@ -187,7 +159,7 @@ router.get('/menuswap-items', async (req, res) => {
   }
   });
 
-// @route   GET /api/swap-menu
+// @route   GET /api/menuitem/swap-menu
 // @desc    Get all menu items
 // @access  Public (no auth yet)
 router.get('/swap-menu', async (req, res) => {
@@ -216,7 +188,7 @@ router.get('/swap-menu', async (req, res) => {
 });
 
 
-// @route   PUT /api/swap-menu
+// @route   PUT /api/menuitem/swap-menu
 // @desc    Edit an existing menu item
 // @access  Public (no auth yet)
 router.put('/swap-menu', async (req, res) => {

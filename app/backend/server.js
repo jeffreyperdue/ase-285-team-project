@@ -45,7 +45,7 @@ const menuRoutes = require('./routes/menuRoutes');
 app.use('/api/menus', menuRoutes);
 
 const menuItemRoutes = require('./routes/menuItemsRoutes');
-app.use('/api', menuItemRoutes);
+app.use('/api/menuitems', menuItemRoutes);
 
 const auth = require('./routes/user.routes');
 app.use('/api/auth', auth);
