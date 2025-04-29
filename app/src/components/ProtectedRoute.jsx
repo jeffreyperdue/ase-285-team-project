@@ -26,6 +26,10 @@ function ProtectedRoute({ component, route, admin }) {
 	/* The following statements only execute if the user is logged in. */
 
 	// Prevents user from accessing sign in/up page if they're logged in
+	if (route === 'chooseBusiness') {
+		return component;
+	}
+
 	if (route === 'signInUp') {
 		// Redirect to dashboard
 		return (

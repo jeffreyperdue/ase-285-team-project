@@ -124,7 +124,8 @@ router.post('/signup', async (req, res) => {
 			last_name,
 			email,
 			password,
-			business_id: savedBusiness._id.toString(),
+			// business_id: savedBusiness._id.toString(),
+			business_id: '',
 			menu_item_layout: 0,
 			admin: true,
 		});
