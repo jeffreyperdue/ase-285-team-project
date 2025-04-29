@@ -22,12 +22,13 @@ const CollapsiblePanel = ({ header, formData, onFormChange, onAddPanel }) => {
 
     const handleSave = async () => {
         try {
+            const menuId = localStorage.getItem('menu_id');
           const response = await axios.post('http://localhost:5000/api/add-menu-item', {
             name: formData.name,
             description: formData.description,
             ingredients: formData.ingredients,
             allergens: formData.selectedAllergens || [],
-            menuIDs: ['680a79fa3b98428dcf348668']
+            menuIDs: ['680a79fa3b98428dcf348668', menuId]
           });
           console.log('Saved menu item:', response.data);
           alert('Item saved successfully!');
@@ -150,13 +151,14 @@ const AddMenuItemForm = () => {
     
     const handleSaveAll = async () => {
         try {
+            const menuId = localStorage.getItem('menu_id');
           const saveRequests = panels.map(panel =>
             axios.post('http://localhost:5000/api/add-menu-item', {
               name: panel.name,
               description: panel.description,
               ingredients: panel.ingredients,
               allergens: panel.selectedAllergens || [],
-              menuIDs: ['680a79fa3b98428dcf348668']
+              menuIDs: ['680a79fa3b98428dcf348668',menuId]
             })
           );
           await Promise.all(saveRequests);
