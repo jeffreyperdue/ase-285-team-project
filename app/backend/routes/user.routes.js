@@ -150,6 +150,7 @@ router.post('/edit-login', async (req, res) => {
 		// Check if any data is missing
 		if (!credType || !newCred || !currentCred) {
 			return res.status(401).json({
+				error: 'All fields are required',
 				message: 'All fields are required.',
 			});
 		}
@@ -178,15 +179,16 @@ router.post('/edit-login', async (req, res) => {
 
 			if (updatedUser && updatedUser.email !== newCred) {
 				// Email was not saved to the DB
-				return res
-					.status(400)
-					.json({ message: 'Error saving email' });
+				return res.status(400).json({
+					error: 'Error saving email',
+					message: 'Error saving email.',
+				});
 			}
 
 			// Update the email cookie
 			cookies.updateCookie(res, 'email', newCred);
 
-			// Send response
+			// Send success response
 			return res.status(200).json({
 				message: 'Email changed successfully.',
 			});
@@ -201,7 +203,8 @@ router.post('/edit-login', async (req, res) => {
 
 			if (!user) {
 				// Email does not exist in the DB
-				return res.status(200).json({
+				return res.status(400).json({
+					error: 'User not found',
 					message: 'User not found.',
 				});
 			}
@@ -238,12 +241,14 @@ router.post('/edit-login', async (req, res) => {
 		}
 
 		// Invalid credential was given
-		return res
-			.status(400)
-			.json({ error: 'Credential cannot be changed' });
+		return res.status(400).json({
+			error: 'Credential cannot be changed',
+			message: 'Credential cannot be changed.',
+		});
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error changing login info: ' + err.message,
+			message: 'Error changing login info.',
 		});
 	}
 });

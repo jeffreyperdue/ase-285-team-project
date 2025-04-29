@@ -4,13 +4,12 @@ import ChangePassword from './ChangePassword';
 import GetConfirmationMessage from '../ConfirmationMessage';
 import ErrorMessage from '../ErrorMessage';
 import getCookie from '../../assets/cookies';
+import format from '../../assets/formValidation.js';
 import '../../css/auth.scss';
 
 function EditLoginInfo() {
 	const [option, setOption] = useState('');
-	const [message, setMessage] = useState(
-		'Something went wrong'
-	);
+	const [message, setMessage] = useState('');
 	const [showError, setShowError] = useState(false);
 	const [showConfirmation, setShowConfirmation] =
 		useState(false);
@@ -29,7 +28,7 @@ function EditLoginInfo() {
 	const save = async (event) => {
 		event.preventDefault();
 		const form = event.target;
-		const email = getCookie('email');
+		const cookieEmail = getCookie('email');
 		var newCred;
 		var confirmNewCred;
 		var currentCred;
@@ -39,30 +38,29 @@ function EditLoginInfo() {
 			newCred = form.newEmail.value;
 			confirmNewCred = form.confirmNewEmail.value;
 			currentCred = form.currentEmail.value;
-			setMessage('Emails do not match.');
 
-			if (email !== currentCred) {
+			if (cookieEmail !== currentCred) {
 				wrongEmail = true;
-				setMessage('Current email is incorrect');
+				setMessage('Current email is incorrect.');
+				setShowError(true);
+			} else if (newCred !== confirmNewCred) {
+				setMessage('Emails do not match.');
+				setShowError(true);
+			} else if (newCred === currentCred) {
+				setMessage(
+					'New email must be different from current email.'
+				);
+				setShowError(true);
 			}
 		} else if (option === 'password') {
 			newCred = form.newPassword.value;
 			confirmNewCred = form.confirmNewPassword.value;
 			currentCred = form.currentPassword.value;
-			setMessage('Passwords do not match.');
-		}
 
-		const match = newCred === confirmNewCred;
-		const newMatchesCurrent =
-			match && newCred === currentCred;
-
-		if (option === 'email' && newMatchesCurrent) {
-			setMessage(
-				`New email must be different from current email.`
-			);
-			setShowError(true);
-		} else if (!match || wrongEmail) {
-			setShowError(true);
+			if (newCred !== confirmNewCred) {
+				setMessage('Passwords do not match.');
+				setShowError(true);
+			}
 		} else {
 			const formData = {
 				credType: option,
@@ -86,27 +84,11 @@ function EditLoginInfo() {
 				const result = await response.json();
 
 				if (response.ok) {
-					if (result.message) {
-						setMessage(result.message);
-					}
-					if (response.message) {
-						setMessage(response.message);
-					}
+					setMessage(result.message);
 					setShowConfirmation(true);
 				} else {
-					if (option === 'password' && result.message) {
-						setMessage(result.message);
-						setShowError(true);
-					} else if (newMatchesCurrent) {
-						setMessage(
-							`New ${option} must be different from current ${option}.`
-						);
-					} else if (option === 'email' && result.message) {
-						setMessage(result.message);
-						setShowError(true);
-					} else {
-						console.error('Error changing login info.');
-					}
+					setMessage(result.message);
+					setShowError(true);
 				}
 			} catch (err) {
 				console.error('Error: ', err.message);
