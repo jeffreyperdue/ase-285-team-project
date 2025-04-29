@@ -7,10 +7,9 @@ import getCookie from '../../assets/cookies';
 import axios from 'axios';
 
 // Collapsible Panel Component
-const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
+const CollapsiblePanel = ({ header, formData, onFormChange, onAddPanel }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedAllergens, setSelectedAllergens] = useState([]);
-    const [formData, setFormData] = useState({ name: '', ingredients: '', description: '', allergens: [], menuIDs: [] });
 
     const togglePanel = () => {
         setIsOpen(!isOpen);
@@ -18,19 +17,18 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        onFormChange({ ...formData, [name]: value });
     };
-
-
 
     const handleSave = async () => {
         try {
-          const response = await axios.post('/api/addmenuitem', {
+            const menuId = localStorage.getItem('menu_id');
+          const response = await axios.post('http://localhost:5000/api/add-menu-item', {
             name: formData.name,
             description: formData.description,
             ingredients: formData.ingredients,
             allergens: formData.selectedAllergens || [],
-            menuIDs: ['680a79fa3b98428dcf348668'] // Assign to Master Menu or wherever you want
+            menuIDs: ['680a79fa3b98428dcf348668', menuId]
           });
           console.log('Saved menu item:', response.data);
           alert('Item saved successfully!');
@@ -38,9 +36,7 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
           console.error('Error saving menu item:', err);
           alert('Failed to save item.');
         }
-      };
-
-    const [selectedIds, setSelectedIds] = useState([]);
+    };
 
     const handleAllergenChange = (event) => {
         const allergenValue = event.target.value;
@@ -94,14 +90,14 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
                                         <h3>Name:</h3>
                                         <input type="text" id="name"
                                             name="name"
-                                            value={formData.itemName}
+                                            value={formData.name}
                                             onChange={handleInputChange}
                                             style={{ width: '100%' }} />
                                     </div>
                                     <div name="ingredientsInput">
                                         <h3>Ingredients</h3>
                                         <textarea id="ingredients" name="ingredients"
-                                            value={formData.Ingredients}
+                                            value={formData.ingredients}
                                             onChange={handleInputChange}
                                             rows="4" cols="50"></textarea>
                                     </div>
@@ -146,23 +142,49 @@ const CollapsiblePanel = ({ header, onSave, onAddPanel }) => {
     );
 };
 
+// The main form
 const AddMenuItemForm = () => {
-    const [panels, setPanels] = useState([{}]);
+    const [panels, setPanels] = useState([
+        { name: '', ingredients: '', description: '', selectedAllergens: [] }
+    ]);
 
-    const handleSave = (data) => {
-        console.log('Form data saved:', data);
+    
+    const handleSaveAll = async () => {
+        try {
+            const menuId = localStorage.getItem('menu_id');
+          const saveRequests = panels.map(panel =>
+            axios.post('http://localhost:5000/api/add-menu-item', {
+              name: panel.name,
+              description: panel.description,
+              ingredients: panel.ingredients,
+              allergens: panel.selectedAllergens || [],
+              menuIDs: ['680a79fa3b98428dcf348668',menuId]
+            })
+          );
+          await Promise.all(saveRequests);
+      
+          alert('All items saved successfully!');
+        } catch (err) {
+          console.error('Error saving items:', err);
+          alert('Failed to save all items.');
+        }
     };
 
     const handleAddPanel = () => {
         setPanels([...panels, {}]); // Adds a new panel to the array
     };
 
+    const handlePanelChange = (index, newFormData) => {
+        setPanels(prevPanels =>
+          prevPanels.map((panel, i) => i === index ? newFormData : panel)
+        );
+      };
+
+    // For buttons
     const navigate = useNavigate();
 	const isAuthorized = getCookie('isAuthorized');
-
     const toMenu = (event) => {
       event.preventDefault();
-  
       if (isAuthorized === 'true') {
         navigate('/menuitems');
       } else {
@@ -176,19 +198,20 @@ const AddMenuItemForm = () => {
                 <div className="add-header-row">
                     <div style={{ flex: 1}}><button className="button" onClick={toMenu}>Menu</button></div>
                     <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>Add Menu Items</div>
-                    <div style={{ flex: 1, textAlign: 'right'}}><button className="button">Save All</button></div>
+                    <div style={{ flex: 1, textAlign: 'right'}}><button className="button" onClick={handleSaveAll}>Save All</button></div>
                 </div>
             </div>
             <div className="center add-center-flex">
                 {/* Render Collapsible Panels */}
-                {panels.map((panel, index) => (
-                <CollapsiblePanel
-                    key={index}
-                    header={`New Menu Item ${index + 1}`}
-                    onSave={handleSave}
-                    onAddPanel={handleAddPanel}  // Pass the add panel function as a prop
-                />
-            ))}
+                {panels.map((panelData, index) => (
+                    <CollapsiblePanel
+                        key={index}
+                        header={`New Menu Item ${index + 1}`}
+                        formData={panelData}
+                        onFormChange={(newFormData) => handlePanelChange(index, newFormData)}
+                        onAddPanel={handleAddPanel}
+                    />
+                    ))}
             </div>
         </div>
     )
