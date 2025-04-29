@@ -15,15 +15,12 @@ router.post('/signin', async (req, res) => {
 		if (!email || !password) {
 			// Email or password is missing
 			return res.status(400).json({
-				error: 'Email and password are required.',
+				error: 'Email and password are required',
+				message: 'Email and password are required.',
 			});
 		}
 
-		const filters = {
-			email: req.body.email,
-			password: req.body.password,
-		};
-		const foundUser = await User.findOne(filters);
+		const foundUser = await User.findOne({ email: email });
 
 		if (!foundUser) {
 			// Email is wrong or doesn't exist
@@ -34,11 +31,11 @@ router.post('/signin', async (req, res) => {
 		}
 
 		const hasBusiness = foundUser.business_id !== '';
-
 		// Check that the password is correct
 		const passwordMatches = await foundUser.comparePassword(
 			password
 		);
+		console.log('passwordMatches:', passwordMatches);
 
 		if (!passwordMatches) {
 			// Password is wrong
@@ -52,10 +49,10 @@ router.post('/signin', async (req, res) => {
 		cookies.setCookies(res, foundUser);
 
 		// Set hasBusiness cookie
-		res.cookie('hasBusiness', hasBusiness, {
-			secure: true,
-			sameSite: 'None',
-		});
+		// res.cookie('hasBusiness', hasBusiness, {
+		// 	secure: true,
+		// 	sameSite: 'None',
+		// });
 
 		// Send success response w/ user's data
 		res.status(200).json(foundUser);

@@ -12,7 +12,6 @@ function GetAuthForm({ formName }) {
 		'Something went wrong'
 	);
 	const [showError, setShowError] = useState(false);
-	useState(false);
 
 	const checkCredentials = async (event) => {
 		event.preventDefault();
@@ -78,10 +77,9 @@ function GetAuthForm({ formName }) {
 			const result = await response.json();
 
 			if (response.ok) {
-				const user = await response.json();
 				localStorage.setItem(
 					'business_id',
-					user.business_id
+					result.business_id
 				);
 				navigate('/step1'); // Redirect on success
 			} else {
@@ -115,8 +113,6 @@ function GetAuthForm({ formName }) {
 			const result = await response.json();
 
 			if (response.ok) {
-				const result = await response.json();
-				console.log(result.message);
 				localStorage.setItem(
 					'business_id',
 					result.business_id
