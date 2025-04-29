@@ -40,6 +40,13 @@ input[type='email'] {
 	font-size: 14px;
 }
 
+textarea {
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: var(--corners-round);
+	font-size: 14px;
+}
+
 #root {
 	width: 100vw;
 	height: 100vh;

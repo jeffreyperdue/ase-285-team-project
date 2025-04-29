@@ -23,7 +23,7 @@ const CollapsiblePanel = ({ header, formData, onFormChange, onAddPanel }) => {
     const handleSave = async () => {
         try {
             const menuId = localStorage.getItem('menu_id');
-          const response = await axios.post('http://localhost:5000/api/add-menu-item', {
+          const response = await axios.post('http://localhost:5000/api/menuitems/add-menu-item', {
             name: formData.name,
             description: formData.description,
             ingredients: formData.ingredients,
@@ -153,7 +153,7 @@ const AddMenuItemForm = () => {
         try {
             const menuId = localStorage.getItem('menu_id');
           const saveRequests = panels.map(panel =>
-            axios.post('http://localhost:5000/api/add-menu-item', {
+            axios.post('http://localhost:5000/api/menuitems/add-menu-item', {
               name: panel.name,
               description: panel.description,
               ingredients: panel.ingredients,
@@ -186,7 +186,7 @@ const AddMenuItemForm = () => {
     const toMenu = (event) => {
       event.preventDefault();
       if (isAuthorized === 'true') {
-        navigate('/menuitems');
+        navigate(`/menuitems{menuID}`);
       } else {
         navigate('/');
       }
@@ -196,7 +196,7 @@ const AddMenuItemForm = () => {
         <div>
             <div className="center add-center-flex">
                 <div className="add-header-row">
-                    <div style={{ flex: 1}}><button className="button" onClick={toMenu}>Menu</button></div>
+                    <div style={{ flex: 1}}><button className="button" onClick={toMenu}>Return to Menu</button></div>
                     <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>Add Menu Items</div>
                     <div style={{ flex: 1, textAlign: 'right'}}><button className="button" onClick={handleSaveAll}>Save All</button></div>
                 </div>
