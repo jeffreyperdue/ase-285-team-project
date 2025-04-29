@@ -72,9 +72,10 @@ router.post('/signup', async (req, res) => {
 		}
 
 		// Get User document from the DB if the email already exists
-		const userExists = await User.findOne({
-			email: email,
-		});
+		const userExists = await User.findOne(
+			{ email: email },
+			{ email: 1, _id: 0 }
+		);
 
 		if (userExists) {
 			// Email already exists in DB
@@ -158,9 +159,10 @@ router.post('/edit-login', async (req, res) => {
 		// Handle email change
 		if (credType === 'email') {
 			// Check that the new email does not already exist in the DB
-			const emailExists = await User.findOne({
-				email: newCred,
-			});
+			const emailExists = await User.findOne(
+				{ email: newCred },
+				{ email: 1, _id: 0 }
+			);
 
 			if (emailExists) {
 				// Email already exists in the DB
@@ -174,7 +176,7 @@ router.post('/edit-login', async (req, res) => {
 			const updatedUser = await User.findOneAndUpdate(
 				{ email: currentEmail },
 				{ $set: { email: newCred } },
-				{ new: true }
+				{ new: true, fields: { email: 1, _id: 0 } }
 			);
 
 			if (updatedUser && updatedUser.email !== newCred) {

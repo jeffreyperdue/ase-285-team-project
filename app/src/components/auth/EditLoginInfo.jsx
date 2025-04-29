@@ -27,12 +27,12 @@ function EditLoginInfo() {
 
 	const save = async (event) => {
 		event.preventDefault();
+		var proceed = false;
 		const form = event.target;
 		const cookieEmail = getCookie('email');
 		var newCred;
 		var confirmNewCred;
 		var currentCred;
-		var wrongEmail = false;
 
 		if (option === 'email') {
 			newCred = form.newEmail.value;
@@ -40,7 +40,6 @@ function EditLoginInfo() {
 			currentCred = form.currentEmail.value;
 
 			if (cookieEmail !== currentCred) {
-				wrongEmail = true;
 				setMessage('Current email is incorrect.');
 				setShowError(true);
 			} else if (newCred !== confirmNewCred) {
@@ -51,6 +50,8 @@ function EditLoginInfo() {
 					'New email must be different from current email.'
 				);
 				setShowError(true);
+			} else {
+				proceed = true;
 			}
 		} else if (option === 'password') {
 			newCred = form.newPassword.value;
@@ -60,8 +61,12 @@ function EditLoginInfo() {
 			if (newCred !== confirmNewCred) {
 				setMessage('Passwords do not match.');
 				setShowError(true);
+			} else {
+				proceed = true;
 			}
-		} else {
+		}
+
+		if (proceed) {
 			const formData = {
 				credType: option,
 				currentCred: currentCred,
