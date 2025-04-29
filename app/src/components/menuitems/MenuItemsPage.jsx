@@ -3,8 +3,8 @@ import { useLocation } from 'react-router-dom';
 import MenuItemPanel from './assets/MenuItemPanel.jsx';
 import { useNavigate } from 'react-router-dom';
 import getCookie from '../../assets/cookies';
+import axios from 'axios';
 import '../../css/styles.css';
-import { Link } from 'react-router-dom';
 
 const mockMenuItems = [
   {
@@ -23,27 +23,36 @@ const mockMenuItems = [
   },
 ];
 
+
 const MenuItemsPage = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
-
-
-  useEffect(() => {
-    // Fetch from your backend here
-    setMenuItems(mockMenuItems);
-  }, []);
-
-  const handleSave = (updatedItem) => {
-    setMenuItems((prev) =>
-      prev.map((item) => (item.id === updatedItem.id ? updatedItem : item))
-    );
-    // TODO: Send update to backend
+ // fetch menuItems on initial renders
+ useEffect(() => {
+  const fetchMenuItems = async () => {
+    try {
+      const menuID = "680a79fa3b98428dcf348668";
+      const res = await axios.get(`http://localhost:5000/api/menuitems?menuID=${menuID}`); 
+      const fetchedMenuItems = res.data.map(menuItem => ({
+        ...menuItem,
+      }));
+      setMenuItems(fetchedMenuItems);
+    } catch (err) {
+      console.error('Error fetching menu items:', err);
+    }
   };
 
-  const handleDelete = (id) => {
-    setMenuItems((prev) => prev.filter((item) => item.id !== id));
-    // TODO: Send delete request to backend
+  fetchMenuItems();
+}, []);
+
+  const handleSave = async (updatedItem) => {
+    await axios.put(`http://localhost:5000/menuitems/${updatedItem._id}`, updatedItem);
+    // Refresh list if you want
+  };
+
+  const handleDelete = (deletedId) => {
+    setMenuItems((prevItems) => prevItems.filter(item => item._id !== deletedId));
   };
 
   const filteredItems = menuItems.filter((item) =>
@@ -79,7 +88,6 @@ return (
       </div>
     </div>
 
-
         {/* Search bar */}
         <div className="menu-search-wrapper">
           <input
@@ -96,7 +104,7 @@ return (
           <h2>Menu Items</h2>
           {filteredItems.map((item) => (
             <MenuItemPanel
-              key={item.id}
+              key={item._id}
               item={item}
               onSave={handleSave}
               onDelete={handleDelete}

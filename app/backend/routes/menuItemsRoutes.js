@@ -4,40 +4,32 @@ const MenuItem = require('../schemas/MenuItem');
 const Menu = require('../schemas/Menu')
 const mongoose = require('mongoose');
 // const { Menu } = require('@mui/material');
-
+//
 // MenuItems.jsx
-// @route   GET /api/menuitems
-// @desc    Get all menu items
-// @access  Public (no auth yet)
+//
+
+// @route GET /api/menuitems
+// @desc Get menu items by menuID (optional)
+// @access Public
 router.get('/menuitems', async (req, res) => {
-    try {
-      let menuitems = await MenuItem.find();
-  
-      // If there are no menuItiems pulled from mongodb
-      if (menuitems.length === 0) {
-        // Create Menu Item
-        const menuItem = new MenuItem({
-          title: 'Example Menu Item',
-          description: 'This is shown to customers',
-          ingredients: 'Cheese, bread, broccoli',
-          allergens: ['Dairy, Wheat'],
-          menuID: ['680a79fa3b98428dcf348668']
-        });
-  
-        const saved = await menuItem.save();
-        menuitems = [saved]; // start list with Master Menu
-      } else {
-       // DO SOMETHING if not saved because oops.
-      }
-  
-      res.json(menuitems || []);
-    } catch (err) {
+  try {
+    const { menuID } = req.query;  // read menuID from URL
+
+    let filter = {};
+    if (menuID) {
+      filter = { menuIDs: menuID };  // menuID exists inside menuIDs array
+    }
+
+    const menuitems = await MenuItem.find(filter);
+
+    res.json(menuitems || []);
+  } catch (err) {
     console.error('Error fetching menu items:', err);
     res.status(500).json({ error: 'Could not fetch menu items' });
   }
-  });
+});
   
-// @route   PUT /api/menuitems
+// @route   PUT /menuitems
 // @desc    Edit an existing menu item
 // @access  Public (no auth yet)
 router.put('/menuitems', async (req, res) => {
@@ -68,6 +60,21 @@ router.put('/menuitems', async (req, res) => {
   }
 });
 
+// @route   DELETE /menusitems/:id
+// @desc    Delete a menu item by ID
+// @access  Public (no auth yet)
+router.delete('/menuitems/:id', async (req, res) => {
+  try {
+    const deleted = await MenuItem.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ error: 'Menu Item not found' });
+    }
+    res.json({ message: 'Menu item deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Could not delete menu item' });
+  }
+});
+
 ///
 /// AddMenuItem.jsx
 ///
@@ -79,7 +86,7 @@ router.get('/add-menu-item', async (req, res) => {
   try {
     let menuitems = await MenuItem.find();
 
-    // If there are no menuItiems pulled from mongodb
+    // If there are no menuItems pulled from mongodb
     if (menuitems.length === 0) {
       // Create Menu Item
       const menuItem = new MenuItem({
@@ -127,9 +134,59 @@ router.post('/add-menu-item', async (req, res) => {
 });
 
 ///
-/// MenuItemPicklist.jsx
+/// MenuItemSwap.jsx
 ///
-// MenuItemPicklist.jsx
+// @route   GET /api/menuitems-menus
+// @desc    Get all menu items
+// @access  Public (no auth yet)
+router.get('/menuswap-menus', async (req, res) => {
+  try {
+    const menus = await Menu.find();
+
+    // Always ensure Master Menu appears first
+    menus.sort((a, b) => {
+      if (a.title === 'Master Menu') return -1;
+      if (b.title === 'Master Menu') return 1;
+      return 0;
+    });
+
+    res.json(menus);
+  } catch (err) {
+    res.status(500).json({ error: 'Could not fetch menus' });
+  }
+});
+
+// @route   GET /api/menuitems-items
+// @desc    Get all menu items
+// @access  Public (no auth yet)
+router.get('/menuswap-items', async (req, res) => {
+    try {
+      let menuitems = await MenuItem.find();
+  
+      // If there are no menuItiems pulled from mongodb
+      if (menuitems.length === 0) {
+        // Create Menu Item
+        const menuItem = new MenuItem({
+          title: 'Example Menu Item',
+          description: 'This is shown to customers',
+          ingredients: 'Cheese, bread, broccoli',
+          allergens: ['Dairy, Wheat'],
+          menuID: ['680a79fa3b98428dcf348668']
+        });
+  
+        const saved = await menuItem.save();
+        menuitems = [saved]; 
+      } else {
+       // DO SOMETHING if not saved because oops.
+      }
+  
+      res.json(menuitems || []);
+    } catch (err) {
+    console.error('Error fetching menu items:', err);
+    res.status(500).json({ error: 'Could not fetch menu items' });
+  }
+  });
+
 // @route   GET /api/swap-menu
 // @desc    Get all menu items
 // @access  Public (no auth yet)
