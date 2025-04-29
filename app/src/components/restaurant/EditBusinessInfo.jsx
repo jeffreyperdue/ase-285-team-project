@@ -12,7 +12,8 @@ const EditBusinessInfo = () => {
 		diets: '',
 	});
 
-	const [confirmation, setConfirmation] = useState(false);
+	const [showConfirmation, setShowConfirmation] =
+		useState(false);
 	const navigate = useNavigate();
 
 	const businessId = localStorage.getItem('business_id'); // Get from localStorage
@@ -93,7 +94,7 @@ const EditBusinessInfo = () => {
 			if (!response.ok)
 				throw new Error('Failed to update business');
 
-			setConfirmation(true);
+			setShowConfirmation(true);
 		} catch (error) {
 			console.error('Error updating business:', error);
 		}
