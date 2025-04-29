@@ -61,6 +61,11 @@ function EditLoginInfo() {
 			if (newCred !== confirmNewCred) {
 				setMessage('Passwords do not match.');
 				setShowError(true);
+			} else if (!format.validatePassword(newCred)) {
+				setMessage(
+					'Password must be at least 6 characters long.'
+				);
+				setShowError(true);
 			} else {
 				proceed = true;
 			}
