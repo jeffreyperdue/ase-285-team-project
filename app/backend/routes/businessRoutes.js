@@ -31,24 +31,27 @@ router.get('/', async (req, res) => {
 });
 
 // @route   GET /api/businesses/:id
-// @desc    Get a business by ID
+// @desc    Get a business by ID and populate its menus
 // @access  Public (no auth yet)
 router.get('/:id', async (req, res) => {
 	try {
-		const business = await Business.findById(
-			req.params.id
-		).populate('menus');
-		if (!business)
-			return res
-				.status(404)
-				.json({ error: 'Business not found' });
+		const business = await Business.findById(req.params.id)
+			.populate({
+				path: 'menus',
+				select: 'title description _id restaurant',
+			})
+			.lean();
+
+		if (!business) {
+			return res.status(404).json({ error: 'Business not found' });
+		}
+
 		res.json(business);
 	} catch (err) {
-		res
-			.status(500)
-			.json({ error: 'Could not fetch business' });
+		res.status(500).json({ error: 'Could not fetch business' });
 	}
 });
+
 
 // @route   POST /api/businesses
 // @desc    Create a new business

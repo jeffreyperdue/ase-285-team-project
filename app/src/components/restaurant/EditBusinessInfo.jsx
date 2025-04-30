@@ -27,7 +27,7 @@ const EditBusinessInfo = () => {
 
 			try {
 				const response = await fetch(
-					`/api/businesses/${businessId}`
+					`http://localhost:5000/api/businesses/${businessId}`
 				);
 				if (!response.ok)
 					throw new Error('Failed to fetch business info');
@@ -83,7 +83,7 @@ const EditBusinessInfo = () => {
 			};
 
 			const response = await fetch(
-				`/api/businesses/${businessId}`,
+				`http://localhost:5000/api/businesses/${businessId}`,
 				{
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
