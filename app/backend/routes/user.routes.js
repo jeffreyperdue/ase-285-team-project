@@ -101,10 +101,9 @@ router.post('/signup', async (req, res) => {
 			last_name,
 			email,
 			password,
-			// business_id: savedBusiness._id.toString(),
 			business_id: '',
 			menu_item_layout: 0,
-			admin: true,
+			admin: false,
 		});
 
 		// Save new user to DB
@@ -305,7 +304,7 @@ router.post('/set-business', async (req, res) => {
 			// Include business_id in response
 			res.status(200).json({
 				message: `You have been added to ${foundBusiness.name} successfully.`,
-				business_id: foundBusiness._id
+				business_id: foundBusiness._id,
 			});
 		}
 	} catch (err) {
@@ -315,6 +314,5 @@ router.post('/set-business', async (req, res) => {
 		});
 	}
 });
-
 
 module.exports = router;

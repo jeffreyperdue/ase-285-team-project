@@ -18,7 +18,8 @@ input {
 	}
 }
 
-a {
+.swap-btn {
+	cursor: pointer;
 	color: var(--dark-turq);
 	text-decoration: none;
 	font-weight: bold;

@@ -36,7 +36,7 @@ export default function MenuCard({
 	const saveTitleToDb = async () => {
 		try {
 		  const businessId = localStorage.getItem('business_id');
-		  const res = await axios.put(`/api/menus/update-title-description`, {
+		  const res = await axios.put(`http://localhost:5000/api/menus/update-title-description`, {
 			businessId,
 			title: localTitle,
 			description: localDescription,

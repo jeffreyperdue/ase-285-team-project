@@ -2,17 +2,12 @@ import '../../css/admin.scss';
 import AdminTable from './AdminTable';
 import GetConfirmationMessage from '../ConfirmationMessage';
 import ErrorMessage from '../ErrorMessage';
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 function UserMaintenance() {
-	const navigate = useNavigate();
-	const [message, setMessage] = useState(
-		'Something went wrong'
-	);
+	const [message, setMessage] = useState('Something went wrong');
 	const [showError, setShowError] = useState(false);
-	const [showConfirmation, setShowConfirmation] =
-		useState(false);
+	const [showConfirmation, setShowConfirmation] = useState(false);
 
 	const addUserAccess = async (event) => {
 		event.preventDefault();
@@ -40,9 +35,7 @@ function UserMaintenance() {
 				setMessage('Added user access successfully.');
 				setShowConfirmation(true);
 			} else {
-				setMessage(
-					`There was an error adding user access.`
-				);
+				setMessage(`There was an error adding user access.`);
 				setShowError(true);
 			}
 		} catch (err) {
@@ -95,9 +88,7 @@ function UserMaintenance() {
 					</div>
 
 					<div className='add-user-status-container'>
-						<div className='question'>
-							Select user status:
-						</div>
+						<div className='question'>Select user status:</div>
 
 						<label
 							key='user'
