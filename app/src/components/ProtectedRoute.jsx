@@ -10,7 +10,7 @@ function ProtectedRoute({ component, route, admin }) {
 
 	// Prevents user from accessing any pages if they're not logged in
 	if (!isAuthorized) {
-		if (route != 'signInUp') {
+		if (route !== 'signInUp') {
 			// Redirect to sign-in page
 			return (
 				<Navigate

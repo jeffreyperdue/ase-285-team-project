@@ -60,10 +60,6 @@ export default function ProfileIcon() {
 		}
 	};
 
-	const deleteAccount = (event) => {
-		event.preventDefault();
-	};
-
 	const toLogin = (event) => {
 		event.preventDefault();
 		setConfirmation(false);
