@@ -31,9 +31,7 @@ router.post('/signin', async (req, res) => {
 		}
 
 		// Check that the password is correct
-		const passwordMatches = await foundUser.comparePassword(
-			password
-		);
+		const passwordMatches = await foundUser.comparePassword(password);
 
 		if (!passwordMatches) {
 			// Password is wrong
@@ -73,8 +71,7 @@ router.post('/signin', async (req, res) => {
 // @access  Public (no auth yet)
 router.post('/signup', async (req, res) => {
 	try {
-		const { first_name, last_name, email, password } =
-			req.body;
+		const { first_name, last_name, email, password } = req.body;
 
 		if (!first_name || !last_name || !email || !password) {
 			// One of the fields is missing
@@ -93,10 +90,8 @@ router.post('/signup', async (req, res) => {
 		if (userExists) {
 			// Email already exists in DB
 			return res.status(401).json({
-				error:
-					'An account with the provided email already exists',
-				message:
-					'An account with the provided email already exists.',
+				error: 'An account with the provided email already exists',
+				message: 'An account with the provided email already exists.',
 			});
 		}
 
@@ -144,9 +139,7 @@ router.post('/logout', async (req, res) => {
 		cookies.clearAllCookies(req, res);
 
 		// Send response
-		return res
-			.status(200)
-			.json({ message: 'Logged out successfully.' });
+		return res.status(200).json({ message: 'Logged out successfully.' });
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error logging out: ' + err.message,
@@ -226,9 +219,7 @@ router.post('/edit-login', async (req, res) => {
 			}
 
 			// Check that the current password is correct
-			const currentMatchesDb = await user.comparePassword(
-				currentCred
-			);
+			const currentMatchesDb = await user.comparePassword(currentCred);
 
 			if (!currentMatchesDb) {
 				// Current password is incorrect
@@ -274,75 +265,7 @@ router.post('/edit-login', async (req, res) => {
 // @access  Public (no auth yet)
 router.post('/set-business', async (req, res) => {
 	try {
-		const { type, beganSetup, lastStepCompleted } =
-			req.body;
-		const { email } = req.cookies;
-
-		if (type === 'new') {
-			if (beganSetup === true && lastStepCompleted === 0) {
-				// Set user's business_id to indicate that the user has started the setup process
-				const updatedUser = await User.findOneAndUpdate(
-					{ email: email },
-					{
-						$set: {
-							business_id: 'create',
-						},
-					}
-				);
-
-				if (!updatedUser) {
-					// User's business_id was not updated
-					return res.status(401).json({
-						error:
-							'An error occurred starting the business set up process',
-						message:
-							'An error occurred starting the business set up process.',
-					});
-				}
-
-				console.log('about to set cookies');
-				// Set cookie to indicate that the user has started the setup process
-				cookies.updateCookie(res, 'beganSetup', true);
-				cookies.updateCookie(
-					res,
-					'lastStepCompleted',
-					lastStepCompleted
-				);
-
-				return res.status(200).json({
-					message:
-						'Business setup process started successfully.',
-				});
-			}
-
-			if (lastStepCompleted === 1) {
-				// send business_id in req.body
-				// retreive business_id from req.body
-				// update user's business_id in db using findOneAndUpdate()
-				// update lastStepCompleted cookie
-				// // Creates a new business tied to user
-				// const newBusiness = new Business({
-				// 	name: `${first_name}'s Restaurant`,
-				// 	url: '',
-				// 	address: '',
-				// 	allergens: [],
-				// 	menus: [],
-				// });
-				// const savedBusiness = await newBusiness.save();
-				// // Creates master menu
-				// const masterMenu = new Menu({
-				// 	title: 'Master Menu',
-				// 	description:
-				// 		'This menu will be shown to customers',
-				// 	restaurant: savedBusiness._id,
-				// 	menuItems: [],
-				// });
-				// const savedMenu = await masterMenu.save();
-				// // That menu is added to business's menus array
-				// savedBusiness.menus.push(savedMenu._id);
-				// await savedBusiness.save();
-			}
-		}
+		const { type } = req.body;
 
 		if (type === 'existing') {
 			const { business_id } = req.body;
@@ -383,11 +306,7 @@ router.post('/set-business', async (req, res) => {
 
 			// Set cookies
 			cookies.updateCookie(res, 'hasBusiness', true);
-			cookies.updateCookie(
-				res,
-				'isAdmin',
-				updatedUser.admin
-			);
+			cookies.updateCookie(res, 'isAdmin', updatedUser.admin);
 
 			// Send success response
 			res.status(200).json({

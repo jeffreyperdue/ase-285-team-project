@@ -10,27 +10,21 @@ function ChooseBusiness() {
 	const navigate = useNavigate();
 	const [data, setData] = useState([]);
 	const [option, setOption] = useState('');
-	const [message, setMessage] = useState(
-		'Something went wrong.'
-	);
-	const [showConfirmation, setShowConfirmation] =
-		useState(false);
+	const [message, setMessage] = useState('Something went wrong.');
+	const [showConfirmation, setShowConfirmation] = useState(false);
 	const [showError, setShowError] = useState(false);
 
 	// Get a list of all business names and IDs from the DB
 	React.useEffect(() => {
 		const getBusinessNames = async () => {
 			try {
-				const response = await fetch(
-					'http://localhost:5000/api/businesses/',
-					{
-						method: 'GET',
-						credentials: 'include',
-						headers: {
-							'Content-Type': 'application/json',
-						},
-					}
-				);
+				const response = await fetch('http://localhost:5000/api/businesses/', {
+					method: 'GET',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				});
 
 				const result = await response.json();
 
@@ -44,10 +38,7 @@ function ChooseBusiness() {
 				} else {
 					setMessage(result.message);
 					setShowError(true);
-					console.error(
-						'Error: response not ok:',
-						response.error
-					);
+					console.error('Error: response not ok:', response.error);
 				}
 			} catch (err) {
 				console.error('Error: ', err.message);
@@ -64,59 +55,46 @@ function ChooseBusiness() {
 		var formData = { type: option };
 
 		if (option === 'existing') {
-			const selectedBusinessId =
-				form.selectedBusiness.value;
+			const selectedBusinessId = form.selectedBusiness.value;
 			formData = {
 				...formData,
 				business_id: selectedBusinessId,
 			};
-		}
 
-		if (option === 'new') {
-			formData = {
-				...formData,
-				beganSetup: true,
-				lastStepCompleted: 0,
-			};
-			console.log('formData:', formData);
-		}
+			try {
+				const response = await fetch(
+					'http://localhost:5000/api/auth/set-business',
+					{
+						method: 'POST',
+						credentials: 'include',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify(formData),
+					}
+				);
+				const result = await response.json();
 
-		try {
-			const response = await fetch(
-				'http://localhost:5000/api/auth/set-business',
-				{
-					method: 'POST',
-					credentials: 'include',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify(formData),
-				}
-			);
-			const result = await response.json();
+				if (response.ok) {
+					if (option === 'existing') {
+						localStorage.setItem('business_id', result.business_id);
 
-			if (response.ok) {
-				if (option === 'existing') {
-					localStorage.setItem(
-						'business_id',
-						result.business_id
-					);
-
-					setMessage(result.message);
-					setShowConfirmation(true);
-				} else if (option === 'new') {
-					// Redirect on success
-					navigate('/step1');
+						setMessage(result.message);
+						setShowConfirmation(true);
+					} else {
+						setMessage('Something went wrong.');
+						setShowError(true);
+					}
 				} else {
-					setMessage('Something went wrong.');
+					setMessage(result.message);
 					setShowError(true);
 				}
-			} else {
-				setMessage(result.message);
-				setShowError(true);
+			} catch (err) {
+				console.error('Error: ', err.message);
 			}
-		} catch (err) {
-			console.error('Error: ', err.message);
+		} else if (option === 'new') {
+			// Redirect on success
+			navigate('/step1');
 		}
 	};
 
@@ -125,9 +103,7 @@ function ChooseBusiness() {
 			{showConfirmation ? (
 				<GetConfirmationMessage
 					message={message}
-					destination={
-						option === 'new' ? '/step1' : '/dashboard'
-					}
+					destination={option === 'new' ? '/step1' : '/dashboard'}
 				/>
 			) : (
 				<></>
@@ -152,8 +128,7 @@ function ChooseBusiness() {
 				<div className='choose-business-container'>
 					<div className='choose-business'>
 						<div className='question'>
-							Do you want to create a new business or join
-							an existing one?
+							Do you want to create a new business or join an existing one?
 						</div>
 
 						<div>
@@ -188,9 +163,7 @@ function ChooseBusiness() {
 
 					{option === 'existing' ? (
 						<div className='business-options'>
-							<div className='question'>
-								Select a business:
-							</div>
+							<div className='question'>Select a business:</div>
 
 							<Select
 								options={data}

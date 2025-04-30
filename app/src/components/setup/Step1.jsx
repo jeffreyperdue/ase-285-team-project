@@ -9,21 +9,25 @@ function Step1({ updateFormData }) {
 		streetAddress2: '',
 		city: '',
 		state: '',
-		zipCode: ''
+		zipCode: '',
 	});
 
 	useEffect(() => {
-		const formattedAddress = `${localData.streetAddress1 || ''} ${localData.streetAddress2 || ''}, ${localData.city || ''}, ${localData.state || ''} ${localData.zipCode || ''}`;
+		const formattedAddress = `${localData.streetAddress1 || ''} ${
+			localData.streetAddress2 || ''
+		}, ${localData.city || ''}, ${localData.state || ''} ${
+			localData.zipCode || ''
+		}`;
 		updateFormData({
 			name: localData.name,
 			url: localData.url,
-			address: formattedAddress.trim()
+			address: formattedAddress.trim(),
 		});
 	}, [localData]);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
-		setLocalData(prev => ({ ...prev, [name]: value }));
+		setLocalData((prev) => ({ ...prev, [name]: value }));
 	};
 
 	return (
@@ -36,8 +40,7 @@ function Step1({ updateFormData }) {
 			>
 				<div className='business-info'>
 					<span className='question'>
-						Please enter your business name and website URL
-						(if applicable):
+						Please enter your business name and website URL (if applicable):
 					</span>
 
 					<div className='name-website-container'>
@@ -127,23 +130,22 @@ function Step1({ updateFormData }) {
 
 					<ul>
 						<li>
-							Information given in this section will be
-							shown publicly to the users (your customers).
-							Please only give info you want them to see.
+							Information given in this section will be shown publicly to the
+							users (your customers). Please only give info you want them to
+							see.
 						</li>
 						<br />
 						<li>
-							If you are a mobile food truck service, please
-							put your most recent or upcoming location, or
-							the location of an event, in the “Location
-							Address” box. This location can be changed at
-							anytime via the “business info” settings.
+							If you are a mobile food truck service, please put your most
+							recent or upcoming location, or the location of an event, in the
+							“Location Address” box. This location can be changed at anytime
+							via the “business info” settings.
 						</li>
 						<br />
-						<li>
+						{/* <li>
 							Additional locations can be added later in the
 							business info settings.
-						</li>
+						</li> */}
 					</ul>
 				</div>
 			</form>
