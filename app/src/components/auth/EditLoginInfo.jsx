@@ -122,10 +122,7 @@ function EditLoginInfo() {
 				<></>
 			)}
 
-			<h1>
-				<Btn />
-				Edit Login Information
-			</h1>
+			<h1>Edit Login Information</h1>
 
 			<div className='edit-login-info-form-container'>
 				<form
