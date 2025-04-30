@@ -1,45 +1,26 @@
 import { useNavigate } from 'react-router-dom';
 import '../css/auth.scss';
 
-function GetConfirmationMessage({ type }) {
+function GetConfirmationMessage({ message, destination }) {
 	const navigate = useNavigate();
 
-	const toDashboard = (event) => {
+	const nav = (event) => {
 		event.preventDefault();
-		navigate('/dashboard');
+		navigate(destination);
 	};
 
-	if (type === 'edit-login-info') {
-		return (
-			<div className='confirmation-container'>
-				Login information changed successfully.
-				<button
-					type='button'
-					onClick={toDashboard}
-					className='button'
-				>
-					Ok
-				</button>
-			</div>
-		);
-	}
-
-	if (type === 'edit-business-info') {
-		return (
-			<div className='confirmation-container'>
-				Business information changed successfully.
-				<button
-					type='button'
-					onClick={toDashboard}
-					className='button'
-				>
-					Ok
-				</button>
-			</div>
-		);
-	}
-
-	return <div className='confirmation-container'></div>;
+	return (
+		<div className='confirmation-container'>
+			{message}
+			<button
+				type='button'
+				onClick={nav}
+				className='button'
+			>
+				Ok
+			</button>
+		</div>
+	);
 }
 
 export default GetConfirmationMessage;

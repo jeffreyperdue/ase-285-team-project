@@ -1,15 +1,58 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import '../../css/auth.scss';
 import GetPasswordField from './Password';
+import ErrorMessage from '../ErrorMessage';
+import format from '../../assets/formValidation.js';
+import getCookie from '../../assets/cookies.jsx';
 
 function GetAuthForm({ formName }) {
 	const navigate = useNavigate();
+	const [message, setMessage] = useState(
+		'Something went wrong'
+	);
+	const [showError, setShowError] = useState(false);
 
-	const signUp = async (event) => {
+	const checkCredentials = async (event) => {
 		event.preventDefault();
 		const form = event.target;
 
+		if (formName === 'signUpForm') {
+			const validEmail = format.validateEmail(
+				form.email.value
+			);
+
+			if (!validEmail) {
+				setMessage('Invalid email format.');
+				setShowError(true);
+			} else {
+				const passwordsMatch =
+					form.password.value ===
+					form.confirmPassword.value;
+
+				const validPassword = format.validatePassword(
+					form.password.value
+				);
+
+				if (!passwordsMatch) {
+					setMessage('Passwords do not match.');
+					setShowError(true);
+				} else if (!validPassword) {
+					setMessage(
+						'Password must be at least 6 characters long.'
+					);
+					setShowError(true);
+				} else {
+					await signUp(form);
+				}
+			}
+		} else if (formName === 'signInForm') {
+			await logIn(form);
+		}
+	};
+
+	const signUp = async (form) => {
 		const formData = {
 			first_name: form.first_name.value,
 			last_name: form.last_name.value,
@@ -19,87 +62,85 @@ function GetAuthForm({ formName }) {
 			menu_item_layout: 0,
 			admin: true,
 		};
-
-		console.log(formData);
-
+	
 		try {
-			const response = await fetch(
-				'http://localhost:5000/api/auth/signup',
-				{
-					method: 'POST',
-					credentials: 'include',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify(formData),
-				}
-			);
-
+			const response = await fetch('http://localhost:5000/api/auth/signup', {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(formData),
+			});
+			const result = await response.json();
+	
 			if (response.ok) {
-				const user = await response.json();
-				localStorage.setItem('business_id', user.business_id);
-				navigate('/step1'); // Redirect on success
+				localStorage.setItem('justSignedUp', 'true');
+				navigate('/choose-business'); 
 			} else {
-				console.log('sign up response: ' + response.body);
-				const error = await response;
-				console.error('Error:', error);
+				setMessage(result.message);
+				setShowError(true);
 			}
 		} catch (err) {
 			console.error('Error: ', err.message);
 		}
 	};
+	
 
-	const logIn = async (event) => {
-		event.preventDefault();
-		const form = event.target;
-		console.log('form.email: ' + form.email.value);
-		console.log('form.password: ' + form.password.value);
-
+	// Logs a user in
+	const logIn = async (form) => {
 		const formData = {
 			email: form.email.value,
 			password: form.password.value,
 		};
-
-		console.log('formData: ' + formData);
-
+	
 		try {
-			const response = await fetch(
-				'http://localhost:5000/api/auth/signin',
-				{
-					method: 'POST',
-					credentials: 'include',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify(formData),
-				}
-			);
-
-			// LEFT OFF
+			const response = await fetch('http://localhost:5000/api/auth/signin', {
+				method: 'POST',
+				credentials: 'include',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(formData),
+			});
+			const result = await response.json();
+	
 			if (response.ok) {
-				const result = await response.json();
-				console.log(result.message);
-				localStorage.setItem('business_id', result.business_id); 
-				console.log(result.email);
-				console.log('result.cookies:', document.cookie);
-				navigate('/dashboard');
+				// Store business_id if it exists
+				if (result.business_id) {
+					localStorage.setItem('business_id', result.business_id);
+				}
+	
+				if (getCookie('hasBusiness') === 'false') {
+					navigate('/choose-business');
+				} else {
+					navigate('/dashboard');
+				}
 			} else {
-				console.log('sign in response: ' + response.body);
-				const error = await response;
-				console.error('Error:', error);
+				setMessage(result.message);
+				setShowError(true);
 			}
 		} catch (err) {
 			console.error('Error: ', err.message);
 		}
 	};
+	
 
 	return (
 		<form
 			name={formName}
-			onSubmit={formName === 'signUpForm' ? signUp : logIn}
+			onSubmit={checkCredentials}
 			method='POST'
 			className='auth-form'
 		>
+			{showError ? (
+				<ErrorMessage
+					message={message}
+					destination={false}
+					onClose={() => setShowError(false)}
+				/>
+			) : (
+				<></>
+			)}
+
 			<h2
 				className={
 					formName === 'signUpForm'

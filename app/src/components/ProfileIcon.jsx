@@ -6,11 +6,13 @@ import editBusinessIcon from '../icons/edit_business.png';
 import logoutIcon from '../icons/logout.png';
 import userMaintenanceIcon from '../icons/user-maintenance.png';
 import getCookie from '../assets/cookies';
+import deleteIcon from '../icons/delete.png';
 import '../css/ProfileIcon.css';
 
 export default function ProfileIcon() {
 	const navigate = useNavigate();
-	const isAdmin = getCookie('isAdmin');
+	const isAdmin = getCookie('isAdmin') === 'true';
+	const hasBusiness = getCookie('hasBusiness') === 'true';
 
 	// Define states
 	const [isOpen, setIsOpen] = useState(false);
@@ -62,6 +64,10 @@ export default function ProfileIcon() {
 		}
 	};
 
+	const deleteAccount = (event) => {
+		event.preventDefault();
+	};
+
 	const toLogin = (event) => {
 		event.preventDefault();
 		setConfirmation(false);
@@ -100,7 +106,7 @@ export default function ProfileIcon() {
 							<span>{getCookie('email')}</span>
 						</div>
 
-						{isAdmin === 'true' ? (
+						{isAdmin ? (
 							<div
 								onClick={toUserMaintenance}
 								className='dropdown-item'
@@ -126,15 +132,30 @@ export default function ProfileIcon() {
 							<span>Edit Login Info</span>
 						</div>
 
+						{hasBusiness ? (
+							<div
+								onClick={toEditBusinessInfo}
+								className='dropdown-item'
+							>
+								<img
+									src={editBusinessIcon}
+									alt='Edit Business'
+								/>
+								<span>Edit Business Info</span>
+							</div>
+						) : (
+							<></>
+						)}
+
 						<div
-							onClick={toEditBusinessInfo}
+							onClick={deleteAccount}
 							className='dropdown-item'
 						>
 							<img
-								src={editBusinessIcon}
-								alt='Edit Business'
+								src={deleteIcon}
+								alt='Delete Account'
 							/>
-							<span>Edit Business Info</span>
+							<span>Delete Account</span>
 						</div>
 
 						<div

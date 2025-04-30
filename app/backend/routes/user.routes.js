@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../schemas/User');
+const cookies = require('../utils/cookies');
 const Business = require('../schemas/Business');
 const Menu = require('../schemas/Menu');
 
@@ -9,60 +10,58 @@ const Menu = require('../schemas/Menu');
 // @access  Public (no auth yet)
 router.post('/signin', async (req, res) => {
 	try {
-		// Check if email or password is missing
-		if (!req.body.email || !req.body.password) {
+		const { email, password } = req.body;
+
+		if (!email || !password) {
+			// Email or password is missing
 			return res.status(400).json({
-				error: 'Email and password are required.',
+				error: 'Email and password are required',
+				message: 'Email and password are required.',
 			});
 		}
 
-		const filters = {
-			email: req.body.email,
-			password: req.body.password,
-		};
-		const foundUser = await User.findOne(filters);
+		const foundUser = await User.findOne({ email: email });
 
-		if (foundUser) {
-			console.log('Found user in db');
-			const hasBusiness = foundUser.business_id !== '';
-
-			// Set name cookie
-			res.cookie('fullName', foundUser.getFullName(), {
-				secure: true,
-				sameSite: 'None',
-			});
-			// Set email cookie
-			res.cookie('email', req.body.email, {
-				secure: true,
-				sameSite: 'None',
-			});
-			// Set admin status cookie
-			res.cookie('isAdmin', foundUser.admin, {
-				secure: true,
-				sameSite: 'None',
-			});
-			// Set authorized status cookie
-			res.cookie('isAuthorized', true, {
-				secure: true,
-				sameSite: 'None',
-			});
-			// Set hasBusiness cookie
-			res.cookie('hasBusiness', hasBusiness, {
-				secure: true,
-				sameSite: 'None',
-			});
-
-			// Return the user's data
-			res.status(200).json(foundUser);
-		} else {
-			// Email and/or password is wrong or doesn't exist
-			res.status(401).json({
-				error: "Email or password doesn't match.",
+		if (!foundUser) {
+			// Email is wrong or doesn't exist
+			return res.status(401).json({
+				error: 'Invalid email',
+				message: 'Invalid email.',
 			});
 		}
+
+		// Check that the password is correct
+		const passwordMatches = await foundUser.comparePassword(password);
+
+		if (!passwordMatches) {
+			// Password is wrong
+			return res.status(401).json({
+				error: 'Password is incorrect',
+				message: 'Password is incorrect.',
+			});
+		}
+
+		// Set cookies
+		cookies.setCookies(res, foundUser);
+
+		if (foundUser.business_id === 'create') {
+			// Set cookie to indicate that the user has started the setup process
+			cookies.updateCookie(res, 'beganSetup', true);
+			cookies.updateCookie(res, 'lastStepCompleted', 0);
+		}
+
+		// Set hasBusiness cookie
+		// res.cookie('hasBusiness', hasBusiness, {
+		// 	secure: true,
+		// 	sameSite: 'None',
+		// });
+
+		// Send success response w/ user's data
+		res.status(200).json(foundUser);
 	} catch (err) {
 		res.status(500).json({
 			error: 'Could not fetch user' + err.message,
+			message: 'Could not fetch user.',
 		});
 	}
 });
@@ -72,87 +71,60 @@ router.post('/signin', async (req, res) => {
 // @access  Public (no auth yet)
 router.post('/signup', async (req, res) => {
 	try {
-		const { first_name, last_name, email, password } =
-			req.body;
+		const { first_name, last_name, email, password } = req.body;
 
-		// Check if first_name, last_name, email or password is missing
 		if (!first_name || !last_name || !email || !password) {
-			return res
-				.status(400)
-				.json({ error: 'All fields are required.' });
+			// One of the fields is missing
+			return res.status(401).json({
+				error: 'All fields are required',
+				message: 'All fields are required.',
+			});
 		}
 
-		// Creates a new business tied to user
-		const newBusiness = new Business({
-			name: `${first_name}'s Restaurant`,
-			url: '',
-			address: '',
-			allergens: [],
-			menus: [],
-		});
-		const savedBusiness = await newBusiness.save();
+		// Get User document from the DB if the email already exists
+		const userExists = await User.findOne(
+			{ email: email },
+			{ email: 1, _id: 0 }
+		);
 
-		// Creates master menu
-		const masterMenu = new Menu({
-			title: 'Master Menu',
-			description: 'This menu will be shown to customers',
-			restaurant: savedBusiness._id,
-			menuItems: [],
-		});
-		const savedMenu = await masterMenu.save();
+		if (userExists) {
+			// Email already exists in DB
+			return res.status(401).json({
+				error: 'An account with the provided email already exists',
+				message: 'An account with the provided email already exists.',
+			});
+		}
 
-		// That menu is added to business's menus array
-		savedBusiness.menus.push(savedMenu._id);
-		await savedBusiness.save();
-
-		// Create new user document from request body
+		// Create new User document from request body
 		const newUser = new User({
 			first_name,
 			last_name,
 			email,
 			password,
-			business_id: savedBusiness._id.toString(),
+			// business_id: savedBusiness._id.toString(),
+			business_id: '',
 			menu_item_layout: 0,
 			admin: true,
 		});
+
+		// Save new user to DB
 		const savedUser = await newUser.save();
 
 		if (!savedUser) {
-			return res.status(400).json({
-				error: 'Error saving user: ' + err.message,
+			// User was not saved
+			return res.status(401).json({
+				error: 'Error saving user',
+				message: 'Error saving user.',
 			});
 		}
 
-		console.log('saved user');
-		// Set name cookie
-		res.cookie('fullName', newUser.getFullName(), {
-			secure: true,
-			sameSite: 'None',
-		});
-		// Set email cookie
-		res.cookie('email', newUser.email, {
-			secure: true,
-			sameSite: 'None',
-		});
-		// Set admin status cookie
-		res.cookie('isAdmin', newUser.admin, {
-			secure: true,
-			sameSite: 'None',
-		});
-		// Set authorized status cookie
-		res.cookie('isAuthorized', true, {
-			secure: true,
-			sameSite: 'None',
-		});
-		// Set hasBusiness cookie
-		res.cookie('hasBusiness', false, {
-			secure: true,
-			sameSite: 'None',
-		});
+		// Set cookies
+		cookies.setCookies(res, newUser);
 
+		// Send response
 		return res.status(201).json(savedUser);
 	} catch (err) {
-		res.status(400).json({
+		res.status(401).json({
 			error: 'Error creating user: ' + err.message,
 		});
 	}
@@ -164,27 +136,10 @@ router.post('/signup', async (req, res) => {
 router.post('/logout', async (req, res) => {
 	try {
 		// Clear cookies
-		res.clearCookie('fullName', {
-			secure: true,
-			sameSite: 'None',
-		});
-		res.clearCookie('email', {
-			secure: true,
-			sameSite: 'None',
-		});
-		res.clearCookie('isAdmin', {
-			secure: true,
-			sameSite: 'None',
-		});
-		res.clearCookie('isAuthorized', {
-			secure: true,
-			sameSite: 'None',
-		});
+		cookies.clearAllCookies(req, res);
 
 		// Send response
-		res
-			.status(200)
-			.json({ message: 'Logged out successfully' });
+		return res.status(200).json({ message: 'Logged out successfully.' });
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error logging out: ' + err.message,
@@ -197,69 +152,169 @@ router.post('/logout', async (req, res) => {
 // @access  Public (no auth yet)
 router.post('/edit-login', async (req, res) => {
 	try {
-		console.log('req.body.credential:', req.body.credType);
-		console.log('req.cookies.email:', req.cookies.email);
-		console.log('req.body.newCred', req.body.newCred);
+		const { credType, currentCred, newCred } = req.body;
+		const { email: currentEmail } = req.cookies;
 
-		const credType = req.body.credType;
-		const currentEmail = req.cookies.email;
-		const newCred = req.body.newCred;
-		var updatedUser;
+		// Check if any data is missing
+		if (!credType || !newCred || !currentCred) {
+			return res.status(401).json({
+				error: 'All fields are required',
+				message: 'All fields are required.',
+			});
+		}
 
+		// Handle email change
 		if (credType === 'email') {
-			console.log('credType is email');
+			// Check that the new email does not already exist in the DB
+			const emailExists = await User.findOne(
+				{ email: newCred },
+				{ email: 1, _id: 0 }
+			);
 
-			updatedUser = await User.findOneAndUpdate(
+			if (emailExists) {
+				// Email already exists in the DB
+				return res.status(400).json({
+					error: 'Email already exists',
+					message: 'Email already exists.',
+				});
+			}
+
+			// Update the user's email in the DB
+			const updatedUser = await User.findOneAndUpdate(
 				{ email: currentEmail },
 				{ $set: { email: newCred } },
-				{ new: true }
+				{ new: true, fields: { email: 1, _id: 0 } }
 			);
 
-			if (updatedUser.email === newCred) {
-				// Update the email cookie
-				res.cookie('email', newCred, {
-					secure: true,
-					sameSite: 'None',
+			if (updatedUser && updatedUser.email !== newCred) {
+				// Email was not saved to the DB
+				return res.status(400).json({
+					error: 'Error saving email',
+					message: 'Error saving email.',
 				});
-
-				// Send response
-				res.status(200).json({
-					message: 'Email changed successfully',
-				});
-			} else {
-				res
-					.status(400)
-					.json({ error: 'Error saving email' });
 			}
-		} else if (credType === 'password') {
-			console.log('credType is password');
 
-			updatedUser = await User.findOneAndUpdate(
-				{ email: currentEmail },
-				{ $set: { password: newCred } },
-				{ new: true }
-			);
+			// Update the email cookie
+			cookies.updateCookie(res, 'email', newCred);
 
-			if (updatedUser.password === newCred) {
-				// Send response
-				res.status(200).json({
-					message: 'Password changed successfully',
-				});
-			} else {
-				res
-					.status(400)
-					.json({ error: 'Error saving password' });
-			}
-		} else {
-			res
-				.status(400)
-				.json({ error: 'Credential cannot be changed' });
+			// Send success response
+			return res.status(200).json({
+				message: 'Email changed successfully.',
+			});
 		}
+
+		// Handle password change
+		if (credType === 'password') {
+			// Get User document from the DB
+			const user = await User.findOne({
+				email: currentEmail,
+			});
+
+			if (!user) {
+				// Email does not exist in the DB
+				return res.status(400).json({
+					error: 'User not found',
+					message: 'User not found.',
+				});
+			}
+
+			// Check that the current password is correct
+			const currentMatchesDb = await user.comparePassword(currentCred);
+
+			if (!currentMatchesDb) {
+				// Current password is incorrect
+				return res.status(400).json({
+					error: 'Current password is incorrect',
+					message: 'Current password is incorrect.',
+				});
+			}
+
+			// Check that the new password is not the same as the current password
+			if (newCred === currentCred) {
+				return res.status(400).json({
+					error: `New ${credType} must be different from current ${credType}`,
+					message: `New ${credType} must be different from current ${credType}.`,
+				});
+			}
+
+			// Change and save user password (save() is required for hashing)
+			user.password = newCred;
+			await user.save();
+
+			// Send response
+			return res.status(200).json({
+				message: 'Password changed successfully.',
+			});
+		}
+
+		// Invalid credential was given
+		return res.status(400).json({
+			error: 'Credential cannot be changed',
+			message: 'Credential cannot be changed.',
+		});
 	} catch (err) {
 		res.status(400).json({
 			error: 'Error changing login info: ' + err.message,
+			message: 'Error changing login info.',
 		});
 	}
 });
+
+// @route   POST /api/auth/set-business
+// @desc    Get a user
+// @access  Public (no auth yet)
+router.post('/set-business', async (req, res) => {
+	try {
+		const { type } = req.body;
+
+		if (type === 'existing') {
+			const { business_id } = req.body;
+			const { email } = req.cookies;
+
+			if (!business_id) {
+				return res.status(400).json({
+					error: 'A business is required',
+					message: 'A business is required.',
+				});
+			}
+
+			const foundBusiness = await Business.findById(business_id);
+			if (!foundBusiness) {
+				return res.status(401).json({
+					error: 'Invalid business',
+					message: 'Invalid business.',
+				});
+			}
+
+			const updatedUser = await User.findOneAndUpdate(
+				{ email: email },
+				{ $set: { business_id: business_id, admin: false } }
+			);
+
+			if (!updatedUser) {
+				return res.status(401).json({
+					error: 'Could not add user to the business',
+					message: 'Could not add user to the business.',
+				});
+			}
+
+			// Set cookies
+			cookies.updateCookie(res, 'hasBusiness', true);
+			cookies.updateCookie(res, 'isAdmin', updatedUser.admin);
+
+			// Include business_id in response
+			res.status(200).json({
+				message: `You have been added to ${foundBusiness.name} successfully.`,
+				business_id: foundBusiness._id
+			});
+		}
+	} catch (err) {
+		res.status(500).json({
+			error: 'An error occurred: ' + err.message,
+			message: 'An error occurred.',
+		});
+	}
+});
+
 
 module.exports = router;
