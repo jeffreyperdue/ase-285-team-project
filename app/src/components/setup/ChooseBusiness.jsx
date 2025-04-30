@@ -7,12 +7,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function ChooseBusiness() {
-	// dummy test data
-	const options = [
-		{ value: 'business1', label: 'Business 1' },
-		{ value: 'business2', label: 'Business 2' },
-		{ value: 'business3', label: 'Business 3' },
-	];
 	const navigate = useNavigate();
 	const [data, setData] = useState([]);
 	const [option, setOption] = useState('');
@@ -65,6 +59,7 @@ function ChooseBusiness() {
 
 	const setBusiness = async (event) => {
 		event.preventDefault();
+
 		const form = event.target;
 		var formData = { type: option };
 
@@ -75,6 +70,15 @@ function ChooseBusiness() {
 				...formData,
 				business_id: selectedBusinessId,
 			};
+		}
+
+		if (option === 'new') {
+			formData = {
+				...formData,
+				beganSetup: true,
+				lastStepCompleted: 0,
+			};
+			console.log('formData:', formData);
 		}
 
 		try {
@@ -100,15 +104,13 @@ function ChooseBusiness() {
 
 					setMessage(result.message);
 					setShowConfirmation(true);
-				}
-
-				if (option === 'new') {
+				} else if (option === 'new') {
 					// Redirect on success
 					navigate('/step1');
+				} else {
+					setMessage('Something went wrong.');
+					setShowError(true);
 				}
-
-				setMessage('Something went wrong.');
-				setShowError(true);
 			} else {
 				setMessage(result.message);
 				setShowError(true);
@@ -123,7 +125,9 @@ function ChooseBusiness() {
 			{showConfirmation ? (
 				<GetConfirmationMessage
 					message={message}
-					destination={'/dashboard'}
+					destination={
+						option === 'new' ? '/step1' : '/dashboard'
+					}
 				/>
 			) : (
 				<></>

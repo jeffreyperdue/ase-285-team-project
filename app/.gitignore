@@ -22,9 +22,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-<<<<<<< HEAD
 /backend/.env
-=======
-#credentials
-.env
->>>>>>> owen/main
+package.json
+package-lock.json

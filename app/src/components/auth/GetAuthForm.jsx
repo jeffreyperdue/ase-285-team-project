@@ -5,6 +5,7 @@ import '../../css/auth.scss';
 import GetPasswordField from './Password';
 import ErrorMessage from '../ErrorMessage';
 import format from '../../assets/formValidation.js';
+import getCookie from '../../assets/cookies.jsx';
 
 function GetAuthForm({ formName }) {
 	const navigate = useNavigate();
@@ -81,7 +82,7 @@ function GetAuthForm({ formName }) {
 					'business_id',
 					result.business_id
 				);
-				navigate('/step1'); // Redirect on success
+				navigate('/choose-business'); // Redirect on success
 			} else {
 				setMessage(result.message);
 				setShowError(true);
@@ -113,10 +114,14 @@ function GetAuthForm({ formName }) {
 			const result = await response.json();
 
 			if (response.ok) {
-				localStorage.setItem(
-					'business_id',
-					result.business_id
-				);
+				// localStorage.setItem(
+				// 	'business_id',
+				// 	result.business_id
+				// );
+				if (getCookie('hasBusiness') === 'false') {
+					navigate('/choose-business');
+				}
+
 				navigate('/dashboard');
 			} else {
 				setMessage(result.message);

@@ -30,7 +30,6 @@ router.post('/signin', async (req, res) => {
 			});
 		}
 
-		const hasBusiness = foundUser.business_id !== '';
 		// Check that the password is correct
 		const passwordMatches = await foundUser.comparePassword(
 			password
@@ -46,6 +45,12 @@ router.post('/signin', async (req, res) => {
 
 		// Set cookies
 		cookies.setCookies(res, foundUser);
+
+		if (foundUser.business_id === 'create') {
+			// Set cookie to indicate that the user has started the setup process
+			cookies.updateCookie(res, 'beganSetup', true);
+			cookies.updateCookie(res, 'lastStepCompleted', 0);
+		}
 
 		// Set hasBusiness cookie
 		// res.cookie('hasBusiness', hasBusiness, {
@@ -94,29 +99,6 @@ router.post('/signup', async (req, res) => {
 					'An account with the provided email already exists.',
 			});
 		}
-
-		// Creates a new business tied to user
-		const newBusiness = new Business({
-			name: `${first_name}'s Restaurant`,
-			url: '',
-			address: '',
-			allergens: [],
-			menus: [],
-		});
-		const savedBusiness = await newBusiness.save();
-
-		// Creates master menu
-		const masterMenu = new Menu({
-			title: 'Master Menu',
-			description: 'This menu will be shown to customers',
-			restaurant: savedBusiness._id,
-			menuItems: [],
-		});
-		const savedMenu = await masterMenu.save();
-
-		// That menu is added to business's menus array
-		savedBusiness.menus.push(savedMenu._id);
-		await savedBusiness.save();
 
 		// Create new User document from request body
 		const newUser = new User({
@@ -292,9 +274,74 @@ router.post('/edit-login', async (req, res) => {
 // @access  Public (no auth yet)
 router.post('/set-business', async (req, res) => {
 	try {
-		const { type } = req.body;
+		const { type, beganSetup, lastStepCompleted } =
+			req.body;
+		const { email } = req.cookies;
 
 		if (type === 'new') {
+			if (beganSetup === true && lastStepCompleted === 0) {
+				// Set user's business_id to indicate that the user has started the setup process
+				const updatedUser = await User.findOneAndUpdate(
+					{ email: email },
+					{
+						$set: {
+							business_id: 'create',
+						},
+					}
+				);
+
+				if (!updatedUser) {
+					// User's business_id was not updated
+					return res.status(401).json({
+						error:
+							'An error occurred starting the business set up process',
+						message:
+							'An error occurred starting the business set up process.',
+					});
+				}
+
+				console.log('about to set cookies');
+				// Set cookie to indicate that the user has started the setup process
+				cookies.updateCookie(res, 'beganSetup', true);
+				cookies.updateCookie(
+					res,
+					'lastStepCompleted',
+					lastStepCompleted
+				);
+
+				return res.status(200).json({
+					message:
+						'Business setup process started successfully.',
+				});
+			}
+
+			if (lastStepCompleted === 1) {
+				// send business_id in req.body
+				// retreive business_id from req.body
+				// update user's business_id in db using findOneAndUpdate()
+				// update lastStepCompleted cookie
+				// // Creates a new business tied to user
+				// const newBusiness = new Business({
+				// 	name: `${first_name}'s Restaurant`,
+				// 	url: '',
+				// 	address: '',
+				// 	allergens: [],
+				// 	menus: [],
+				// });
+				// const savedBusiness = await newBusiness.save();
+				// // Creates master menu
+				// const masterMenu = new Menu({
+				// 	title: 'Master Menu',
+				// 	description:
+				// 		'This menu will be shown to customers',
+				// 	restaurant: savedBusiness._id,
+				// 	menuItems: [],
+				// });
+				// const savedMenu = await masterMenu.save();
+				// // That menu is added to business's menus array
+				// savedBusiness.menus.push(savedMenu._id);
+				// await savedBusiness.save();
+			}
 		}
 
 		if (type === 'existing') {

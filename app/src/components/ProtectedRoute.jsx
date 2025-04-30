@@ -7,6 +7,7 @@ function ProtectedRoute({ component, route, admin }) {
 	const isAuthorized = getCookie('isAuthorized') === 'true';
 	const isAdmin = getCookie('isAdmin') === 'true';
 	const hasBusiness = getCookie('hasBusiness') === 'true';
+	const beganSetup = getCookie('beganSetup') === 'true';
 
 	// Prevents user from accessing any pages if they're not logged in
 	if (!isAuthorized) {
@@ -25,11 +26,21 @@ function ProtectedRoute({ component, route, admin }) {
 
 	/* The following statements only execute if the user is logged in. */
 
-	// Prevents user from accessing sign in/up page if they're logged in
+	if (route !== 'setup' && beganSetup) {
+		// Redirect to first setup page
+		return (
+			<Navigate
+				to='/step1'
+				replace
+			/>
+		);
+	}
+
 	if (route === 'chooseBusiness') {
 		return component;
 	}
 
+	// Prevents user from accessing sign in/up page if they're logged in
 	if (route === 'signInUp') {
 		// Redirect to dashboard
 		return (
@@ -63,11 +74,11 @@ function ProtectedRoute({ component, route, admin }) {
 	}
 
 	// Prevents users from accessing business pages if they are not associated w/ a business
-	if (route !== 'setup' && !hasBusiness) {
+	if (route !== 'setup' && !hasBusiness && !beganSetup) {
 		// Redirect to setup page
 		return (
 			<Navigate
-				to='/step1'
+				to='/choose-business'
 				replace
 			/>
 		);
