@@ -89,15 +89,33 @@ router.put('/update-title-description', async (req, res) => {
 // @route   DELETE /api/menus/:id
 // @desc    Delete a menu by ID
 // @access  Public (no auth yet)
+// @route   DELETE /api/menus/:id
+// @desc    Delete a menu by ID and remove it from its business
+// @access  Public (no auth yet)
 router.delete('/:id', async (req, res) => {
   try {
-    const deleted = await Menu.findByIdAndDelete(req.params.id);
-    if (!deleted) {
+    const menuId = req.params.id;
+
+    // Step 1: Find the menu to get the restaurant ID
+    const menu = await Menu.findById(menuId);
+
+    if (!menu) {
       return res.status(404).json({ error: 'Menu not found' });
     }
-    res.json({ message: 'Menu deleted successfully' });
+
+    const restaurantId = menu.restaurant;
+
+    // Step 2: Delete the menu
+    await Menu.findByIdAndDelete(menuId);
+
+    // Step 3: Remove the menu reference from the business
+    await Business.findByIdAndUpdate(restaurantId, {
+      $pull: { menus: menuId },
+    });
+
+    res.json({ message: 'Menu deleted and business updated successfully' });
   } catch (err) {
-    res.status(500).json({ error: 'Could not delete menu' });
+    res.status(500).json({ error: 'Could not delete menu: ' + err.message });
   }
 });
 

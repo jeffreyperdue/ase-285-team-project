@@ -13,7 +13,7 @@ class Business {
 }
 
 const BusinessSchema = new Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   url: { type: String },
   address: { type: String },
   allergens: {

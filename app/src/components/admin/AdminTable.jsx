@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
 	MRT_TableBodyCellValue,
@@ -16,6 +17,11 @@ import {
 	TableHead,
 	TableRow,
 } from '@mui/material';
+import removeUserIcon from '../../icons/remove-user.png';
+import demoteAdminIcon from '../../icons/demote-admin.png';
+import promoteAdminIcon from '../../icons/promote-admin.png';
+import GetConfirmationMessage from '../ConfirmationMessage';
+import ErrorMessage from '../ErrorMessage';
 
 //define TData type with JSDoc
 /**
@@ -30,6 +36,14 @@ import {
  * @type {import('material-react-table').MRT_ColumnDef<User>[]}
  */
 const columns = [
+	{
+		accessorKey: 'first_name',
+		header: 'First Name',
+	},
+	{
+		accessorKey: 'last_name',
+		header: 'Last Name',
+	},
 	{
 		accessorKey: 'email',
 		header: 'User Email',
@@ -51,58 +65,145 @@ const columns = [
 	},
 ];
 
-// dummy data for testing UI:
-const data = [
-	{ email: 'johndoe@cafebritt.com', status: 'admin' },
-	{
-		email: 'peterparker@cafebritt.com',
-		status: 'user',
-	},
-	{
-		email: 'jeremyrenner@cafebritt.com',
-		status: 'user',
-	},
-];
-
 const AdminTable = () => {
 	const navigate = useNavigate();
+	const [data, setData] = useState([]);
+	const [message, setMessage] = useState(
+		'Something went wrong.'
+	);
+	const [showError, setShowError] = useState(false);
+	const [showConfirmation, setShowConfirmation] =
+		useState(false);
 
-	const handlePromote = (event) => {
-		event.preventDefault();
-		navigate('/admin');
+	// Get a list of users associated w/ the user's business
+	React.useEffect(() => {
+		const getUsers = async () => {
+			try {
+				const response = await fetch(
+					'http://localhost:5000/api/admin/get-user-list',
+					{
+						method: 'POST',
+						credentials: 'include',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+					}
+				);
+
+				if (response.ok) {
+					const users = await response.json();
+					setData(users);
+				} else {
+					console.error(
+						'Error: response not ok:',
+						response.error
+					);
+				}
+			} catch (err) {
+				console.error('Error: ', err.message);
+			}
+		};
+
+		getUsers();
+	}, []);
+
+	// Change a user's admin status
+	const changeAdminStatus = async (action, targetEmail) => {
+		const data = {
+			action: action,
+			targetEmail: targetEmail,
+		};
+
+		try {
+			const response = await fetch(
+				'http://localhost:5000/api/admin/change-admin-status',
+				{
+					method: 'POST',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(data),
+				}
+			);
+
+			if (response.ok) {
+				setMessage(
+					action === 'promote'
+						? 'Promoted user to admin successfully.'
+						: 'Demoted admin to user successfully.'
+				);
+				setShowConfirmation(true);
+			} else {
+				setMessage(
+					action === 'promote'
+						? `There was an error promoting user to admin.`
+						: `There was an error demoting admin to user.`
+				);
+				setShowError(true);
+			}
+		} catch (err) {
+			console.error('Error:', err.message);
+		}
 	};
 
-	const handleDemote = (event) => {
-		event.preventDefault();
-		navigate('/admin');
+	// Remove a user's access to a business
+	const removeUserAccess = async (targetEmail) => {
+		try {
+			const response = await fetch(
+				'http://localhost:5000/api/admin/remove-user-access',
+				{
+					method: 'POST',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ email: targetEmail }),
+				}
+			);
+
+			if (response.ok) {
+				setMessage(`Removed user access successfully.`);
+				setShowConfirmation(true);
+			} else {
+				setMessage(
+					`There was an error removing user access.`
+				);
+				setShowError(true);
+			}
+		} catch (err) {
+			console.error('Error:', err.message);
+		}
 	};
 
-	const handleRemoveAccess = (event) => {
-		event.preventDefault();
-		navigate('/admin');
-	};
-
-	const getBtn = (status) => {
+	// Get admin table Actions btns
+	const getBtn = (status, email) => {
 		switch (status) {
 			case 'user':
 				return (
-					<button
-						type='submit'
-						className='button promote-btn'
-						onClick={handlePromote}
-					>
-						Promote to Admin
-					</button>
+					<i title='Promote user to admin'>
+						<img
+							src={promoteAdminIcon}
+							onClick={() =>
+								changeAdminStatus('promote', email)
+							}
+							alt='Promote user icon'
+							className='admin-table-icon'
+						/>
+					</i>
 				);
 			case 'admin':
 				return (
-					<button
-						type='submit'
-						className='button demote-btn'
-						onClick={handleDemote}
-					>
-						Demote to User
-					</button>
+					<i title='Demote admin to user'>
+						<img
+							src={demoteAdminIcon}
+							onClick={() =>
+								changeAdminStatus('demote', email)
+							}
+							alt='Demote admin icon'
+							className='admin-table-icon'
+						/>
+					</i>
 				);
 			default:
 				return <></>;
@@ -112,27 +213,53 @@ const AdminTable = () => {
 	const table = useMaterialReactTable({
 		columns,
 		data,
-		enableRowSelection: true,
+		enableRowSelection: false,
 		enableRowActions: true,
 		positionActionsColumn: 'last',
 		layoutMode: 'grid-no-grow',
 		renderRowActions: ({ row }) => (
-			<Box>
-				{getBtn(row.original.status)}
+			<Box
+				sx={{
+					display: 'flex',
+					gap: '15px',
+				}}
+			>
+				{getBtn(row.original.status, row.original.email)}
 
-				<button
-					type='submit'
-					className='button remove-access-btn'
-					onClick={handleRemoveAccess}
-				>
-					Remove User Access
-				</button>
+				<i title='Remove user access'>
+					<img
+						src={removeUserIcon}
+						alt='Remove user access icon'
+						onClick={() =>
+							removeUserAccess(row.original.email)
+						}
+						className='admin-table-icon'
+					/>
+				</i>
 			</Box>
 		),
 	});
 
 	return (
 		<Stack>
+			{showConfirmation ? (
+				<GetConfirmationMessage
+					message={message}
+					destination={0}
+				/>
+			) : (
+				<></>
+			)}
+
+			{showError ? (
+				<ErrorMessage
+					message={message}
+					destination={0}
+				/>
+			) : (
+				<></>
+			)}
+
 			<Box
 				sx={{
 					display: 'flex',

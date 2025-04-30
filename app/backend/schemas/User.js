@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const bcrypt = require('bcrypt');
 
 class User {
 	constructor(
@@ -36,6 +37,29 @@ const UserSchema = new Schema({
 	admin: { type: Boolean, required: true },
 });
 
+// Hash password before saving if password is new or modified
+UserSchema.pre('save', async function (next) {
+	if (!this.isModified('password')) {
+		return next();
+	}
+
+	try {
+		const salt = await bcrypt.genSalt(12);
+		this.password = await bcrypt.hash(this.password, salt);
+		next();
+	} catch (err) {
+		next(err);
+	}
+});
+
+// Compares given password w/ hashed password
+UserSchema.methods.comparePassword = async function (
+	givenPassword
+) {
+	return bcrypt.compare(givenPassword, this.password);
+};
+
+// Returns user's full name
 UserSchema.methods.getFullName = function () {
 	return `${this.first_name} ${this.last_name}`;
 };
