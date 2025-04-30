@@ -6,7 +6,6 @@ import editBusinessIcon from '../icons/edit_business.png';
 import logoutIcon from '../icons/logout.png';
 import userMaintenanceIcon from '../icons/user-maintenance.png';
 import getCookie from '../assets/cookies';
-import deleteIcon from '../icons/delete.png';
 import '../css/ProfileIcon.css';
 
 export default function ProfileIcon() {
@@ -42,16 +41,13 @@ export default function ProfileIcon() {
 		event.preventDefault();
 
 		try {
-			const response = await fetch(
-				'http://localhost:5000/api/auth/logout',
-				{
-					method: 'POST',
-					credentials: 'include',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-				}
-			);
+			const response = await fetch('http://localhost:5000/api/auth/logout', {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			});
 
 			if (response.ok) {
 				setIsOpen(false);
@@ -146,17 +142,6 @@ export default function ProfileIcon() {
 						) : (
 							<></>
 						)}
-
-						<div
-							onClick={deleteAccount}
-							className='dropdown-item'
-						>
-							<img
-								src={deleteIcon}
-								alt='Delete Account'
-							/>
-							<span>Delete Account</span>
-						</div>
 
 						<div
 							onClick={logout}
