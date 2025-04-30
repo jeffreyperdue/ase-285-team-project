@@ -4,8 +4,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 function GetPasswordField({ name, placeholder }) {
-	const [passwordVisible, setPasswordVisible] =
-		useState(false);
+	const [passwordVisible, setPasswordVisible] = useState(false);
 
 	const togglePasswordVisibility = () => {
 		setPasswordVisible(!passwordVisible);
@@ -13,7 +12,7 @@ function GetPasswordField({ name, placeholder }) {
 
 	return (
 		<div className='form-field-container'>
-			<label for={name}>
+			<label key={name}>
 				{placeholder} <span className='required'>*</span>
 			</label>
 
