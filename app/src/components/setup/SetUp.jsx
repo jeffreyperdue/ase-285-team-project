@@ -61,6 +61,9 @@ function SetUp({ step }) {
 		  if (!response.ok) throw new Error('Failed to update business');
 	  
 		  const updatedBusiness = await response.json();
+
+		// Clear the flag once setup is finished
+		localStorage.removeItem('justSignedUp');
 	  
 		  navigate('/dashboard', { state: { business: updatedBusiness } });
 		} catch (error) {

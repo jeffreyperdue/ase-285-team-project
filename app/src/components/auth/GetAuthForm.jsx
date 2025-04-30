@@ -81,6 +81,8 @@ function GetAuthForm({ formName }) {
 					'business_id',
 					result.business_id
 				);
+				localStorage.setItem(
+					'justSignedUp', 'true');
 				navigate('/step1'); // Redirect on success
 			} else {
 				setMessage(result.message);
