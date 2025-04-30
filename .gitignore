@@ -1,1 +1,9 @@
 .vscode/settings.json
+app\backend\package.json
+app\package-lock.json
+app\package.json
+app\backend\node_modules
+app\node_modules
+.gitignore
+app\backend\package.json
+app\backend\node_modules

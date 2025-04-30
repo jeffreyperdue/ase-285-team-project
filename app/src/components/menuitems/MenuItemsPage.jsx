@@ -28,15 +28,13 @@ const MenuItemsPage = () => {
   const businessId = localStorage.getItem('business_id');
   const location = useLocation();
   const menuTitle = location.state?.menuTitle || 'Untitled Menu';
+  const navigate = useNavigate();
 
  // fetch menuItems on initial renders
  const fetchMenuItems = async () => {
   try {
     const menuID = JSON.parse(localStorage.getItem('menu_ID')); // Get from localStorage
-    if (!menuID) {
-      console.warn('No menu ID found');
-      alert("No menu ID found!")
-    }
+    console.log(menuID)
 
     const res = await axios.get(`http://localhost:5000/api/menuitems?menuID=${menuID}`);
     const fetchedMenuItems = res.data.map(menuItem => ({
@@ -50,6 +48,7 @@ const MenuItemsPage = () => {
 
  useEffect(() => {
   const params = new URLSearchParams(location.search);
+  console.log(params)
   let menuID = params.get('menuID');
 
   if (menuID) {
@@ -68,6 +67,7 @@ const MenuItemsPage = () => {
   fetchMenuItems();
 }, [location.search]);
 
+  // saves the updated menu item.
   const handleSave = async (updatedItem) => {
     try {
       await axios.put(`http://localhost:5000/api/menuitems/${updatedItem._id}`, updatedItem);
@@ -79,26 +79,27 @@ const MenuItemsPage = () => {
     }
   };
 
+  // handles deleting a menuItem
   const handleDelete = (deletedId) => {
+    // refreshes after a delete.
     fetchMenuItems();
   };
 
+  // handles filtering the items for search
   const filteredItems = menuItems.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-
-  const navigate = useNavigate();
+  // for navigation
   const toAddItem = (event) => {
     event.preventDefault();
     navigate('/add-menu-item');
   };
-
+  // for navigation
   const toMenuSwap = (event) => {
     event.preventDefault();
     navigate('/swap-menu');
   }
-
 
 return (
     <div className='center'>
