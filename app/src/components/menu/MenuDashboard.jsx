@@ -61,7 +61,7 @@ function MenuDashboard() {
 		}
 	
 		try {
-			const res = await axios.post('/api/menus', {
+			const res = await axios.post('http://localhost:5000/api/menus', {
 				title: 'Untitled Menu',
 				description: 'New menu created',
 				restaurant: businessId,
@@ -90,7 +90,7 @@ function MenuDashboard() {
 		}
 	
 		try {
-			await axios.delete(`/api/menus/${menuToRemove._id}`); // Make DELETE request
+			await axios.delete(`http://localhost:5000/api/menus/${menuToRemove._id}`); // Make DELETE request
 	
 			// Remove menu from local state
 			setMenus((prevMenus) => prevMenus.filter((_, i) => i !== menuToDelete));
