@@ -54,17 +54,16 @@ router.get('/:id', async (req, res) => {
 // @desc    Create a new business
 // @access  Public (no auth yet)
 router.post('/', async (req, res) => {
-	try {
-		const {
-			name,
-			url,
-			address,
-			allergens = [],
-			diets = [],
-		} = req.body;
+  try {
+    const { name, url, address, allergens = [], diets = [] } = req.body;
+
+    const existing = await Business.findOne({ name: name.trim() });
+    if (existing) {
+      return res.status(400).json({ error: 'Business name already exists.' });
+    }
 
 		const newBusiness = new Business({
-			name: name?.trim(),
+			name: name.trim(),
 			url: url?.trim().toLowerCase(),
 			address: address?.trim(),
 			allergens,
@@ -81,27 +80,36 @@ router.post('/', async (req, res) => {
 	}
 });
 
+
 // @route   PUT /api/businesses/:id
 // @desc    Update a business
 // @access  Public (no auth yet)
 router.put('/:id', async (req, res) => {
-	try {
-		const { name, url, address, allergens, diets, menus } =
-			req.body;
+  try {
+    const { name, url, address, allergens, diets, menus } = req.body;
 
-		const updatedBusiness =
-			await Business.findByIdAndUpdate(
-				req.params.id,
-				{
-					name: name?.trim(),
-					url: url?.trim().toLowerCase(),
-					address: address?.trim(),
-					allergens,
-					diets,
-					menus,
-				},
-				{ new: true }
-			);
+    // Check if another business already exists with the same name
+    const existingBusiness = await Business.findOne({
+      name: name?.trim(),
+      _id: { $ne: req.params.id }, // Exclude the current business from the check
+    });
+
+    if (existingBusiness) {
+      return res.status(400).json({ error: 'Business name already exists.' });
+    }
+
+    const updatedBusiness = await Business.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: name?.trim(),
+        url: url?.trim().toLowerCase(),
+        address: address?.trim(),
+        allergens,
+        diets,
+        menus,
+      },
+      { new: true }
+    );
 
 		if (!updatedBusiness)
 			return res
@@ -114,6 +122,7 @@ router.put('/:id', async (req, res) => {
 		});
 	}
 });
+
 
 // @route   DELETE /api/businesses/:id
 // @desc    Delete a business
