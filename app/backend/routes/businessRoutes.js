@@ -8,10 +8,7 @@ const mongoose = require('mongoose');
 // @access  Public (no auth yet)
 router.get('/', async (req, res) => {
 	try {
-		const businesses = await Business.find(
-			{},
-			{ name: 1, _id: 1 }
-		);
+		const businesses = await Business.find({}, { name: 1, _id: 1 });
 
 		if (businesses.length <= 0) {
 			// No businesses exist in the DB
@@ -52,18 +49,18 @@ router.get('/:id', async (req, res) => {
 	}
 });
 
-
 // @route   POST /api/businesses
 // @desc    Create a new business
 // @access  Public (no auth yet)
 router.post('/', async (req, res) => {
-  try {
-    const { name, url, address, allergens = [], diets = [] } = req.body;
+	try {
+		const { name, url, address, allergens = [], diets = [] } = req.body;
 
-    const existing = await Business.findOne({ name: name.trim() });
-    if (existing) {
-      return res.status(400).json({ error: 'Business name already exists.' });
-    }
+		const existing = await Business.findOne({ name: name.trim() });
+		const unnamed = name === 'New Business';
+		if (existing && !unnamed) {
+			return res.status(400).json({ error: 'Business name already exists.' });
+		}
 
 		const newBusiness = new Business({
 			name: name.trim(),
@@ -83,41 +80,38 @@ router.post('/', async (req, res) => {
 	}
 });
 
-
 // @route   PUT /api/businesses/:id
 // @desc    Update a business
 // @access  Public (no auth yet)
 router.put('/:id', async (req, res) => {
-  try {
-    const { name, url, address, allergens, diets, menus } = req.body;
+	try {
+		const { name, url, address, allergens, diets, menus } = req.body;
 
-    // Check if another business already exists with the same name
-    const existingBusiness = await Business.findOne({
-      name: name?.trim(),
-      _id: { $ne: req.params.id }, // Exclude the current business from the check
-    });
+		// Check if another business already exists with the same name
+		const existingBusiness = await Business.findOne({
+			name: name?.trim(),
+			_id: { $ne: req.params.id }, // Exclude the current business from the check
+		});
 
-    if (existingBusiness) {
-      return res.status(400).json({ error: 'Business name already exists.' });
-    }
+		if (existingBusiness) {
+			return res.status(400).json({ error: 'Business name already exists.' });
+		}
 
-    const updatedBusiness = await Business.findByIdAndUpdate(
-      req.params.id,
-      {
-        name: name?.trim(),
-        url: url?.trim().toLowerCase(),
-        address: address?.trim(),
-        allergens,
-        diets,
-        menus,
-      },
-      { new: true }
-    );
+		const updatedBusiness = await Business.findByIdAndUpdate(
+			req.params.id,
+			{
+				name: name?.trim(),
+				url: url?.trim().toLowerCase(),
+				address: address?.trim(),
+				allergens,
+				diets,
+				menus,
+			},
+			{ new: true }
+		);
 
 		if (!updatedBusiness)
-			return res
-				.status(404)
-				.json({ error: 'Business not found' });
+			return res.status(404).json({ error: 'Business not found' });
 		res.json(updatedBusiness);
 	} catch (err) {
 		res.status(400).json({
@@ -126,23 +120,17 @@ router.put('/:id', async (req, res) => {
 	}
 });
 
-
 // @route   DELETE /api/businesses/:id
 // @desc    Delete a business
 // @access  Public (no auth yet)
 router.delete('/:id', async (req, res) => {
 	try {
-		const deletedBusiness =
-			await Business.findByIdAndDelete(req.params.id);
+		const deletedBusiness = await Business.findByIdAndDelete(req.params.id);
 		if (!deletedBusiness)
-			return res
-				.status(404)
-				.json({ error: 'Business not found' });
+			return res.status(404).json({ error: 'Business not found' });
 		res.json({ message: 'Business deleted successfully' });
 	} catch (err) {
-		res
-			.status(500)
-			.json({ error: 'Could not delete business' });
+		res.status(500).json({ error: 'Could not delete business' });
 	}
 });
 
