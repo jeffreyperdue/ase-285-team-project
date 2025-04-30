@@ -4,7 +4,6 @@ import ChangePassword from './ChangePassword';
 import GetConfirmationMessage from '../ConfirmationMessage';
 import ErrorMessage from '../ErrorMessage';
 import getCookie from '../../assets/cookies';
-import Btn from '../Btn';
 import format from '../../assets/formValidation.js';
 import '../../css/auth.scss';
 
@@ -12,8 +11,7 @@ function EditLoginInfo() {
 	const [option, setOption] = useState('');
 	const [message, setMessage] = useState('');
 	const [showError, setShowError] = useState(false);
-	const [showConfirmation, setShowConfirmation] =
-		useState(false);
+	const [showConfirmation, setShowConfirmation] = useState(false);
 
 	const getEditLoginForm = (option) => {
 		switch (option) {
@@ -47,9 +45,7 @@ function EditLoginInfo() {
 				setMessage('Emails do not match.');
 				setShowError(true);
 			} else if (newCred === currentCred) {
-				setMessage(
-					'New email must be different from current email.'
-				);
+				setMessage('New email must be different from current email.');
 				setShowError(true);
 			} else {
 				proceed = true;
@@ -63,9 +59,7 @@ function EditLoginInfo() {
 				setMessage('Passwords do not match.');
 				setShowError(true);
 			} else if (!format.validatePassword(newCred)) {
-				setMessage(
-					'Password must be at least 6 characters long.'
-				);
+				setMessage('Password must be at least 6 characters long.');
 				setShowError(true);
 			} else {
 				proceed = true;
@@ -141,9 +135,7 @@ function EditLoginInfo() {
 					className='edit-login-info-form'
 				>
 					<div>
-						<span className='question'>
-							Which would you like to change?
-						</span>
+						<span className='question'>Which would you like to change?</span>
 
 						<div>
 							<label
