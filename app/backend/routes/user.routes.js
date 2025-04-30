@@ -272,19 +272,14 @@ router.post('/set-business', async (req, res) => {
 			const { email } = req.cookies;
 
 			if (!business_id) {
-				// business_id is missing
 				return res.status(400).json({
 					error: 'A business is required',
 					message: 'A business is required.',
 				});
 			}
 
-			const foundBusiness = await Business.findOne({
-				_id: business_id,
-			});
-
+			const foundBusiness = await Business.findById(business_id);
 			if (!foundBusiness) {
-				// Business doesn't exist
 				return res.status(401).json({
 					error: 'Invalid business',
 					message: 'Invalid business.',
@@ -297,7 +292,6 @@ router.post('/set-business', async (req, res) => {
 			);
 
 			if (!updatedUser) {
-				// User's business_id was not updated
 				return res.status(401).json({
 					error: 'Could not add user to the business',
 					message: 'Could not add user to the business.',
@@ -308,17 +302,19 @@ router.post('/set-business', async (req, res) => {
 			cookies.updateCookie(res, 'hasBusiness', true);
 			cookies.updateCookie(res, 'isAdmin', updatedUser.admin);
 
-			// Send success response
+			// Include business_id in response
 			res.status(200).json({
 				message: `You have been added to ${foundBusiness.name} successfully.`,
+				business_id: foundBusiness._id
 			});
 		}
 	} catch (err) {
 		res.status(500).json({
-			error: 'An error occurred' + err.message,
+			error: 'An error occurred: ' + err.message,
 			message: 'An error occurred.',
 		});
 	}
 });
+
 
 module.exports = router;

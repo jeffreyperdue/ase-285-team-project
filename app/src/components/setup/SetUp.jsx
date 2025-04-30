@@ -35,50 +35,66 @@ function SetUp({ step }) {
 
 	const completeSetUp = async (event) => {
 		event.preventDefault();
-
+	
 		try {
-			const businessId = localStorage.getItem('business_id');
-
+			let businessId = localStorage.getItem('business_id');
+	
+			// Step 1: Create business if not already created
 			if (!businessId) {
-				throw new Error('No Business ID found. Cannot complete setup.');
+				const response = await fetch('localhost:5000/api/businesses', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						name: formData.name,
+						url: formData.url,
+						address: formData.address,
+						allergens: formData.allergens,
+						diets: formData.diets,
+					}),
+				});
+	
+				if (!response.ok) {
+					const result = await response.json();
+					if (result.error?.includes('Business name already exists')) {
+						alert('That business name is already in use. Please choose another.');
+						return;
+					}
+					throw new Error('Failed to create business');
+				}
+	
+				const created = await response.json();
+				businessId = created._id;
+				localStorage.setItem('business_id', businessId);
 			}
-
-			const businessData = {
-				name: formData.name,
-				url: formData.url,
-				address: formData.address,
-				allergens: formData.allergens,
-				diets: formData.diets,
-				menuLayout: formData.menuLayout,
-			};
-
-			const response = await fetch(`/api/businesses/${businessId}`, {
+	
+			// Step 2: Update business (layout, etc.)
+			const updateResponse = await fetch(`http://localhost:5000/api/businesses/${businessId}`, {
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(businessData),
+				body: JSON.stringify({
+					name: formData.name,
+					url: formData.url,
+					address: formData.address,
+					allergens: formData.allergens,
+					diets: formData.diets,
+					menuLayout: formData.menuLayout,
+				}),
 			});
+	
+			if (!updateResponse.ok) throw new Error('Failed to update business');
+	
+			const updatedBusiness = await updateResponse.json();
 
-			if (!response.ok) {
-			const result = await response.json();
-			if (result.error?.includes('Business name already exists')) {
-				alert('That business name is already in use. Please choose another.');
-				return;
-			}
-			throw new Error('Failed to update business');
-		}
-
-			const updatedBusiness = await response.json();
-
-		// Clear the flag once setup is finished
-		localStorage.removeItem('justSignedUp');
-
-			navigate('/dashboard', {
-				state: { business: updatedBusiness },
-			});
+			document.cookie = 'hasBusiness=true; path=/;';
+	
+			// Finish setup
+			localStorage.removeItem('justSignedUp');
+			navigate('/dashboard', { state: { business: updatedBusiness } });
 		} catch (error) {
 			console.error('Error completing setup:', error);
 		}
 	};
+	
 
 	const updateFormData = (stepData) => {
 		setFormData((prev) => ({ ...prev, ...stepData }));
