@@ -19,35 +19,29 @@ function SignInUp() {
 	}
 
 	return (
-		<div
-			className={
-				signUpForm
-					? 'sign-up-container'
-					: 'sign-in-container'
-			}
-		>
+		<div className={signUpForm ? 'sign-up-container' : 'sign-in-container'}>
 			<div className={signUpForm ? 'sign-up' : 'sign-in'}>
 				<GetAuthForm formName={formType} />
 
 				{signUpForm ? (
 					<div className='swap-form'>
 						Already have an account?&nbsp;
-						<a
-							href='#'
+						<span
 							onClick={(event) => toSignIn(event)}
+							className='swap-btn'
 						>
 							Log in
-						</a>
+						</span>
 					</div>
 				) : (
 					<div className='swap-form'>
 						Don't have an account?&nbsp;
-						<a
-							href='#'
+						<span
 							onClick={(event) => toSignUp(event)}
+							className='swap-btn'
 						>
 							Sign Up
-						</a>
+						</span>
 					</div>
 				)}
 			</div>

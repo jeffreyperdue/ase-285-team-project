@@ -29,10 +29,12 @@ function ChooseBusiness() {
 				const result = await response.json();
 
 				if (response.ok) {
-					const businesses = result.map((business) => ({
-						value: business._id,
-						label: business.name,
-					}));
+					const businesses = result
+						.filter((business) => business.name !== 'New Business')
+						.map((business) => ({
+							value: business._id,
+							label: business.name,
+						}));
 
 					setData(businesses);
 				} else {
@@ -95,86 +97,93 @@ function ChooseBusiness() {
 		} else if (option === 'new') {
 			// Create new business and master menu immediately
 			try {
-			  const createBusinessResponse = await fetch('http://localhost:5000/api/businesses', {
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-				  'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-				  name: 'New Business',
-				  url: '',
-				  address: '',
-				  allergens: [],
-				  diets: [],
-				}),
-			  });
-		  
-			  if (!createBusinessResponse.ok) {
-				const result = await createBusinessResponse.json();
-				setMessage(result.message || 'Failed to create business');
-				setShowError(true);
-				return;
-			  }
-		  
-			  const createdBusiness = await createBusinessResponse.json();
-			  const businessId = createdBusiness._id;
-			  localStorage.setItem('business_id', businessId);
-		  
-			  // Create master menu
-			  const createMenuResponse = await fetch('http://localhost:5000/api/menus', {
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-				  'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-				  title: 'Master Menu',
-				  description: 'This menu will be shown to customers',
-				  restaurant: businessId,
-				  menuItems: [],
-				}),
-			  });
-		  
-			  if (!createMenuResponse.ok) {
-				const result = await createMenuResponse.json();
-				setMessage(result.message || 'Failed to create menu');
-				setShowError(true);
-				return;
-			  }
-		  
-			  // Associate business with user
-			  const assignResponse = await fetch('http://localhost:5000/api/auth/set-business', {
-				method: 'POST',
-				credentials: 'include',
-				headers: {
-				  'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-				  type: 'existing',
-				  business_id: businessId,
-				}),
-			  });
-		  
-			  if (!assignResponse.ok) {
-				const result = await assignResponse.json();
-				setMessage(result.message || 'Failed to assign business to user');
-				setShowError(true);
-				return;
-			  }
-		  
-			  document.cookie = 'hasBusiness=true; path=/;';
-		  
-			  // Redirect to step 1
-			  navigate('/step1');
+				const createBusinessResponse = await fetch(
+					'http://localhost:5000/api/businesses',
+					{
+						method: 'POST',
+						credentials: 'include',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							name: 'New Business',
+							url: '',
+							address: '',
+							allergens: [],
+							diets: [],
+						}),
+					}
+				);
+
+				if (!createBusinessResponse.ok) {
+					const result = await createBusinessResponse.json();
+					setMessage(result.message || 'Failed to create business');
+					setShowError(true);
+					return;
+				}
+
+				const createdBusiness = await createBusinessResponse.json();
+				const businessId = createdBusiness._id;
+				localStorage.setItem('business_id', businessId);
+
+				// Create master menu
+				const createMenuResponse = await fetch(
+					'http://localhost:5000/api/menus',
+					{
+						method: 'POST',
+						credentials: 'include',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							title: 'Master Menu',
+							description: 'This menu will be shown to customers',
+							restaurant: businessId,
+							menuItems: [],
+						}),
+					}
+				);
+
+				if (!createMenuResponse.ok) {
+					const result = await createMenuResponse.json();
+					setMessage(result.message || 'Failed to create menu');
+					setShowError(true);
+					return;
+				}
+
+				// Associate business with user
+				const assignResponse = await fetch(
+					'http://localhost:5000/api/auth/set-business',
+					{
+						method: 'POST',
+						credentials: 'include',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							type: 'existing',
+							business_id: businessId,
+						}),
+					}
+				);
+
+				if (!assignResponse.ok) {
+					const result = await assignResponse.json();
+					setMessage(result.message || 'Failed to assign business to user');
+					setShowError(true);
+					return;
+				}
+
+				document.cookie = 'hasBusiness=true; path=/;';
+
+				// Redirect to step 1
+				navigate('/step1');
 			} catch (err) {
-			  console.error('Error: ', err.message);
-			  setMessage('Unexpected error while creating business.');
-			  setShowError(true);
+				console.error('Error: ', err.message);
+				setMessage('Unexpected error while creating business.');
+				setShowError(true);
 			}
-		  }
-		  
-		  
+		}
 	};
 
 	return (
