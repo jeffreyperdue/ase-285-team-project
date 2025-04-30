@@ -23,13 +23,18 @@ router.post('/', async (req, res) => {
   try {
     const { name, url, address, allergens = [], diets = [] } = req.body;
 
+    const existing = await Business.findOne({ name: name.trim() });
+    if (existing) {
+      return res.status(400).json({ error: 'Business name already exists.' });
+    }
+
     const newBusiness = new Business({
-      name: name?.trim(),
+      name: name.trim(),
       url: url?.trim().toLowerCase(),
       address: address?.trim(),
       allergens,
       diets,
-      menus: []
+      menus: [],
     });
 
     const savedBusiness = await newBusiness.save();
@@ -39,12 +44,23 @@ router.post('/', async (req, res) => {
   }
 });
 
+
 // @route   PUT /api/businesses/:id
 // @desc    Update a business
 // @access  Public (no auth yet)
 router.put('/:id', async (req, res) => {
   try {
     const { name, url, address, allergens, diets, menus } = req.body;
+
+    // Check if another business already exists with the same name
+    const existingBusiness = await Business.findOne({
+      name: name?.trim(),
+      _id: { $ne: req.params.id }, // Exclude the current business from the check
+    });
+
+    if (existingBusiness) {
+      return res.status(400).json({ error: 'Business name already exists.' });
+    }
 
     const updatedBusiness = await Business.findByIdAndUpdate(
       req.params.id,
@@ -54,17 +70,21 @@ router.put('/:id', async (req, res) => {
         address: address?.trim(),
         allergens,
         diets,
-        menus
+        menus,
       },
       { new: true }
     );
 
-    if (!updatedBusiness) return res.status(404).json({ error: 'Business not found' });
+    if (!updatedBusiness) {
+      return res.status(404).json({ error: 'Business not found' });
+    }
+
     res.json(updatedBusiness);
   } catch (err) {
     res.status(400).json({ error: 'Error updating business: ' + err.message });
   }
 });
+
 
 // @route   DELETE /api/businesses/:id
 // @desc    Delete a business

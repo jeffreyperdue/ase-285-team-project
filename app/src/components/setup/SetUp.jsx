@@ -58,7 +58,14 @@ function SetUp({ step }) {
 			body: JSON.stringify(businessData)
 		  });
 	  
-		  if (!response.ok) throw new Error('Failed to update business');
+		  if (!response.ok) {
+			const result = await response.json();
+			if (result.error?.includes('Business name already exists')) {
+				alert('That business name is already in use. Please choose another.');
+				return;
+			}
+			throw new Error('Failed to update business');
+		}
 	  
 		  const updatedBusiness = await response.json();
 
