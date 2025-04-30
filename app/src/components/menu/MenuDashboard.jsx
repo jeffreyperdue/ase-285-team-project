@@ -20,7 +20,6 @@ function MenuDashboard() {
 			}
 			try {
 				const res = await axios.get(`http://localhost:5000/api/businesses/${businessId}`);
-				console.log('Fetched business:', res.data);
 	
 				if (!Array.isArray(res.data.menus)) {
 					console.error('Expected menus to be an array:', res.data.menus);
@@ -32,7 +31,6 @@ function MenuDashboard() {
 					isEditable: menu.title !== 'Master Menu',
 				}));
 	
-				console.log('Populated Menus:', fetchedMenus);
 				setMenus(fetchedMenus);
 			} catch (err) {
 				console.error('Error fetching business menus:', err);
