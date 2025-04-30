@@ -287,4 +287,72 @@ router.post('/edit-login', async (req, res) => {
 	}
 });
 
+// @route   POST /api/auth/set-business
+// @desc    Get a user
+// @access  Public (no auth yet)
+router.post('/set-business', async (req, res) => {
+	try {
+		const { type } = req.body;
+
+		if (type === 'new') {
+		}
+
+		if (type === 'existing') {
+			const { business_id } = req.body;
+			const { email } = req.cookies;
+
+			if (!business_id) {
+				// business_id is missing
+				return res.status(400).json({
+					error: 'A business is required',
+					message: 'A business is required.',
+				});
+			}
+
+			const foundBusiness = await Business.findOne({
+				_id: business_id,
+			});
+
+			if (!foundBusiness) {
+				// Business doesn't exist
+				return res.status(401).json({
+					error: 'Invalid business',
+					message: 'Invalid business.',
+				});
+			}
+
+			const updatedUser = await User.findOneAndUpdate(
+				{ email: email },
+				{ $set: { business_id: business_id, admin: false } }
+			);
+
+			if (!updatedUser) {
+				// User's business_id was not updated
+				return res.status(401).json({
+					error: 'Could not add user to the business',
+					message: 'Could not add user to the business.',
+				});
+			}
+
+			// Set cookies
+			cookies.updateCookie(res, 'hasBusiness', true);
+			cookies.updateCookie(
+				res,
+				'isAdmin',
+				updatedUser.admin
+			);
+
+			// Send success response
+			res.status(200).json({
+				message: `You have been added to ${foundBusiness.name} successfully.`,
+			});
+		}
+	} catch (err) {
+		res.status(500).json({
+			error: 'An error occurred' + err.message,
+			message: 'An error occurred.',
+		});
+	}
+});
+
 module.exports = router;
