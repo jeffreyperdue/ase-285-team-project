@@ -25,6 +25,7 @@ function GetPasswordField({ name, placeholder }) {
 					placeholder={placeholder}
 					className='password'
 					required
+					autoComplete='off'
 				/>
 
 				{/* dynamically changes eye icon appearance (slash or no slash)
