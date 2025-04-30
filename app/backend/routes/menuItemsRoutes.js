@@ -110,11 +110,19 @@ router.post('/add-menu-item', async (req, res) => {
 /// MenuItemSwap.jsx
 ///
 // @route   GET /api/menuitems/menuswap-menus
-// @desc    Get all menu items
+// @desc    Get all menus for restraunt id
 // @access  Public (no auth yet)
 router.get('/menuswap-menus', async (req, res) => {
   try {
-    const menus = await Menu.find();
+    const { businessID } = req.query; 
+    let filter = {};
+
+    // only get menus belonging to the business
+    if (businessID) {
+      filter = { restaurant: businessID };  
+    }
+
+    const menus = await Menu.find(filter);
 
     // Always ensure Master Menu appears first
     menus.sort((a, b) => {
@@ -122,39 +130,31 @@ router.get('/menuswap-menus', async (req, res) => {
       if (b.title === 'Master Menu') return 1;
       return 0;
     });
-
+    // Return the menus
     res.json(menus);
   } catch (err) {
+    console.error('Error fetching menu:', err);
     res.status(500).json({ error: 'Could not fetch menus' });
   }
 });
 
 // @route   GET /api/menuitem/menuswap-items
-// @desc    Get all menu items
+// @desc    Get all menu items associated with Master Menu ID
 // @access  Public (no auth yet)
 router.get('/menuswap-items', async (req, res) => {
-    try {
-      let menuitems = await MenuItem.find();
-  
-      // If there are no menuItiems pulled from mongodb
-      if (menuitems.length === 0) {
-        // Create Menu Item
-        const menuItem = new MenuItem({
-          title: 'Example Menu Item',
-          description: 'This is shown to customers',
-          ingredients: 'Cheese, bread, broccoli',
-          allergens: ['Dairy, Wheat'],
-          menuID: ['680a79fa3b98428dcf348668']
-        });
-  
-        const saved = await menuItem.save();
-        menuitems = [saved]; 
-      } else {
-       // DO SOMETHING if not saved because oops.
-      }
-  
-      res.json(menuitems || []);
-    } catch (err) {
+  try {
+    const { menuID } = req.query; 
+    let filter = {};
+
+    // only get menuItemss on the menu
+    if (menuID) {
+      filter = { menuIDs: menuID };  
+    }
+	  // Get the menu items 
+    const menuItems = await MenuItems.find(filter);
+
+    res.json(menuitems || []);
+  } catch (err) {
     console.error('Error fetching menu items:', err);
     res.status(500).json({ error: 'Could not fetch menu items' });
   }
@@ -190,7 +190,7 @@ router.get('/swap-menu', async (req, res) => {
 
 
 // @route   PUT /api/menuitem/swap-menu
-// @desc    Edit an existing menu item
+// @desc    Update the existing menuItems
 // @access  Public (no auth yet)
 router.put('/swap-menu', async (req, res) => {
   try {

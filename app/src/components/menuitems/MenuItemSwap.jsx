@@ -1,90 +1,51 @@
 import { useState, useEffect } from 'react';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa'; 
 import Checkbox from './assets/Checkbox'
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import getCookie from '../../assets/cookies';
 // import '../../css/styles.css';
 import '../../css/picklist.scss';
 
 const MenuItemPicklist = () => {
-    const [menus, setMenus] = useState([
-        { 
-            menuID: "0", 
-            name: "Master Menu", 
-            description: "Master Menu", 
-        },
-        { 
-            menuID: "1", 
-            name: "Summer Specials", 
-            description: "Summer menu",
-        },
-        { 
-            menuID: "2", 
-            name: "Spring Surprise", 
-            description: "Spring menu",
-        },
-    ]);
-
-    const [menuItems, setMenuItems] = useState([
-        { 
-             
-            itemID: "1A",
-            name: "Item 1",
-            description: "sammich",
-            allergens: [],
-            isSelected: false,
-            menuIDs: ["0", "1"]
-        },
-        { 
-            itemID: "2A",
-            name: "Item 2",
-            description: "hot dog",
-            allergens: [],
-            isSelected: false,
-            menuIDs: ["0", "1"]
-        },
-        { 
-            itemID: "1C",
-            name: "Menu Item 1",
-            description: "lala",
-            allergens: [],
-            isSelected: false,
-            menuIDs: ["0"]
-        },
-        { 
-            itemID: "2C",
-            name: "Menu Item 2",
-            description: "test 2",
-            allergens: [],
-            isSelected: false,
-            menuIDs: ["0"]
-        },
-        
-        { 
-            itemID: "1B",
-            name: "Spring Item 1",
-            description: "Green Ham and Cheese",
-            allergens: [],
-            isSelected: false,
-            menuIDs: ["0", "2"]
-        },
-        { 
-            itemID: "2B",
-            name: "Spring Item 2",
-            description: "Roasted duck",
-            allergens: [],
-            isSelected: false,
-            menuIDs: ["0", "2"]
-        },
-    ]);
+    const [menus, setMenus] = useState([]);
+    const [menuItems, setMenuItems] = useState([]);
+    const [masterMenu, setMasterMenu] = useState([]);
+    const [otherMenus, setOtherMenus] = useState([]);
+    const [masterMenuID, setMasterMenuID] = useState([]);
     const [selectedItemID, setSelectedItemID] = useState(null);
     const [selectedKeys, setSelectedKeys] = useState(new Set());
     const [searchTerms, setSearchTerms] = useState({ masterMenu: '', otherMenus: '' });
 
-    // Initialize masterMenu and otherMenus directly from the menus array
-    const masterMenu = menus.find(menu => menu.menuID === "0");
-    const otherMenus = menus.filter(menu => menu.menuID !== "0");
 
+    // Call the functions to pull in the menus and menu items.
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const businessID = localStorage.getItem('business_id');
+          if (!businessID) return alert("No business ID found.");
+          
+          // Get the menus based on business ID
+          const menusRes = await axios.get(`/api/menuitems/menuswap-menus?businessID=${businessID}`);
+          setMenus(menusRes.data);
+    
+          const masterMenu = menusRes.data.find(menu => menu.name === "Master Menu");
+          if (masterMenu) {
+            setMasterMenuID(masterMenu._id);
+            // get the menuItems basted on masterMenu ID
+            const itemsRes = await axios.get(`/api/menuitems/menuswap-items?masterMenuID=${masterMenu._id}`);
+            setMenuItems(itemsRes.data);
+          }
+        } catch (error) {
+          console.error('Error loading data:', error);
+          alert("Unable to load the needed data.")
+        }
+      };
+    
+      fetchData();
+    }, []);
+    
+
+    // Filter the lists in real time
     const handleSearchChange = (menuID, value) => {
         setSearchTerms((prev) => ({ ...prev, [menuID]: value }));
     };
@@ -164,7 +125,7 @@ const MenuItemPicklist = () => {
           </div>
         );
     };
-
+    // Menu is moved
     const handleMoveToMenu = () => {
       const targetMenu = menus.find((menu) => menu.isSelected && menu.menuID !== "0");
     
@@ -172,7 +133,7 @@ const MenuItemPicklist = () => {
         alert("No target menu selected.");
         return;
       }
-    
+      // showing the menuItems
       setMenuItems((prevItems) => {
         return prevItems.map(item => {
           const itemSelected = [...selectedKeys].some(key => key.startsWith(item.itemID));
@@ -238,12 +199,33 @@ const MenuItemPicklist = () => {
       );
     };
     
+    // Saving the altered menuItems
+    const handleSave = async () => {
+      try {
+        const saveRequests = menuItems.map(menuItem =>
+          axios.post('http://localhost:5000/api/menuitems/swap-menu', {
+            name: menuItem.name,
+            description: menuItem.description,
+            ingredients: menuItem.ingredients,
+            allergens: menuItem.selectedAllergens || [],
+            menuIDs: menuItem.menuIDs
+          })
+        );
+        await Promise.all(saveRequests);
+    
+        alert('All items saved successfully!');
+      } catch (err) {
+        console.error('Error saving items:', err);
+        alert('Failed to save all items.');
+      }
+    }
+
     return (
       <div className='center add-center-flex'>
         {/* Top section: buttons + menu name */}
         <div className="picklist-header-row">
           <div style={{ flex: 1, textAlign: 'left' }}>
-            <button className="button">Save</button>
+            <button className="button" onClick={handleSave}>Save</button>
           </div>
           <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>Add Item to Menu</div>
         </div>

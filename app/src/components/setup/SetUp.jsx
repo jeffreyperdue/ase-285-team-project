@@ -41,7 +41,7 @@ function SetUp({ step }) {
 	
 			// Step 1: Create business if not already created
 			if (!businessId) {
-				const response = await fetch('localhost:5000/api/businesses', {
+				const response = await fetch('http://localhost:5000/api/businesses', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({

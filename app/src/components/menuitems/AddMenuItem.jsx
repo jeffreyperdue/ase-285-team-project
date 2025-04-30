@@ -1,13 +1,12 @@
-import { useState, changeState } from 'react';
+import { useState, useEffect } from 'react';
 import '../../css/styles.css'
 import AllergenList from '../auth/AllergenList';
 import { FaAngleDown, FaAngleRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import getCookie from '../../assets/cookies';
 import axios from 'axios';
 
 // Collapsible Panel Component
-const CollapsiblePanel = ({ header, formData, onFormChange, onAddPanel }) => {
+const CollapsiblePanel = ({ header, formData, onFormChange, onAddPanel, masterMenuID }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedAllergens, setSelectedAllergens] = useState([]);
 
@@ -19,16 +18,18 @@ const CollapsiblePanel = ({ header, formData, onFormChange, onAddPanel }) => {
         const { name, value } = e.target;
         onFormChange({ ...formData, [name]: value });
     };
-
+    
+    // Save single menuItem
     const handleSave = async () => {
         try {
-            const menuId = localStorage.getItem('menu_id');
-          const response = await axios.post('http://localhost:5000/api/menuitems/add-menu-item', {
-            name: formData.name,
-            description: formData.description,
-            ingredients: formData.ingredients,
-            allergens: formData.selectedAllergens || [],
-            menuIDs: ['680a79fa3b98428dcf348668', menuId]
+            const menuID = localStorage.getItem('menu_id');
+            const menuIDs = masterMenuID === menuID ? [masterMenuID] : [masterMenuID, menuID];
+            const response = await axios.post('http://localhost:5000/api/menuitems/add-menu-item', {
+                name: formData.name,
+                description: formData.description,
+                ingredients: formData.ingredients,
+                allergens: formData.selectedAllergens || [],
+                menuIDs: menuIDs
           });
           console.log('Saved menu item:', response.data);
           alert('Item saved successfully!');
@@ -144,23 +145,44 @@ const CollapsiblePanel = ({ header, formData, onFormChange, onAddPanel }) => {
 
 // The main form
 const AddMenuItemForm = () => {
+    const [masterMenuID, setMasterMenuID] = useState('');
+    const [menuID, setMenuID] = useState('');
+    const[routeID, setRouteID] = useState('');
     const [panels, setPanels] = useState([
-        { name: '', ingredients: '', description: '', selectedAllergens: [] }
+        { name: '', ingredients: '', description: '', selectedAllergens: [], menuIDs: [] }
     ]);
 
-    
+    // Call the functions to pull in the menus and menu items.
+    useEffect(() => {
+        // Get the MasterMenu ID
+        const storedMasterID = localStorage.getItem('masterMenu_ID');
+        
+        if (storedMasterID) {
+            setMasterMenuID(storedMasterID);
+        }
+        const storedMenuID = localStorage.getItem('menu_id');
+        if (storedMenuID) {
+            setMenuID(storedMenuID)
+        }
+        
+        const routeMenuID = masterMenuID === menuID ? [masterMenuID] : [masterMenuID, menuID];
+        setRouteID(routeMenuID)
+    }, []);
+
+    // Save all menuItems
+    // must exist out side due to trying to get all of them.
     const handleSaveAll = async () => {
         try {
-            const menuId = localStorage.getItem('menu_id');
-          const saveRequests = panels.map(panel =>
-            axios.post('http://localhost:5000/api/menuitems/add-menu-item', {
-              name: panel.name,
-              description: panel.description,
-              ingredients: panel.ingredients,
-              allergens: panel.selectedAllergens || [],
-              menuIDs: ['680a79fa3b98428dcf348668',menuId]
-            })
-          );
+            const menuIDs = masterMenuID === menuID ? [masterMenuID] : [masterMenuID, menuID];
+            const saveRequests = panels.map(panel =>
+                axios.post('http://localhost:5000/api/menuitems/add-menu-item', {
+                    name: panel.name,
+                    description: panel.description,
+                    ingredients: panel.ingredients,
+                    allergens: panel.selectedAllergens || [],
+                    menuIDs: menuIDs
+                })
+            );
           await Promise.all(saveRequests);
       
           alert('All items saved successfully!');
@@ -182,14 +204,9 @@ const AddMenuItemForm = () => {
 
     // For buttons
     const navigate = useNavigate();
-	const isAuthorized = getCookie('isAuthorized');
     const toMenu = (event) => {
-      event.preventDefault();
-      if (isAuthorized === 'true') {
-        navigate(`/menuitems{menuID}`);
-      } else {
-        navigate('/');
-      }
+        event.preventDefault();
+        navigate(`/menuitems/${routeID}`);
     };
 
     return (
@@ -210,6 +227,7 @@ const AddMenuItemForm = () => {
                         formData={panelData}
                         onFormChange={(newFormData) => handlePanelChange(index, newFormData)}
                         onAddPanel={handleAddPanel}
+                        masterMenuID={masterMenuID}
                     />
                     ))}
             </div>
