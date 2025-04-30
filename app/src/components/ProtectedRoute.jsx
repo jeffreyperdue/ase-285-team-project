@@ -25,6 +25,10 @@ function ProtectedRoute({ component, route, admin }) {
 
 	/* The following statements only execute if the user is logged in. */
 
+	if (route === 'chooseBusiness') {
+		return component;
+	}
+
 	// Prevents user from accessing sign in/up page if they're logged in
 	if (route === 'signInUp') {
 		// Redirect to dashboard
@@ -65,7 +69,7 @@ function ProtectedRoute({ component, route, admin }) {
 		// Redirect to setup page
 		return (
 			<Navigate
-				to='/step1'
+				to='/choose-business'
 				replace
 			/>
 		);

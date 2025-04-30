@@ -13,7 +13,9 @@ const setCookies = (res, user, extraFields = {}) => {
 		isAdmin: user.admin,
 		isAuthorized: true,
 		hasBusiness:
-			user.business_id && user.business_id !== ''
+			user.business_id &&
+			user.business_id !== '' &&
+			user.business_id !== 'create'
 				? true
 				: false,
 		// Optional

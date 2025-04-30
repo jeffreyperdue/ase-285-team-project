@@ -10,6 +10,61 @@ ul {
 }
 
 /* Classes --------------------------------------------*/
+.choose {
+	&-business {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		flex: 1 1 auto;
+
+		&-form {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+		}
+
+		&-container {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+			flex: 1 1 auto;
+		}
+	}
+}
+
+.business {
+	&-options {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		flex: 1 1 auto;
+	}
+
+	// Targets internal classes of React's Select component
+	&__ {
+		&control {
+			cursor: pointer !important;
+		}
+
+		&option {
+			cursor: pointer !important;
+		}
+	}
+}
+
+.radio {
+	&-btn {
+		&-container {
+			// display: flex;
+			display: grid;
+			grid-template-columns: min-content auto;
+			gap: 5px;
+			align-items: center;
+			flex: 0 0 auto;
+		}
+	}
+}
+
 .set-up {
 	&-container {
 		padding: 0px 50px;
@@ -57,6 +112,7 @@ ul {
 	background: var(--mint-green);
 }
 
+.set-up-container,
 .step1,
 .step2,
 .step3 {
@@ -70,6 +126,7 @@ ul {
 	}
 }
 
+.choose-business,
 .edit-login-info,
 .step1,
 .step2,
