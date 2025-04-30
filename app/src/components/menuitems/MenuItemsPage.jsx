@@ -5,142 +5,133 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../css/styles.css';
 
-const mockMenuItems = [
-  {
-    id: 1,
-    name: 'Cheeseburger',
-    description: 'Classic burger with cheese and pickles.',
-    ingredients: 'Beef, Cheese, Bun, Pickles, Onion, Tomato',
-    allergens: []
-  },
-  {
-    id: 2,
-    name: 'Vegan Wrap',
-    description: 'Fresh and healthy wrap with veggies.',
-    ingredients: 'Lettuce, Tomato, Cucumber, Hummus, Wrap',
-    allergens: []
-  },
-];
-
 const MenuItemsPage = () => {
-  const [menuItems, setMenuItems] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const businessId = localStorage.getItem('business_id');
-  const location = useLocation();
-  const menuTitle = location.state?.menuTitle || 'Untitled Menu';
-  const navigate = useNavigate();
+    const [menuItems, setMenuItems] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [fetchedMenu, setFetchedMenu] = useState([]);
+    const location = useLocation();
+    const menuTitle = location.state?.menuTitle || 'Untitled Menu';
+    const navigate = useNavigate();
 
- // fetch menuItems on initial renders
- const fetchMenuItems = async () => {
-  try {
-    const menuID = JSON.parse(localStorage.getItem('menu_ID')); // Get from localStorage
-    console.log(menuID)
+    // To be used in useEffect to fetch menuItems on intiial render, and to be called after handleDelete is used
+    const fetchMenu = async () => {
+        try {
+            const businessID = localStorage.getItem('business_id');
+            const encodedTitle = encodeURIComponent(menuTitle);
+            const res = await axios.get(
+                `http://localhost:5000/api/menuitems/menu?encodedMenuName=${encodedTitle}&businessID=${businessID}`
+            );
+            setFetchedMenu(res.data);
+        } catch (err) {
+            console.error('Error fetching menu:', err);
+        }
+    };
 
-    const res = await axios.get(`http://localhost:5000/api/menuitems?menuID=${menuID}`);
-    const fetchedMenuItems = res.data.map(menuItem => ({
-      ...menuItem,
-    }));
-    setMenuItems(fetchedMenuItems);
-  } catch (err) {
-    console.error('Error fetching menu items:', err);
-  }
-  };
+    // used for refreshing the menu items.
+    const fetchMenuItems = async () => {
+        if (!fetchedMenu || !fetchedMenu._id) return;
 
- useEffect(() => {
-  const params = new URLSearchParams(location.search);
-  console.log(params)
-  let menuID = params.get('menuID');
+        try {
+            const itemRes = await axios.get(`http://localhost:5000/api/menuitems?menuID=${fetchedMenu._id}`);
+            const fetchedMenuItems = itemRes.data.map(menuItem => ({
+                ...menuItem,
+            }));
+            setMenuItems(fetchedMenuItems);
+        } catch (err) {
+            console.error('Error fetching menu items:', err);
+        }
+    };
 
-  if (menuID) {
-    // Save to localStorage if found in URL
-    localStorage.setItem('menu_ID', JSON.stringify(menuID));
-  } else {
-    // Otherwise try to pull from localStorage
-    const storedID = localStorage.getItem('menu_ID');
-    if (storedID) {
-      menuID = JSON.parse(storedID);
-      console.log('Using stored menuID:', menuID);
-    } else {
-      console.warn('No menuID found in URL or localStorage.');
-    }
-  }
-  fetchMenuItems();
-}, [location.search]);
+    // Runs when the page is rendered
+    useEffect(() => {
+        // gets the menu to get the menu items from
+        fetchMenu();
+    }, [location.search]);
 
-  // saves the updated menu item.
-  const handleSave = async (updatedItem) => {
-    try {
-      await axios.put(`http://localhost:5000/api/menuitems/${updatedItem._id}`, updatedItem);
-      alert('Menu item updated successfully!');
-      fetchMenuItems();
-    } catch (err) {
-      console.error('Error saving item:', err);
-      alert('Failed to update item.');
-    }
-  };
+    useEffect(() => {
+        // Loads teh menu Items
+        fetchMenuItems();
+    }, [fetchedMenu]);
+
+    // saves the updated menu item.
+    const handleSave = async (updatedItem) => {
+        try {
+        await axios.put(`http://localhost:5000/api/menuitems/${updatedItem._id}`, updatedItem);
+        alert('Menu item updated successfully!');
+        fetchMenuItems();
+        } catch (err) {
+        console.error('Error saving item:', err);
+        alert('Failed to update item.');
+        }
+    };
 
   // handles deleting a menuItem
-  const handleDelete = (deletedId) => {
-    // refreshes after a delete.
-    fetchMenuItems();
-  };
+    const handleDelete = (deletedId) => {
+        // refreshes after a delete.
+        fetchMenuItems();
+    };
 
   // handles filtering the items for search
-  const filteredItems = menuItems.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    const filteredItems = menuItems.filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
   // for navigation
-  const toAddItem = (event) => {
-    event.preventDefault();
-    navigate('/add-menu-item');
-  };
-  // for navigation
-  const toMenuSwap = (event) => {
-    event.preventDefault();
-    navigate('/swap-menu');
-  }
+    const toAddItem = (event) => {
+        event.preventDefault();
+        navigate('/add-menu-item', {
+			state: { menuID: fetchedMenu._id,
+                menuTitle: fetchedMenu.title
+             },
+		});
+    };
 
-return (
-    <div className='center'>
-      <div className="menu-items-container">
-        {/* Top section: buttons + menu name */}
-        <div className="menu-header-row">
-      <div style={{ flex: 1 }}>
-        <button className="button" onClick={toAddItem}>+ Add Item</button>
-      </div>
-      <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>{menuTitle}</div>
-      <div style={{ flex: 1, textAlign: 'right' }}>
-        <button className="button" onClick={toMenuSwap}>Integrate Menus</button>
-      </div>
-    </div>
+    // for navigation
+    const toMenuSwap = (event) => {
+        event.preventDefault();
+        navigate('/swap-menu');
+    }
 
-        {/* Search bar */}
-        <div className="menu-search-wrapper">
-          <input
-            className="menu-search"
-            type="text"
-            placeholder="Search for Item"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+    return (
+        <div className='center'>
+        <div className="menu-items-container">
+            {/* Top section: buttons + menu name */}
+            <div className="menu-header-row">
+        <div style={{ flex: 1 }}>
+            <button className="button" onClick={toAddItem}>+ Add Item</button>
+        </div>
+        <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>{menuTitle}</div>
+        <div style={{ flex: 1, textAlign: 'right' }}>
+            <button className="button" onClick={toMenuSwap}>Integrate Menus</button>
+        </div>
         </div>
 
-        {/* Menu items list */}
-        <div className="menu-item-list">
-          <h2>Menu Items</h2>
-          {filteredItems.map((item) => (
-            <MenuItemPanel
-              key={item._id}
-              item={item}
-              onSave={handleSave}
-              onDelete={handleDelete}
+            {/* Search bar */}
+            <div className="menu-search-wrapper">
+            <input
+                className="menu-search"
+                type="text"
+                placeholder="Search for Item"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
             />
-          ))}
+            </div>
+
+            {/* Menu items list */}
+            <div className="menu-item-list">
+            <h2>Menu Items</h2>
+            {filteredItems.map((item) => (
+                <MenuItemPanel
+                key={item._id}
+                item={item}
+                onSave={handleSave}
+                onDelete={handleDelete}
+                />
+            ))}
+            </div>
         </div>
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default MenuItemsPage;

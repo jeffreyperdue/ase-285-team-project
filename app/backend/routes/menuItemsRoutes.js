@@ -8,6 +8,33 @@ const mongoose = require('mongoose');
 // MenuItems.jsx
 //
 
+// @route GET /api/menuitems/menu/:menuname
+// @desc Get menu by menuTitle
+// @access Public
+router.get('/menu/', async (req, res) => {
+    try {
+        const { encodedMenuName, businessID } = req.query;
+
+        if (!encodedMenuName || !businessID) {
+            return res.status(400).json({ error: 'Both encodedMenuName and businessID are required' });
+        }
+        // decript from safe for url formate
+        const menuName = decodeURIComponent(encodedMenuName);
+
+        const filter = {
+            title: menuName,
+            restaurant: businessID, 
+        };
+        // get only the menu
+        const menu = await Menu.findOne(filter);
+
+        res.json(menu || []);
+    } catch (err) {
+    console.error('Error fetching menu:', err);
+    res.status(500).json({ error: 'Could not fetch menu' });
+    }
+});
+
 // @route GET /api/menuitems
 // @desc Get menu items by menuID (optional)
 // @access Public
@@ -30,6 +57,7 @@ router.get('/', async (req, res) => {
   }
 });
   
+
 // @route   PUT api/menuitems
 // @desc    Edit an existing menu item
 // @access  Public (no auth yet)
