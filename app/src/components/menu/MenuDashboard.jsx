@@ -6,6 +6,7 @@ import deleteIcon from '../../icons/delete.png';
 
 function MenuDashboard() {
     const [menus, setMenus] = useState([]);
+	const [masterMenuID, setMasterMenuID] = useState([]);
     const [showConfirm, setShowConfirm] = useState(false);
     const [menuToDelete, setMenuToDelete] = useState(null);
 
@@ -39,9 +40,17 @@ function MenuDashboard() {
 		};
 		fetchMenus();
 	}, []);
-	
-	
-	
+
+	// Used for defaulting new Menu Items to be on the masterMenu later
+	useEffect(() => {
+		if (menus.length > 0) {
+			const masterMenu = menus.find(menu => menu.title === 'Master Menu');
+			if (masterMenu?._id) {
+				setMasterMenuID(masterMenu._id);
+				localStorage.setItem('masterMenu_ID', masterMenu._id);
+			}
+		}
+	}, [menus]);
 
     // Add a new menu to backend and update state
 	const handleAddMenu = async () => {
