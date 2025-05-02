@@ -89,9 +89,6 @@ router.put('/update-title-description', async (req, res) => {
 // @route   DELETE /api/menus/:id
 // @desc    Delete a menu by ID
 // @access  Public (no auth yet)
-// @route   DELETE /api/menus/:id
-// @desc    Delete a menu by ID and remove it from its business
-// @access  Public (no auth yet)
 router.delete('/:id', async (req, res) => {
   try {
     const menuId = req.params.id;

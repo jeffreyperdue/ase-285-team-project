@@ -1,15 +1,21 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const app = require('../../server');
+const express = require('express');
+const businessRoutes = require('../backend/routes/businessRoutes');
 const Business = require('../backend/schemas/Business');
 
+let app;
 let mongoServer;
 
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
   await mongoose.connect(mongoUri);
+
+  app = express();
+  app.use(express.json());
+  app.use('/api/businesses', businessRoutes);
 });
 
 afterAll(async () => {
@@ -18,95 +24,99 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  // Clear the database before each test
   await Business.deleteMany({});
 });
 
 describe('Business Routes', () => {
-  test('POST /api/menus - should create a new business', async () => {
+  test('POST /api/businesses - creates a new business', async () => {
     const businessData = {
-      name: 'New Restaurant',
-      address: '456 New St',
-      allergens: ['dairy'],
-      restaurant: new mongoose.Types.ObjectId().toString()
+      name: 'Test Business',
+      url: 'http://test.com',
+      address: '123 Test St',
+      allergens: ['peanuts'],
+      diets: ['vegan']
     };
 
-    const response = await request(app)
-      .post('/api/menus')
+    const res = await request(app)
+      .post('/api/businesses')
       .send(businessData)
       .expect(201);
 
-    expect(response.body.name).toBe(businessData.name);
-    expect(response.body.address).toBe(businessData.address);
-    expect(response.body.allergens).toEqual(businessData.allergens);
-    expect(response.body.restaurant).toBe(businessData.restaurant);
+    expect(res.body.name).toBe('Test Business');
+    expect(res.body.allergens).toContain('peanuts');
   });
 
-  test('GET /api/menus/:id - should retrieve a business', async () => {
-    const business = await Business.create({
-      name: 'Test Get',
-      address: '789 Get St',
-      allergens: [],
-      restaurant: new mongoose.Types.ObjectId(),
-      menus: []
-    });
+  test('GET /api/businesses - returns all businesses', async () => {
+    await Business.create({ name: 'One Biz' });
 
-    const response = await request(app)
-      .get(`/api/menus/${business._id}`)
+    const res = await request(app)
+      .get('/api/businesses')
       .expect(200);
 
-    expect(response.body._id).toBe(business._id.toString());
-    expect(response.body.name).toBe('Test Get');
+    expect(res.body.length).toBe(1);
+    expect(res.body[0].name).toBe('One Biz');
   });
 
-  test('GET /api/menus/:id - should return 404 for non-existent business', async () => {
+  test('GET /api/businesses/:id - returns a business by ID', async () => {
+    const biz = await Business.create({ name: 'Detail Biz' });
+
+    const res = await request(app)
+      .get(`/api/businesses/${biz._id}`)
+      .expect(200);
+
+    expect(res.body.name).toBe('Detail Biz');
+  });
+
+  test('PUT /api/businesses/:id - updates a business', async () => {
+    const biz = await Business.create({ name: 'Old Name' });
+
+    const res = await request(app)
+      .put(`/api/businesses/${biz._id}`)
+      .send({ name: 'New Name' })
+      .expect(200);
+
+    expect(res.body.name).toBe('New Name');
+  });
+
+  test('DELETE /api/businesses/:id - deletes a business', async () => {
+    const biz = await Business.create({ name: 'To Delete' });
+
+    await request(app)
+      .delete(`/api/businesses/${biz._id}`)
+      .expect(200);
+
+    const deleted = await Business.findById(biz._id);
+    expect(deleted).toBeNull();
+  });
+
+  test('POST /api/businesses - fails with duplicate name', async () => {
+    await Business.create({ name: 'Duplicate' });
+
+    const res = await request(app)
+      .post('/api/businesses')
+      .send({ name: 'Duplicate' })
+      .expect(400);
+
+    expect(res.body.error).toMatch(/already exists/i);
+  });
+
+  test('PUT /api/businesses/:id - fails with duplicate name', async () => {
+    const first = await Business.create({ name: 'Biz One' });
+    const second = await Business.create({ name: 'Biz Two' });
+
+    const res = await request(app)
+      .put(`/api/businesses/${second._id}`)
+      .send({ name: 'Biz One' })
+      .expect(400);
+
+    expect(res.body.error).toMatch(/already exists/i);
+  });
+
+  test('GET /api/businesses/:id - returns 404 if not found', async () => {
     const fakeId = new mongoose.Types.ObjectId();
+
     await request(app)
-      .get(`/api/menus/${fakeId}`)
+      .get(`/api/businesses/${fakeId}`)
       .expect(404);
-  });
-
-  test('PUT /api/menus/:id - should update a business', async () => {
-    const business = await Business.create({
-      name: 'Before Update',
-      address: '123 Old St',
-      allergens: [],
-      restaurant: new mongoose.Types.ObjectId(),
-      menus: []
-    });
-
-    const updateData = {
-      name: 'After Update',
-      address: '456 New St',
-      allergens: ['peanuts'],
-      menus: [new mongoose.Types.ObjectId()]
-    };
-
-    const response = await request(app)
-      .put(`/api/menus/${business._id}`)
-      .send(updateData)
-      .expect(200);
-
-    expect(response.body.name).toBe(updateData.name);
-    expect(response.body.address).toBe(updateData.address);
-    expect(response.body.allergens).toEqual(updateData.allergens);
-    expect(response.body.menus.length).toBe(1);
-  });
-
-  test('DELETE /api/menus/:id - should delete a business', async () => {
-    const business = await Business.create({
-      name: 'To Delete',
-      address: '123 Delete St',
-      allergens: [],
-      restaurant: new mongoose.Types.ObjectId(),
-      menus: []
-    });
-
-    await request(app)
-      .delete(`/api/menus/${business._id}`)
-      .expect(200);
-
-    const deletedBusiness = await Business.findById(business._id);
-    expect(deletedBusiness).toBeNull();
   });
 });
