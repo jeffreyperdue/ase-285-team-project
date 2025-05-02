@@ -30,10 +30,16 @@ const MenuItemPicklist = () => {
           
             // Get the menus based on business ID
             const menusRes = await axios.get(`http://localhost:5000/api/menuitems/menuswap-menus?businessID=${businessID}`);
-            setMenus(menusRes.data);
 
-            const masterMenu = menusRes.data.find(menu => menu.title === "Master Menu");
-            setOtherMenus(menusRes.data.filter(menu => menu.title !== "Master Menu"));
+            // Add isSelected to each menu object
+            const menusWithSelection = menusRes.data.map(menu => ({
+                ...menu,
+                isSelected: false
+            }));
+            setMenus(menusWithSelection);
+
+            const masterMenu = menusWithSelection.find(menu => menu.title === "Master Menu");
+            setOtherMenus(menusWithSelection.filter(menu => menu.title !== "Master Menu"));
 
             if (masterMenu) {
                 setMasterMenu(masterMenu);
@@ -92,7 +98,6 @@ const MenuItemPicklist = () => {
             )
         );
     };    
-    console.log("Menus:", menus)
     // Rendering the Tree of Menus and their MenuItems
     const renderMenuTree = (menu, searchTerm) => {
         // Getting the items for the tree.
@@ -104,12 +109,12 @@ const MenuItemPicklist = () => {
 
         return (
             <div key={menu._id} className="menu-tree">
-                <input
-                type="checkbox"
-                label={menu.title}
-                isSelected={menu.isSelected || false}
-                onCheckboxChange={() => handleMenuCheckboxChange(menu._id)}
-            />
+                <Checkbox
+                    label={menu.title}
+                    isSelected={menu.isSelected || false}
+                    onCheckboxChange={() => handleMenuCheckboxChange(menu._id)}
+                    disabled={menu.title === "Master Menu"}
+                />
             <ul className="ml-4 mt-2">
                 {itemsForThisMenu.length > 0 ? (
                     itemsForThisMenu.map((item) => {
@@ -262,11 +267,13 @@ const MenuItemPicklist = () => {
                 className="menu-search-bar"
             />
             <div className="menu-tree-container">
-            {otherMenus.map((menu,index) => (
-                <div key={index}>
-                    {renderMenuTree(menu, searchTerms.otherMenus)}
-                </div>
-            ))}
+                {menus
+                    .filter(menu => menu.title !== "Master Menu")
+                    .map((menu) => (
+                        <div key={menu._id}>
+                        {renderMenuTree(menu, searchTerms.otherMenus)}
+                        </div>
+                ))}
             </div>
           </div>
       
