@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Business = require('../schemas/Business');
+const Menu = require('../schemas/Menu');
 const mongoose = require('mongoose');
 
 // @route   GET /api/businesses/
@@ -45,6 +46,7 @@ router.get('/:id', async (req, res) => {
 
 		res.json(business);
 	} catch (err) {
+		console.error('GET /:id error:', err);
 		res.status(500).json({ error: 'Could not fetch business' });
 	}
 });

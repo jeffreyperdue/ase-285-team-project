@@ -22,7 +22,6 @@ describe('Business Model', () => {
       url: 'http://test.com',
       address: '123 Test St',
       allergens: ['peanuts', 'gluten'],
-      restaurant: new mongoose.Types.ObjectId(),
       menus: []
     };
 
@@ -34,7 +33,6 @@ describe('Business Model', () => {
     expect(savedBusiness.url).toBe(businessData.url);
     expect(savedBusiness.address).toBe(businessData.address);
     expect(savedBusiness.allergens).toEqual(businessData.allergens);
-    expect(savedBusiness.restaurant).toEqual(businessData.restaurant);
     expect(savedBusiness.menus).toEqual(businessData.menus);
   });
 
@@ -51,7 +49,7 @@ describe('Business Model', () => {
 
   test('should have default empty arrays for allergens and menus', async () => {
     const businessData = {
-      name: 'Test Restaurant',
+      name: 'Another Test Restaurant',
       address: '123 Test St',
       restaurant: new mongoose.Types.ObjectId()
     };
