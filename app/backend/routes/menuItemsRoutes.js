@@ -138,7 +138,7 @@ router.post('/add-menu-item', async (req, res) => {
 /// MenuItemSwap.jsx
 ///
 // @route   GET /api/menuitems/menuswap-menus
-// @desc    Get all menus for restraunt id
+// @desc    Get all menus for business id
 // @access  Public (no auth yet)
 router.get('/menuswap-menus', async (req, res) => {
   try {
@@ -158,6 +158,7 @@ router.get('/menuswap-menus', async (req, res) => {
       if (b.title === 'Master Menu') return 1;
       return 0;
     });
+
     // Return the menus
     res.json(menus);
   } catch (err) {
@@ -166,7 +167,7 @@ router.get('/menuswap-menus', async (req, res) => {
   }
 });
 
-// @route   GET /api/menuitem/menuswap-items
+// @route   GET /api/menuitems/menuswap-items
 // @desc    Get all menu items associated with Master Menu ID
 // @access  Public (no auth yet)
 router.get('/menuswap-items', async (req, res) => {
@@ -179,9 +180,9 @@ router.get('/menuswap-items', async (req, res) => {
       filter = { menuIDs: menuID };  
     }
 	  // Get the menu items 
-    const menuItems = await MenuItems.find(filter);
+    const menuItems = await MenuItem.find(filter);
 
-    res.json(menuitems || []);
+    res.json(menuItems || []);
   } catch (err) {
     console.error('Error fetching menu items:', err);
     res.status(500).json({ error: 'Could not fetch menu items' });

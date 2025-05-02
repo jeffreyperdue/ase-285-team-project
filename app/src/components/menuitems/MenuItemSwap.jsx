@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa'; 
+import { useLocation } from 'react-router-dom';
 import Checkbox from './assets/Checkbox'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -15,30 +16,37 @@ const MenuItemPicklist = () => {
     const [selectedItemID, setSelectedItemID] = useState(null);
     const [selectedKeys, setSelectedKeys] = useState(new Set());
     const [searchTerms, setSearchTerms] = useState({ masterMenu: '', otherMenus: '' });
+    const location = useLocation();
+    const menuTitle = location.state?.menuTitle || 'Untitled Menu';
+    const navigate = useNavigate();
 
 
     // Call the functions to pull in the menus and menu items.
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const businessID = localStorage.getItem('business_id');
-          if (!businessID) return alert("No business ID found.");
+            const businessID = localStorage.getItem('business_id');
+            if (!businessID) return alert("No business ID found.");
           
-          // Get the menus based on business ID
-          const menusRes = await axios.get(`/api/menuitems/menuswap-menus?businessID=${businessID}`);
-          setMenus(menusRes.data);
-    
-          const masterMenu = menusRes.data.find(menu => menu.name === "Master Menu");
-          if (masterMenu) {
-            setMasterMenuID(masterMenu._id);
-            // get the menuItems basted on masterMenu ID
-            const itemsRes = await axios.get(`/api/menuitems/menuswap-items?masterMenuID=${masterMenu._id}`);
-            setMenuItems(itemsRes.data);
-          }
+            // Get the menus based on business ID
+            const menusRes = await axios.get(`http://localhost:5000/api/menuitems/menuswap-menus?businessID=${businessID}`);
+            setMenus(menusRes.data);
+
+            const masterMenu = menusRes.data.find(menu => menu.title === "Master Menu");
+            setOtherMenus(menusRes.data.filter(menu => menu.title !== "Master Menu"));
+
+            if (masterMenu) {
+                setMasterMenu(masterMenu);
+                setMasterMenuID(masterMenu._id);
+
+                const itemsRes = await axios.get(`http://localhost:5000/api/menuitems/menuswap-items?menuID=${masterMenu._id}`);
+                setMenuItems(itemsRes.data);
+            }
+
         } catch (error) {
           console.error('Error loading data:', error);
-          alert("Unable to load the needed data.")
-        }
+          alert("Unable to load the menus.")
+        };
       };
     
       fetchData();
@@ -92,33 +100,32 @@ const MenuItemPicklist = () => {
             item.name.toLowerCase().includes(searchTerm.toLowerCase())
           );
 
-        let localCounter = 0; 
-
+        const localCounter = 0;
         return (
           <div key={menu.menuID} className="menu-tree">
             <Checkbox
-              label={menu.name}
+              label={menu.title}
               isSelected={menu.isSelected || false}
               onCheckboxChange={() => handleMenuCheckboxChange(menu.menuID)}
             />
             <ul className="ml-4 mt-2">
-              {itemsForThisMenu.length > 0 ? (
-                itemsForThisMenu.map((item, localCounter) => {
-                  localCounter++; // Increment counter for each item
-                  return (
-                    <li
-                      key={`${item.itemID}_${localCounter}`}
-                      className={`text-sm ${item.itemID === selectedItemID ? "bg-yellow-100" : "text-gray-500"}`}
-                    >
-                      <Checkbox
-                        label={item.name}
-                        isSelected={selectedKeys.has(`${item.itemID}_${localCounter}`)}
-                        onCheckboxChange={() => handleCheckboxChange(`${item.itemID}_${localCounter}`)}
-                      />
-                    </li>
-                  );
-                })
-              ) : (
+                {itemsForThisMenu.length > 0 ? (
+                    localCounter++,
+                    itemsForThisMenu.map((item, index) => {
+                        return (
+                        <li
+                        key={`${item.itemID}_${index}`}
+                        className={`text-sm ${item.itemID === selectedItemID ? "bg-yellow-100" : "text-gray-500"}`}
+                        >
+                        <Checkbox
+                            label={item.name}
+                            isSelected={selectedKeys.has(`${item.itemID}_${index}`)}
+                            onCheckboxChange={() => handleCheckboxChange(`${item.itemID}_${index}`)}
+                        />
+                        </li>
+                        );
+                    })
+                ) : (
                 <li className="text-sm text-gray-400 italic">No items found</li>
               )}
             </ul>
@@ -135,7 +142,7 @@ const MenuItemPicklist = () => {
       }
       // showing the menuItems
       setMenuItems((prevItems) => {
-        return prevItems.map(item => {
+        return prevItems.map(item  => {
           const itemSelected = [...selectedKeys].some(key => key.startsWith(item.itemID));
           if (itemSelected) {
             if (!item.menuIDs.includes(targetMenu.menuID)) {
@@ -220,6 +227,13 @@ const MenuItemPicklist = () => {
       }
     }
 
+    // Go back to menu
+    const toMenu = (event) => {
+        navigate('/menuitems', {
+            state: { menuTitle: menuTitle }, 
+        });
+    };
+
     return (
       <div className='center add-center-flex'>
         {/* Top section: buttons + menu name */}
@@ -228,6 +242,7 @@ const MenuItemPicklist = () => {
             <button className="button" onClick={handleSave}>Save</button>
           </div>
           <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>Add Item to Menu</div>
+          <div style={{ flex: 1}}><button className="button" onClick={toMenu}>Return to Menu</button></div>
         </div>
 
         <div className="flex-container menu-items-container">
@@ -244,7 +259,11 @@ const MenuItemPicklist = () => {
                 className="menu-search-bar"
             />
             <div className="menu-tree-container">
-              {otherMenus.map((menu) => renderMenuTree(menu, searchTerms.otherMenus))}
+            {otherMenus.map((menu) => (
+                <div key={menu.menuID}>
+                    {renderMenuTree(menu, searchTerms.otherMenus)}
+                </div>
+            ))}
             </div>
           </div>
       
