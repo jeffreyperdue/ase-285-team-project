@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa'; 
+import { useLocation } from 'react-router-dom';
 import Checkbox from './assets/Checkbox'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -15,30 +16,43 @@ const MenuItemPicklist = () => {
     const [selectedItemID, setSelectedItemID] = useState(null);
     const [selectedKeys, setSelectedKeys] = useState(new Set());
     const [searchTerms, setSearchTerms] = useState({ masterMenu: '', otherMenus: '' });
+    const location = useLocation();
+    const menuTitle = location.state?.menuTitle || 'Untitled Menu';
+    const navigate = useNavigate();
 
 
     // Call the functions to pull in the menus and menu items.
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const businessID = localStorage.getItem('business_id');
-          if (!businessID) return alert("No business ID found.");
+            const businessID = localStorage.getItem('business_id');
+            if (!businessID) return alert("No business ID found.");
           
-          // Get the menus based on business ID
-          const menusRes = await axios.get(`/api/menuitems/menuswap-menus?businessID=${businessID}`);
-          setMenus(menusRes.data);
-    
-          const masterMenu = menusRes.data.find(menu => menu.name === "Master Menu");
-          if (masterMenu) {
-            setMasterMenuID(masterMenu._id);
-            // get the menuItems basted on masterMenu ID
-            const itemsRes = await axios.get(`/api/menuitems/menuswap-items?masterMenuID=${masterMenu._id}`);
-            setMenuItems(itemsRes.data);
-          }
+            // Get the menus based on business ID
+            const menusRes = await axios.get(`http://localhost:5000/api/menuitems/menuswap-menus?businessID=${businessID}`);
+
+            // Add isSelected to each menu object
+            const menusWithSelection = menusRes.data.map(menu => ({
+                ...menu,
+                isSelected: false
+            }));
+            setMenus(menusWithSelection);
+
+            const masterMenu = menusWithSelection.find(menu => menu.title === "Master Menu");
+            setOtherMenus(menusWithSelection.filter(menu => menu.title !== "Master Menu"));
+
+            if (masterMenu) {
+                setMasterMenu(masterMenu);
+                setMasterMenuID(masterMenu._id);
+
+                const itemsRes = await axios.get(`http://localhost:5000/api/menuitems/menuswap-items?menuID=${masterMenu._id}`);
+                setMenuItems(itemsRes.data);
+            }
+
         } catch (error) {
           console.error('Error loading data:', error);
-          alert("Unable to load the needed data.")
-        }
+          alert("Unable to load the menus.")
+        };
       };
     
       fetchData();
@@ -52,82 +66,83 @@ const MenuItemPicklist = () => {
 
     const filteredMenuItems = (menu, searchTerm) => {
         return menuItems.filter(item => 
-          item.menuIDs.includes(menu.menuID) &&
+          item.menuIDs.includes(menu._id) &&
           item.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
       };
 
-    // When a checkbox is clicked, select that item and get its parent menuIDs too
-    const handleCheckboxChange = (uniqueKey) => {
-      setSelectedItemID(uniqueKey.split('_')[0]); // still for highlighting by itemID
-    
-      setSelectedKeys((prevKeys) => {
-        const updated = new Set(prevKeys);
-        if (updated.has(uniqueKey)) {
-          updated.delete(uniqueKey);
-        } else {
-          updated.add(uniqueKey);
-        }
-        return updated;
-      });
-    };
+      // menuItem checkbox changes
+      const handleCheckboxChange = (compositeKey) => {
+        const itemID = compositeKey.split('_')[1];
+        setSelectedItemID(itemID);
+        
+        setSelectedKeys((prevKeys) => {
+          const updated = new Set(prevKeys);
+          if (updated.has(compositeKey)) {
+            updated.delete(compositeKey);
+          } else {
+            updated.add(compositeKey);
+          }
+          return updated;
+        });
+      };
+      
     
     // Menu checkbox changes
     const handleMenuCheckboxChange = (menuID) => {
         setMenus((prevMenus) =>
             prevMenus.map((menu) =>
-                menu.menuID === menuID
-                    ? { ...menu, isSelected: !menu.isSelected } // Toggle isSelected for the menu
+                menu._id === menuID
+                    ? { ...menu, isSelected: !menu.isSelected }
                     : menu
             )
         );
-    };
-
+    };    
     // Rendering the Tree of Menus and their MenuItems
     const renderMenuTree = (menu, searchTerm) => {
         // Getting the items for the tree.
         const itemsForThisMenu = menuItems.filter(item =>
             // this item belongs to this menu
-            item.menuIDs.includes(menu.menuID) &&
+            item.menuIDs.includes(menu._id) &&
             item.name.toLowerCase().includes(searchTerm.toLowerCase())
           );
 
-        let localCounter = 0; 
-
         return (
-          <div key={menu.menuID} className="menu-tree">
-            <Checkbox
-              label={menu.name}
-              isSelected={menu.isSelected || false}
-              onCheckboxChange={() => handleMenuCheckboxChange(menu.menuID)}
-            />
+            <div key={menu._id} className="menu-tree">
+                <Checkbox
+                    label={menu.title}
+                    isSelected={menu.isSelected || false}
+                    onCheckboxChange={() => handleMenuCheckboxChange(menu._id)}
+                    disabled={menu.title === "Master Menu"}
+                />
             <ul className="ml-4 mt-2">
-              {itemsForThisMenu.length > 0 ? (
-                itemsForThisMenu.map((item, localCounter) => {
-                  localCounter++; // Increment counter for each item
-                  return (
-                    <li
-                      key={`${item.itemID}_${localCounter}`}
-                      className={`text-sm ${item.itemID === selectedItemID ? "bg-yellow-100" : "text-gray-500"}`}
-                    >
-                      <Checkbox
-                        label={item.name}
-                        isSelected={selectedKeys.has(`${item.itemID}_${localCounter}`)}
-                        onCheckboxChange={() => handleCheckboxChange(`${item.itemID}_${localCounter}`)}
-                      />
-                    </li>
-                  );
-                })
-              ) : (
-                <li className="text-sm text-gray-400 italic">No items found</li>
-              )}
+                {itemsForThisMenu.length > 0 ? (
+                    itemsForThisMenu.map((item) => {
+                        const compositeKey = `${item._id}_${menu._id}`;
+                        return (
+                          <li
+                            key={compositeKey}
+                            className={`text-sm ${item._id === selectedItemID ? "bg-yellow-100" : "text-gray-500"}`}
+                          >
+                            <Checkbox
+                              label={item.name}
+                              isSelected={selectedKeys.has(compositeKey)}
+                              onCheckboxChange={() => handleCheckboxChange(compositeKey)}
+                            />
+                          </li>
+                        );
+                      })
+                ) : (
+                    <li className="text-sm text-gray-400 italic">No items found</li>
+                )}
             </ul>
           </div>
         );
     };
-    // Menu is moved
+
+    // menuItem is moved
     const handleMoveToMenu = () => {
-      const targetMenu = menus.find((menu) => menu.isSelected && menu.menuID !== "0");
+      const targetMenu = menus.find((menu) => menu.isSelected && menu._id !== "0");
     
       if (!targetMenu) {
         alert("No target menu selected.");
@@ -135,13 +150,13 @@ const MenuItemPicklist = () => {
       }
       // showing the menuItems
       setMenuItems((prevItems) => {
-        return prevItems.map(item => {
-          const itemSelected = [...selectedKeys].some(key => key.startsWith(item.itemID));
+        return prevItems.map(item  => {
+          const itemSelected = [...selectedKeys].some(key => key.startsWith(item._id));
           if (itemSelected) {
-            if (!item.menuIDs.includes(targetMenu.menuID)) {
+            if (!item.menuIDs.includes(targetMenu._id)) {
               return { 
                 ...item, 
-                menuIDs: [...item.menuIDs, targetMenu.menuID]
+                menuIDs: [...item.menuIDs, targetMenu._id]
               };
             }
           }
@@ -169,16 +184,16 @@ const MenuItemPicklist = () => {
         return;
       }
     
-      if (parentMenu.menuID === "0") {
+      if (parentMenu._id === "0") {
         alert("Cannot remove from Master Menu.");
         return;
       }
     
       setMenuItems((prevItems) => {
         return prevItems.map(item => {
-          const itemSelected = [...selectedKeys].some(key => key.startsWith(item.itemID));
+          const itemSelected = [...selectedKeys].some(key => key.startsWith(item._id));
           if (itemSelected) {
-            const updatedMenuIDs = item.menuIDs.filter(id => id !== parentMenu.menuID);
+            const updatedMenuIDs = item.menuIDs.filter(id => id !== parentMenu._id);
             return { 
               ...item,
               menuIDs: updatedMenuIDs
@@ -220,6 +235,13 @@ const MenuItemPicklist = () => {
       }
     }
 
+    // Go back to menu
+    const toMenu = (event) => {
+        navigate('/menuitems', {
+            state: { menuTitle: menuTitle }, 
+        });
+    };
+
     return (
       <div className='center add-center-flex'>
         {/* Top section: buttons + menu name */}
@@ -228,6 +250,7 @@ const MenuItemPicklist = () => {
             <button className="button" onClick={handleSave}>Save</button>
           </div>
           <div className="menu-name" style={{ flex: 1, textAlign: 'center' }}>Add Item to Menu</div>
+          <div style={{ flex: 1}}><button className="button" onClick={toMenu}>Return to Menu</button></div>
         </div>
 
         <div className="flex-container menu-items-container">
@@ -244,7 +267,13 @@ const MenuItemPicklist = () => {
                 className="menu-search-bar"
             />
             <div className="menu-tree-container">
-              {otherMenus.map((menu) => renderMenuTree(menu, searchTerms.otherMenus))}
+                {menus
+                    .filter(menu => menu.title !== "Master Menu")
+                    .map((menu) => (
+                        <div key={menu._id}>
+                        {renderMenuTree(menu, searchTerms.otherMenus)}
+                        </div>
+                ))}
             </div>
           </div>
       

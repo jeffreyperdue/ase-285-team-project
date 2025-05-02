@@ -89,7 +89,9 @@ const MenuItemsPage = () => {
     // for navigation
     const toMenuSwap = (event) => {
         event.preventDefault();
-        navigate('/swap-menu');
+        navigate('/swap-menu', {
+            state: {menuTitle: fetchedMenu.title }
+        });
     }
 
     return (
