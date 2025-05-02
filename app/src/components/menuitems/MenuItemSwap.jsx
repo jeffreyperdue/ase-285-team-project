@@ -60,81 +60,84 @@ const MenuItemPicklist = () => {
 
     const filteredMenuItems = (menu, searchTerm) => {
         return menuItems.filter(item => 
-          item.menuIDs.includes(menu.menuID) &&
+          item.menuIDs.includes(menu._id) &&
           item.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
       };
 
-    // When a checkbox is clicked, select that item and get its parent menuIDs too
-    const handleCheckboxChange = (uniqueKey) => {
-      setSelectedItemID(uniqueKey.split('_')[0]); // still for highlighting by itemID
-    
-      setSelectedKeys((prevKeys) => {
-        const updated = new Set(prevKeys);
-        if (updated.has(uniqueKey)) {
-          updated.delete(uniqueKey);
-        } else {
-          updated.add(uniqueKey);
-        }
-        return updated;
-      });
-    };
+      // menuItem checkbox changes
+      const handleCheckboxChange = (compositeKey) => {
+        const itemID = compositeKey.split('_')[1];
+        setSelectedItemID(itemID);
+        
+        setSelectedKeys((prevKeys) => {
+          const updated = new Set(prevKeys);
+          if (updated.has(compositeKey)) {
+            updated.delete(compositeKey);
+          } else {
+            updated.add(compositeKey);
+          }
+          return updated;
+        });
+      };
+      
     
     // Menu checkbox changes
     const handleMenuCheckboxChange = (menuID) => {
         setMenus((prevMenus) =>
             prevMenus.map((menu) =>
-                menu.menuID === menuID
-                    ? { ...menu, isSelected: !menu.isSelected } // Toggle isSelected for the menu
+                menu._id === menuID
+                    ? { ...menu, isSelected: !menu.isSelected }
                     : menu
             )
         );
-    };
-
+    };    
+    console.log("Menus:", menus)
     // Rendering the Tree of Menus and their MenuItems
     const renderMenuTree = (menu, searchTerm) => {
         // Getting the items for the tree.
         const itemsForThisMenu = menuItems.filter(item =>
             // this item belongs to this menu
-            item.menuIDs.includes(menu.menuID) &&
+            item.menuIDs.includes(menu._id) &&
             item.name.toLowerCase().includes(searchTerm.toLowerCase())
           );
 
-        const localCounter = 0;
         return (
-          <div key={menu.menuID} className="menu-tree">
-            <Checkbox
-              label={menu.title}
-              isSelected={menu.isSelected || false}
-              onCheckboxChange={() => handleMenuCheckboxChange(menu.menuID)}
+            <div key={menu._id} className="menu-tree">
+                <input
+                type="checkbox"
+                label={menu.title}
+                isSelected={menu.isSelected || false}
+                onCheckboxChange={() => handleMenuCheckboxChange(menu._id)}
             />
             <ul className="ml-4 mt-2">
                 {itemsForThisMenu.length > 0 ? (
-                    localCounter++,
-                    itemsForThisMenu.map((item, index) => {
+                    itemsForThisMenu.map((item) => {
+                        const compositeKey = `${item._id}_${menu._id}`;
                         return (
-                        <li
-                        key={`${item.itemID}_${index}`}
-                        className={`text-sm ${item.itemID === selectedItemID ? "bg-yellow-100" : "text-gray-500"}`}
-                        >
-                        <Checkbox
-                            label={item.name}
-                            isSelected={selectedKeys.has(`${item.itemID}_${index}`)}
-                            onCheckboxChange={() => handleCheckboxChange(`${item.itemID}_${index}`)}
-                        />
-                        </li>
+                          <li
+                            key={compositeKey}
+                            className={`text-sm ${item._id === selectedItemID ? "bg-yellow-100" : "text-gray-500"}`}
+                          >
+                            <Checkbox
+                              label={item.name}
+                              isSelected={selectedKeys.has(compositeKey)}
+                              onCheckboxChange={() => handleCheckboxChange(compositeKey)}
+                            />
+                          </li>
                         );
-                    })
+                      })
                 ) : (
-                <li className="text-sm text-gray-400 italic">No items found</li>
-              )}
+                    <li className="text-sm text-gray-400 italic">No items found</li>
+                )}
             </ul>
           </div>
         );
     };
-    // Menu is moved
+
+    // menuItem is moved
     const handleMoveToMenu = () => {
-      const targetMenu = menus.find((menu) => menu.isSelected && menu.menuID !== "0");
+      const targetMenu = menus.find((menu) => menu.isSelected && menu._id !== "0");
     
       if (!targetMenu) {
         alert("No target menu selected.");
@@ -143,12 +146,12 @@ const MenuItemPicklist = () => {
       // showing the menuItems
       setMenuItems((prevItems) => {
         return prevItems.map(item  => {
-          const itemSelected = [...selectedKeys].some(key => key.startsWith(item.itemID));
+          const itemSelected = [...selectedKeys].some(key => key.startsWith(item._id));
           if (itemSelected) {
-            if (!item.menuIDs.includes(targetMenu.menuID)) {
+            if (!item.menuIDs.includes(targetMenu._id)) {
               return { 
                 ...item, 
-                menuIDs: [...item.menuIDs, targetMenu.menuID]
+                menuIDs: [...item.menuIDs, targetMenu._id]
               };
             }
           }
@@ -176,16 +179,16 @@ const MenuItemPicklist = () => {
         return;
       }
     
-      if (parentMenu.menuID === "0") {
+      if (parentMenu._id === "0") {
         alert("Cannot remove from Master Menu.");
         return;
       }
     
       setMenuItems((prevItems) => {
         return prevItems.map(item => {
-          const itemSelected = [...selectedKeys].some(key => key.startsWith(item.itemID));
+          const itemSelected = [...selectedKeys].some(key => key.startsWith(item._id));
           if (itemSelected) {
-            const updatedMenuIDs = item.menuIDs.filter(id => id !== parentMenu.menuID);
+            const updatedMenuIDs = item.menuIDs.filter(id => id !== parentMenu._id);
             return { 
               ...item,
               menuIDs: updatedMenuIDs
@@ -259,8 +262,8 @@ const MenuItemPicklist = () => {
                 className="menu-search-bar"
             />
             <div className="menu-tree-container">
-            {otherMenus.map((menu) => (
-                <div key={menu.menuID}>
+            {otherMenus.map((menu,index) => (
+                <div key={index}>
                     {renderMenuTree(menu, searchTerms.otherMenus)}
                 </div>
             ))}
