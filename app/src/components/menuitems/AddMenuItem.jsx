@@ -149,7 +149,6 @@ const CollapsiblePanel = ({ header, formData, onFormChange, onAddPanel, masterMe
 // The main form
 const AddMenuItemForm = () => {
     const [masterMenuID, setMasterMenuID] = useState('');
-    const [savedMenuID, setSavedMenuID] = useState('')
     const[routeName, setRouteName] = useState('');
     const [panels, setPanels] = useState([
         { name: '', ingredients: '', description: '', selectedAllergens: [], menuIDs: [] }
@@ -169,14 +168,11 @@ const AddMenuItemForm = () => {
         }
 
         if (menuID) {
-            // We use this later. 
-            setSavedMenuID(menuID);
-            
             setRouteName(menuTitle);
         } else {
-            console.warn("No menuID found in route state");
+            console.warn("No menuID found in route state.");
         }
-    }, [menuID]);
+    }, [menuID, menuTitle]);
 
     // Save all menuItems
     // must exist out side due to trying to get all of them.
