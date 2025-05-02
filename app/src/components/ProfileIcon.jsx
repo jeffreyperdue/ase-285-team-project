@@ -98,7 +98,7 @@ export default function ProfileIcon() {
 							<span>{getCookie('email')}</span>
 						</div>
 
-						{isAdmin ? (
+						{isAdmin && hasBusiness ? (
 							<div
 								onClick={toUserMaintenance}
 								className='dropdown-item'
@@ -113,28 +113,30 @@ export default function ProfileIcon() {
 							<></>
 						)}
 
-						<div
-							onClick={toEditLoginInfo}
-							className='dropdown-item'
-						>
-							<img
-								src={editLoginIcon}
-								alt='Edit Login'
-							/>
-							<span>Edit Login Info</span>
-						</div>
-
 						{hasBusiness ? (
-							<div
-								onClick={toEditBusinessInfo}
-								className='dropdown-item'
-							>
-								<img
-									src={editBusinessIcon}
-									alt='Edit Business'
-								/>
-								<span>Edit Business Info</span>
-							</div>
+							<>
+								<div
+									onClick={toEditLoginInfo}
+									className='dropdown-item'
+								>
+									<img
+										src={editLoginIcon}
+										alt='Edit Login'
+									/>
+									<span>Edit Login Info</span>
+								</div>
+
+								<div
+									onClick={toEditBusinessInfo}
+									className='dropdown-item'
+								>
+									<img
+										src={editBusinessIcon}
+										alt='Edit Business'
+									/>
+									<span>Edit Business Info</span>
+								</div>
+							</>
 						) : (
 							<></>
 						)}
