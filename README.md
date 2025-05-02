@@ -219,3 +219,11 @@ Handles business profile management including:
 
 - Editing business information
 - Managing unavoidable allergens
+
+### Testing Module
+
+Ensures correctness and reliability across all core modules using Jest and Supertest. Includes:
+
+- Unit tests for schema validation, model methods, and pre-save hooks
+- Integration tests for API routes including authentication, user management, menus, and menu items
+- In-memory MongoDB for isolated database testing
